@@ -25,7 +25,7 @@ Changing the default is fairly easy:
 
 === headers
 
-Accessor for the HTTP headers to send:
+Accessor for the HTTP request headers:
 
   client.headers = { "Accept-Encoding" => "gzip" }
   client.headers  # => { "Accept-Encoding" => "gzip" }
@@ -36,15 +36,11 @@ Sending an HTTP GET request:
 
   client.get "http://example.com"
 
-Returns an HTTPI::Response.
-
 === post(url, body)
 
 Sending an HTTP POST request:
 
   client.get "http://example.com", "<some>xml</xml>"
-
-Returns an HTTPI::Response.
 
 == HTTPI::Response
 
