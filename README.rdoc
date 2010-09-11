@@ -55,3 +55,12 @@ Every HTTP request method is supposed to return an HTTPI::Response containing th
 == Participate
 
 I would appreciate any help to support additional libraries and methods!
+
+== TODO
+
+Implement methods for:
+
+* Authentication (HTTP basic/digest and NTLM auth)
+* SSL configuration
+* Proxy server
+* Timeouts
