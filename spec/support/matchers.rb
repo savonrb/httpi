@@ -1,8 +1,8 @@
 RSpec::Matchers.define :be_a_valid_httpi_response do
   match do |actual|
     actual.should be_an(HTTPI::Response)
-    actual.code.should == 200
-    actual.headers.should == some_headers_hash
-    actual.body.should == some_html
+    actual.code.should == Some.response_code
+    actual.headers.should == Some.headers
+    actual.body.should == Fixture.xml
   end
 end

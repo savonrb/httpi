@@ -1,19 +1,37 @@
-module HelperMethods
+class Some
+  class << self
 
-  def some_url
-    @some_url ||= "http://example.com"
+    def url
+      @url ||= "http://example.com"
+    end
+
+    def headers
+      @headers ||= { "Content-Type" => "text/html; charset=utf-8" }
+    end
+
+    def response_code
+      @code ||= 200
+    end
+
   end
+end
 
-  def some_headers
-    @some_headers ||= [["Content-Type", "text/html; charset=utf-8"]]
+class Fixture
+  class << self
+
+    def xml
+      @xml ||= load :xml
+    end
+
+    def gzip
+      @gzip ||= load :gzip, :gz
+    end
+
+  private
+
+    def load(fixture, type = :xml)
+      File.read File.expand_path("../../fixtures/#{fixture}.#{type}", __FILE__)
+    end
+
   end
-
-  def some_headers_hash
-    @some_headers_hash ||= Hash[some_headers]
-  end
-
-  def some_html
-    @some_html ||= '<!DOCTYPE html><html><head><title>Example Web Page</title></head><body>Example</body></html>'
-  end
-
 end

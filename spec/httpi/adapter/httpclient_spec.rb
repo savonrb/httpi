@@ -2,8 +2,6 @@ require "spec_helper"
 require "httpi/adapter/httpclient"
 
 describe HTTPI::Adapter::HTTPClient do
-  include HelperMethods
-
   before do
     @adapter = Class.new { include HTTPI::Adapter::HTTPClient }.new
   end
@@ -35,33 +33,33 @@ describe HTTPI::Adapter::HTTPClient do
 
     describe "#headers=" do
       it "should set a given Hash of HTTP headers" do
-        @adapter.headers = some_headers_hash
-        @adapter.headers.should == some_headers_hash
+        @adapter.headers = Some.headers
+        @adapter.headers.should == Some.headers
       end
     end
 
     describe "#get" do
       before do
-        response = HTTP::Message.new_response some_html
-        response.header.add *some_headers.first
-        @adapter.client.expects(:get).with(some_url).returns(response)
+        response = HTTP::Message.new_response Fixture.xml
+        response.header.add *Some.headers.to_a.first
+        @adapter.client.expects(:get).with(Some.url).returns(response)
       end
 
       it "should return a valid HTTPI::Response" do
-        @adapter.get(some_url).should be_a_valid_httpi_response
+        @adapter.get(Some.url).should be_a_valid_httpi_response
       end
     end
 
     describe "#post" do
       before do
-        response = HTTP::Message.new_response some_html
-        response.header.add *some_headers.first
-        @adapter.headers = some_headers_hash
-        @adapter.client.expects(:post).with(some_url, some_html, some_headers_hash).returns(response)
+        response = HTTP::Message.new_response Fixture.xml
+        response.header.add *Some.headers.to_a.first
+        @adapter.headers = Some.headers
+        @adapter.client.expects(:post).with(Some.url, Fixture.xml, Some.headers).returns(response)
       end
 
       it "should return a valid HTTPI::Response" do
-        @adapter.post(some_url, some_html).should be_a_valid_httpi_response
+        @adapter.post(Some.url, Fixture.xml).should be_a_valid_httpi_response
       end
     end
   end

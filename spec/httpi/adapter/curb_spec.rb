@@ -2,8 +2,6 @@ require "spec_helper"
 require "httpi/adapter/curb"
 
 describe HTTPI::Adapter::Curb do
-  include HelperMethods
-
   before do
     @adapter = Class.new { include HTTPI::Adapter::Curb }.new
   end
@@ -35,34 +33,34 @@ describe HTTPI::Adapter::Curb do
 
     describe "#headers=" do
       it "should set a given Hash of HTTP headers" do
-        @adapter.headers = some_headers_hash
-        @adapter.headers.should == some_headers_hash
+        @adapter.headers = Some.headers
+        @adapter.headers.should == Some.headers
       end
     end
 
     describe "#get" do
       before do
         @adapter.client.expects(:http_get)
-        @adapter.client.expects(:response_code).returns(200)
-        @adapter.client.expects(:headers).returns(some_headers_hash)
-        @adapter.client.expects(:body_str).returns(some_html)
+        @adapter.client.expects(:response_code).returns(Some.response_code)
+        @adapter.client.expects(:headers).returns(Some.headers)
+        @adapter.client.expects(:body_str).returns(Fixture.xml)
       end
 
       it "should return a valid HTTPI::Response" do
-        @adapter.get(some_url).should be_a_valid_httpi_response
+        @adapter.get(Some.url).should be_a_valid_httpi_response
       end
     end
 
    describe "#post" do
      before do
        @adapter.client.expects(:http_post)
-       @adapter.client.expects(:response_code).returns(200)
-       @adapter.client.expects(:headers).returns(some_headers_hash)
-       @adapter.client.expects(:body_str).returns(some_html)
+       @adapter.client.expects(:response_code).returns(Some.response_code)
+       @adapter.client.expects(:headers).returns(Some.headers)
+       @adapter.client.expects(:body_str).returns(Fixture.xml)
      end
 
      it "should return a valid HTTPI::Response" do
-       @adapter.post(some_url, some_html).should be_a_valid_httpi_response
+       @adapter.post(Some.url, Fixture.xml).should be_a_valid_httpi_response
      end
    end
   end
