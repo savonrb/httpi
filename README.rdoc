@@ -23,14 +23,14 @@ Changing the default is fairly easy:
 
 == Accessor methods
 
-=== headers
+=== #headers
 
 Accessor for the HTTP request headers:
 
   client.headers = { "Accept-Encoding" => "gzip" }
   client.headers  # => { "Accept-Encoding" => "gzip" }
 
-=== proxy
+=== #proxy
 
 Accessor for the proxy server to use:
 
@@ -39,13 +39,13 @@ Accessor for the proxy server to use:
 
 == Request methods
 
-=== get(url)
+=== #get(url)
 
 Sending an HTTP GET request:
 
   client.get "http://example.com"
 
-=== post(url, body)
+=== #post(url, body)
 
 Sending an HTTP POST request:
 
@@ -69,6 +69,6 @@ I would appreciate any help to support additional libraries and methods!
 
 Implement methods for:
 
-* Authentication (HTTP basic/digest and NTLM auth)
-* SSL configuration
-* Timeouts
+* add authentication (HTTP basic/digest and NTLM) methods
+* add SSL configuration method
+* add timeout methods
