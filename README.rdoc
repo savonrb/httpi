@@ -1,3 +1,47 @@
 = HTTPI
 
-HTTP interface supporting multiple backends.
+HTTPI provides a common interface for different HTTP libraries.
+
+== Supported libraries
+
+* {httpclient}[http://rubygems.org/gems/httpclient] ~> 2.1.5
+* {curb}[http://rubygems.org/gems/curb] ~> 0.7.8
+
+== Getting started
+
+To get started, simply create a new HTTPI::Client:
+
+  client = HTTPI::Client.new :curb
+
+Notice that when you're not passing a library to use, HTTPI will default to use the HTTPClient library:
+
+  HTTPI::Adapter.use  # => :httpclient
+
+Changing the default is fairly easy:
+
+  HTTPI::Adapter.use = :curb
+
+== Supported methods
+
+=== headers
+
+Accessor for the HTTP headers to send:
+
+  client.headers = { "Accept-Encoding" => "gzip" }
+  client.headers  # => { "Accept-Encoding" => "gzip" }
+
+=== get(url)
+
+Sending an HTTP GET request:
+
+  client.get "http://example.com"
+
+=== post(url, body)
+
+Sending an HTTP POST request:
+
+  client.get "http://example.com", "<some>xml</xml>"
+
+== Participate
+
+I would appreciate any help to support additional libraries and methods!
