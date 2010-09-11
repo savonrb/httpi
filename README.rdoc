@@ -36,11 +36,25 @@ Sending an HTTP GET request:
 
   client.get "http://example.com"
 
+Returns an HTTPI::Response.
+
 === post(url, body)
 
 Sending an HTTP POST request:
 
   client.get "http://example.com", "<some>xml</xml>"
+
+Returns an HTTPI::Response.
+
+== HTTPI::Response
+
+Every HTTP request method is supposed to return an HTTPI::Response containing the response code, headers and body.
+
+  response = client.get "http://example.com"
+  
+  response.code     # => 200
+  response.headers  # => { "Content-Encoding" => "gzip" }
+  response.body     # => "<!DOCTYPE HTML PUBLIC ..."
 
 == Participate
 
