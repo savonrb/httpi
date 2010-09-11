@@ -35,7 +35,7 @@ Accessor for the HTTP request headers:
 Accessor for the proxy server to use:
 
   client.proxy = "http://proxy.example.com"
-  client.proxy  # => "http://proxy.example.com"
+  client.proxy  # => #<URI::HTTP:0x1026240f0 URL:http://proxy.example.com>
 
 == Request methods
 
