@@ -22,6 +22,15 @@ module HTTPI
         client.headers = headers
       end
 
+      def proxy
+        proxy = client.proxy_url
+        proxy.kind_of?(URI) ? proxy : URI(proxy)
+      end
+
+      def proxy=(proxy)
+        client.proxy_url = proxy
+      end
+
       def get(url)
         client.url = url.to_s
         client.http_get

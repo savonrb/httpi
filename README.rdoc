@@ -21,7 +21,7 @@ Changing the default is fairly easy:
 
   HTTPI::Adapter.use = :curb
 
-== Supported methods
+== Accessor methods
 
 === headers
 
@@ -29,6 +29,15 @@ Accessor for the HTTP request headers:
 
   client.headers = { "Accept-Encoding" => "gzip" }
   client.headers  # => { "Accept-Encoding" => "gzip" }
+
+=== proxy
+
+Accessor for the proxy server to use:
+
+  client.proxy = "http://proxy.example.com"
+  client.proxy  # => "http://proxy.example.com"
+
+== Request methods
 
 === get(url)
 
@@ -62,5 +71,4 @@ Implement methods for:
 
 * Authentication (HTTP basic/digest and NTLM auth)
 * SSL configuration
-* Proxy server
 * Timeouts

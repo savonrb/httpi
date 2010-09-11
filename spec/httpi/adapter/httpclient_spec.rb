@@ -38,6 +38,18 @@ describe HTTPI::Adapter::HTTPClient do
       end
     end
 
+    describe "#proxy" do
+      it "should set the proxy server to use" do
+        @adapter.proxy = Some.proxy_url
+        @adapter.proxy.should == URI(Some.proxy_url)
+      end
+
+      it "should accept a URI" do
+        @adapter.proxy = URI(Some.proxy_url)
+        @adapter.proxy.should == URI(Some.proxy_url)
+      end
+    end
+
     describe "#get" do
       before do
         response = HTTP::Message.new_response Fixture.xml

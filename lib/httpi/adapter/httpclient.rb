@@ -20,6 +20,14 @@ module HTTPI
 
       attr_writer :headers
 
+      def proxy
+        client.proxy
+      end
+
+      def proxy=(proxy)
+        client.proxy = proxy
+      end
+
       def get(url)
         respond_with client.get(url)
       end

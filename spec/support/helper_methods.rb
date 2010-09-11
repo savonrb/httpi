@@ -5,6 +5,10 @@ class Some
       @url ||= "http://example.com"
     end
 
+    def proxy_url
+      @proxy_url ||= "http://proxy.example.com"
+    end
+
     def headers
       @headers ||= { "Content-Type" => "text/html; charset=utf-8" }
     end
