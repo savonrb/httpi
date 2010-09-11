@@ -11,10 +11,10 @@ module HTTPI
     def initialize(code, headers, body)
       self.code = code
       self.headers = headers
-      self.body = body
+      self.raw_body = body
     end
 
-    attr_accessor :code, :headers
+    attr_accessor :code, :headers, :raw_body
 
     # Returns whether the HTTP response is considered successful.
     def error?
@@ -23,7 +23,7 @@ module HTTPI
 
     # Returns the HTTP response body.
     def body
-      gzipped_response? ? decoded_body : @body
+      @body ||= gzipped_response? ? decoded_body : raw_body
     end
 
     attr_writer :body
@@ -32,12 +32,12 @@ module HTTPI
 
     # Returns whether the response is gzipped.
     def gzipped_response?
-      headers["Content-Encoding"] == "gzip" || @body[0..1] == "\x1f\x8b"
+      headers["Content-Encoding"] == "gzip" || raw_body[0..1] == "\x1f\x8b"
     end
 
     # Returns the gzip decoded response body.
     def decoded_body
-      gzip = Zlib::GzipReader.new StringIO.new(@body)
+      gzip = Zlib::GzipReader.new StringIO.new(raw_body)
       gzip.read
     ensure
       gzip.close
