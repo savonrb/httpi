@@ -49,7 +49,7 @@ Sending an HTTP GET request:
 
 Sending an HTTP POST request:
 
-  client.get "http://example.com", "<some>xml</xml>"
+  client.post "http://example.com", "<some>xml</xml>"
 
 == HTTPI::Response
 
