@@ -50,6 +50,15 @@ describe HTTPI::Adapter::Curb do
       end
     end
 
+    describe "#auth" do
+      it "should set authentication credentials" do
+        @adapter.client.expects(:username=).with("username")
+        @adapter.client.expects(:password=).with("password")
+        
+        @adapter.auth "username", "password"
+      end
+    end
+
     describe "#get" do
       before do
         @adapter.client.expects(:http_get)

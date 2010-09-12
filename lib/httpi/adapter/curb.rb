@@ -31,6 +31,11 @@ module HTTPI
         client.proxy_url = proxy
       end
 
+      def auth(username, password)
+        client.username = username
+        client.password = password
+      end
+
       def get(url)
         client.url = url.to_s
         client.http_get

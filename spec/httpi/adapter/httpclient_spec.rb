@@ -50,6 +50,13 @@ describe HTTPI::Adapter::HTTPClient do
       end
     end
 
+    describe "#auth" do
+      it "should set authentication credentials" do
+        @adapter.client.expects(:set_auth).with(nil, "username", "password")
+        @adapter.auth "username", "password"
+      end
+    end
+
     describe "#get" do
       before do
         response = HTTP::Message.new_response Fixture.xml

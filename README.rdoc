@@ -21,7 +21,7 @@ Changing the default is fairly easy:
 
   HTTPI::Adapter.use = :curb
 
-== Accessor methods
+== Settings
 
 === #headers
 
@@ -36,6 +36,12 @@ Accessor for the proxy server to use:
 
   client.proxy = "http://proxy.example.com"
   client.proxy  # => #<URI::HTTP:0x1026240f0 URL:http://proxy.example.com>
+
+=== #auth(username, password)
+
+Setting authentication credentials:
+
+  client.auth "username", "password"
 
 == Request methods
 
@@ -69,6 +75,5 @@ I would appreciate any help to support additional libraries and methods!
 
 Implement methods for:
 
-* add authentication (HTTP basic/digest and NTLM) methods
 * add SSL configuration method
 * add timeout methods

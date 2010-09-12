@@ -28,6 +28,10 @@ module HTTPI
         client.proxy = proxy
       end
 
+      def auth(username, password)
+        client.set_auth nil, username, password
+      end
+
       def get(url)
         respond_with client.get(url)
       end
