@@ -2,6 +2,12 @@
 
 HTTPI provides a common interface for different HTTP libraries.
 
+== Installation
+
+The gem is available through {Rubygems}[http://rubygems.org/gems/httpi] and can be installed via:
+
+  $ gem install httpi
+
 == Supported libraries
 
 * {httpclient}[http://rubygems.org/gems/httpclient] ~> 2.1.5
