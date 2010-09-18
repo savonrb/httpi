@@ -6,7 +6,7 @@ require "httpi/version"
 Gem::Specification.new do |s|
   s.name = "httpi"
   s.version = HTTPI::VERSION
-  s.authors = "Daniel Harrington"
+  s.authors = ["Daniel Harrington", "Martin Tepper"]
   s.email = "me@rubiii.com"
   s.homepage = "http://github.com/rubiii/#{s.name}"
   s.summary = "Common interface for Ruby HTTP libraries"
