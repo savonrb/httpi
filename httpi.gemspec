@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "httpclient", "~> 2.1.5"
   s.add_development_dependency "curb", "~> 0.7.8"
 
-  s.add_development_dependency "rspec", "2.0.0.beta.19"
+  s.add_development_dependency "rspec", "2.0.0.beta.22"
   s.add_development_dependency "mocha", "~> 0.9.8"
 
   s.files = Dir["[A-Z]*", "{autotest,lib,spec}/**/*"] + %w(.rspec)
