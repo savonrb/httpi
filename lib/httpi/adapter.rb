@@ -4,7 +4,7 @@ require "httpi/adapter/curb"
 module HTTPI
   module Adapter
 
-    # The default adapter.
+    # The def self.ault adapter.
     DEFAULT = :httpclient
 
     # Returns the adapter to use. Defaults to <tt>HTTPI::Adapter::DEFAULT</tt>.

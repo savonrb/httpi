@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ex="http://service.example.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <ex:findUser>
+      <request>
+        <id>1</id>
+      </request>
+    </ex:findUser>
+  </soapenv:Body>
+</soapenv:Envelope>

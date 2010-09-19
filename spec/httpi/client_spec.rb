@@ -2,21 +2,50 @@ require "spec_helper"
 require "httpi"
 
 describe HTTPI::Client do
+  let(:client) { HTTPI::Client }
 
-  describe ".new" do
-    it "should default to use HTTPI::Adapter::DEFAULT" do
-      @httpi = HTTPI::Client.new
-      @httpi.client.should be_an(HTTPClient)
+  describe ".get" do
+    it "should execute an HTTP GET request using the default adapter" do
+      adapter = HTTPI::Adapter.find HTTPI::Adapter.use
+      request = HTTPI::Request.new
+      
+      adapter.any_instance.expects(:get).with(request)
+      client.get request
     end
 
-    it "should accept an adapter to use" do
-      @httpi = HTTPI::Client.new :curb
-      @httpi.client.should be_a(Curl::Easy)
+    it "should execute an HTTP GET request using the given adapter" do
+      adapter = HTTPI::Adapter.find :curb
+      request = HTTPI::Request.new
+
+      adapter.any_instance.expects(:get).with(request)
+      client.get request, :curb
     end
 
     it "should raise an ArgumentError in case of an invalid adapter" do
-      lambda { HTTPI::Client.new :unknown }.should raise_error(ArgumentError)
+      lambda { client.get HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
     end
-  end
+ end
+
+  describe ".post" do
+    it "should execute an HTTP POST request using the default adapter" do
+      adapter = HTTPI::Adapter.find HTTPI::Adapter.use
+      request = HTTPI::Request.new
+      
+      adapter.any_instance.expects(:post).with(request)
+      client.post request
+    end
+
+    it "should execute an HTTP POST request using the given adapter" do
+      adapter = HTTPI::Adapter.find :curb
+      request = HTTPI::Request.new
+
+      adapter.any_instance.expects(:post).with(request)
+      client.post request, :curb
+    end
+
+    it "should raise an ArgumentError in case of an invalid adapter" do
+      lambda { client.post HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
+    end
+ end
 
 end

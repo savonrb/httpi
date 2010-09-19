@@ -1,56 +1,48 @@
 require "httpi/response"
-require "httpi/adapter/base"
 
 module HTTPI
   module Adapter
-    module Curb
-      include Base
+    class Curb
 
-      def setup
+      def initialize
         require "curb"
       end
 
-      def client
-        @client ||= Curl::Easy.new
+      def get(request)
+        get_request(request) { |client| client.http_get }
       end
 
-      def headers
-        client.headers
-      end
-
-      def headers=(headers)
-        client.headers = headers
-      end
-
-      def proxy
-        proxy = client.proxy_url
-        proxy.kind_of?(URI) ? proxy : URI(proxy)
-      end
-
-      def proxy=(proxy)
-        client.proxy_url = proxy
-      end
-
-      def auth(username, password)
-        client.username = username
-        client.password = password
-      end
-
-      def get(url)
-        client.url = url.to_s
-        client.http_get
-        respond
-      end
-
-      def post(url, body)
-        client.url = url.to_s
-        client.http_post body
-        respond
+      def post(request)
+        post_request(request) { |client, body| client.http_post body }
       end
 
     private
 
-      def respond
+      def get_request(request)
+        client = client_for request
+        yield client
+        respond_with client
+      end
+
+      def post_request(request)
+        request.url = request.url.to_s
+        request.url.gsub!('?wsdl', '') if request.url =~ /\?wsdl$/
+        
+        client = client_for request
+        yield client, request.body
+        respond_with client
+      end
+
+      def client_for(request)
+        client = Curl::Easy.new request.url.to_s
+        client.timeout = request.read_timeout
+        client.connect_timeout = request.open_timeout
+        client.headers = request.headers
+        client.verbose = false
+        client
+      end
+
+      def respond_with(client)
         Response.new client.response_code, client.headers, client.body_str
       end
 

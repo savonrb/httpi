@@ -2,31 +2,29 @@ require "spec_helper"
 require "httpi/response"
 
 describe HTTPI::Response do
-  before do
-    @response = HTTPI::Response.new Some.response_code, Some.headers, Fixture.gzip
-  end
+  let(:response) { HTTPI::Response.new 200, { "Content-Encoding" => "gzip" }, Fixture.gzip }
 
   describe "#code" do
     it "should return the HTTP response code" do
-      @response.code.should == Some.response_code
+      response.code.should == 200
     end
   end
 
-  describe "#code" do
+  describe "#headers" do
     it "should return the HTTP response headers" do
-      @response.headers.should == Some.headers
+      response.headers.should == { "Content-Encoding" => "gzip" }
     end
   end
 
   describe "#body" do
     it "should return the (gzip decoded) HTTP response body" do
-      @response.body.should == "A short gzip encoded message\n"
+      response.body.should == Fixture.xml
     end
   end
 
   describe "#raw_body" do
     it "should return the raw HTML response body" do
-      @response.raw_body.should == Fixture.gzip
+      response.raw_body.should == Fixture.gzip
     end
   end
 

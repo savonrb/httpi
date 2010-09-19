@@ -1,46 +1,44 @@
 require "httpi/response"
-require "httpi/adapter/base"
 
 module HTTPI
   module Adapter
-    module HTTPClient
-      include Base
+    class HTTPClient
 
-      def setup
+      def initialize
         require "httpclient"
       end
 
-      def client
-        @client ||= ::HTTPClient.new
+      def get(request)
+        get_request request do |client, url, headers|
+          client.get url, nil, headers
+        end
       end
 
-      def headers
-        @headers ||= {}
-      end
-
-      attr_writer :headers
-
-      def proxy
-        client.proxy
-      end
-
-      def proxy=(proxy)
-        client.proxy = proxy
-      end
-
-      def auth(username, password)
-        client.set_auth nil, username, password
-      end
-
-      def get(url)
-        respond_with client.get(url)
-      end
-
-      def post(url, body)
-        respond_with client.post(url, body, headers)
+      def post(request)
+        post_request request do |client, url, headers, body|
+          client.post url, body, headers
+        end
       end
 
     private
+
+      def get_request(request)
+        client = client_for request
+        respond_with yield(client, request.url, request.headers)
+      end
+
+      def post_request(request)
+        client = client_for request
+        respond_with yield(client, request.url, request.headers, request.body)
+      end
+
+      def client_for(request)
+        client = ::HTTPClient.new
+        client.proxy = request.proxy if request.proxy
+        client.connect_timeout = request.open_timeout
+        client.receive_timeout = request.read_timeout
+        client
+      end
 
       def respond_with(response)
         Response.new response.code, Hash[response.header.all], response.content

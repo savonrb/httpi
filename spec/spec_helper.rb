@@ -5,5 +5,5 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
-require "support/helper_methods"
+require "support/fixture"
 require "support/matchers"

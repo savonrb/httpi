@@ -1,6 +1,6 @@
 = HTTPI
 
-HTTPI provides a common interface for different HTTP libraries.
+HTTPI provides a common interface for Ruby HTTP libraries.
 
 == Installation
 
@@ -8,66 +8,72 @@ The gem is available through {Rubygems}[http://rubygems.org/gems/httpi] and can 
 
   $ gem install httpi
 
-== Supported libraries
+== Basic examples
+
+Creating the most basic request object and executing an HTTP GET request:
+
+  request = HTTPI::Request.new :url => "http://example.com"
+  HTTPI::Client.get request
+
+The most basic HTTP POST request:
+
+  request = HTTPI::Request.new
+  request.url = "http://post.example.com"
+  request.body = "send me"
+
+  HTTPI::Client.post request
+
+An HTTP GET request using HTTP basic auth and the Curb adapter:
+
+  request = HTTPI::Request.new
+  request.url = "http://auth.example.com"
+  request.basic_auth "username", "password"
+
+  HTTPI::Client.get request, :curb
+
+== HTTPI::Request
+
+The HTTPI::Request serves as a common denominator of options that HTTPI adapters need to support. It represents an HTTP request and contains the following options:
+
+* [url]          the URL to access
+* [proxy]        the proxy server to use
+* [headers]      a Hash of HTTP headers
+* [body]         the HTTP request body
+* [open_timeout] the open timeout (sec)
+* [read_timeout] the read timeout (sec)
+* [basic_auth]   HTTP basic auth credentials
+
+Please note, that this list is far from complete and will be extended with further options.
+
+== HTTPI::Client
+
+The HTTPI::Client uses one of the available adapters to execute HTTP requests. It currently supports the following request methods:
+
+* get(request, adapter = nil)
+* post(request, adapter = nil)
+
+You can specify the adapter to use per request. Every request method returns an HTTPI::Response.
+
+== HTTPI::Adapter
+
+HTTPI uses adapters to support multiple HTTP libraries. It currently contains adapters for:
 
 * {httpclient}[http://rubygems.org/gems/httpclient] ~> 2.1.5
 * {curb}[http://rubygems.org/gems/curb] ~> 0.7.8
 
-== Getting started
-
-To get started, simply create a new HTTPI::Client:
-
-  client = HTTPI::Client.new :curb
-
-Notice that when you're not passing a library to use, HTTPI will default to use the HTTPClient library:
-
-  HTTPI::Adapter.use  # => :httpclient
-
-Changing the default is fairly easy:
+By default, HTTPI uses the HTTPClient. Changing the default is fairly easy:
 
   HTTPI::Adapter.use = :curb
 
-== Settings
+You can find a list of supported adapters via:
 
-=== #headers
-
-Accessor for the HTTP request headers:
-
-  client.headers = { "Accept-Encoding" => "gzip" }
-  client.headers  # => { "Accept-Encoding" => "gzip" }
-
-=== #proxy
-
-Accessor for the proxy server to use:
-
-  client.proxy = "http://proxy.example.com"
-  client.proxy  # => #<URI::HTTP:0x1026240f0 URL:http://proxy.example.com>
-
-=== #auth(username, password)
-
-Setting authentication credentials:
-
-  client.auth "username", "password"
-
-== Request methods
-
-=== #get(url)
-
-Sending an HTTP GET request:
-
-  client.get "http://example.com"
-
-=== #post(url, body)
-
-Sending an HTTP POST request:
-
-  client.post "http://example.com", "<some>xml</xml>"
+  HTTPI::Adapter.adapters  # returns a Hash of supported adapters
 
 == HTTPI::Response
 
-Every HTTP request method is supposed to return an HTTPI::Response containing the response code, headers and body.
+Every HTTPI::Client request method returns an HTTPI::Response containing the response code, headers and body.
 
-  response = client.get "http://example.com"
+  response = HTTPI::Client.get request
   
   response.code     # => 200
   response.headers  # => { "Content-Encoding" => "gzip" }
@@ -75,11 +81,11 @@ Every HTTP request method is supposed to return an HTTPI::Response containing th
 
 == Participate
 
-I would appreciate any help to support additional libraries and methods!
+We appreciate any help and feedback, so please get in touch!
 
 == TODO
 
-Implement methods for:
+Extend the HTTPI::Request to support:
 
-* add SSL configuration method
-* add timeout methods
+* HTTP digest authentication
+* SSL client authentication
