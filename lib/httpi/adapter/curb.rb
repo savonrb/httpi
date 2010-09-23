@@ -30,8 +30,7 @@ module HTTPI
       end
 
       def post_request(request)
-        request.url = request.url.to_s
-        request.url.gsub!('?wsdl', '') if request.url =~ /\?wsdl$/
+        request.url.query = nil if request.url.query == "wsdl"
         
         client = client_for request
         yield client, request.body
