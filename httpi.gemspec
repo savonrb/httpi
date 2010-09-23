@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ["Daniel Harrington", "Martin Tepper"]
   s.email = "me@rubiii.com"
   s.homepage = "http://github.com/rubiii/#{s.name}"
-  s.summary = "Common interface for Ruby HTTP libraries"
+  s.summary = "Interface for Ruby HTTP libraries"
   s.description = "HTTPI provides a common interface for different HTTP libraries."
 
   s.rubyforge_project = s.name
@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "2.0.0.beta.22"
   s.add_development_dependency "mocha", "~> 0.9.8"
 
-  s.files = Dir["[A-Z]*", "{autotest,lib,spec}/**/*"] + %w(.rspec)
+  s.files = Dir["[A-Z]*", ".rspec", "{autotest,lib,spec}/**/*"]
   s.require_path = "lib"
 end
