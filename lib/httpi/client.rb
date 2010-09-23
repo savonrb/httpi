@@ -58,7 +58,7 @@ module HTTPI
       # and a request body plus an optional adapter and returns an Array with
       # an <tt>HTTPI::Request</tt> and (if given) an adapter.
       def extract_post_args(args)
-        return args if args.first.kind_of? Request
+        return args if args[0].kind_of? Request
         [Request.new(:url => args[0], :body => args[1]), args[2]]
       end
 
