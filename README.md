@@ -45,19 +45,19 @@ And here's a POST:
 HTTPI::Request
 --------------
 
-The HTTPI::Request serves as a common denominator of options that HTTPI adapters need to support.
-It represents an HTTP request and lets you customize various settings:
+The HTTPI::Request serves as a common denominator of options that HTTPI adapters need to support.  
+It represents an HTTP request and lets you customize various settings through these accessors:
 
-* [url]           the URL to access
-* [proxy]         the proxy server to use
-* [headers]       a Hash of HTTP headers
-* [body]          the HTTP request body
-* [open_timeout]  the open timeout (sec)
-* [read_timeout]  the read timeout (sec)
+    #url           # the URL to access
+    #proxy         # the proxy server to use
+    #headers       # a Hash of HTTP headers
+    #body          # the HTTP request body
+    #open_timeout  # the open timeout (sec)
+    #read_timeout  # the read timeout (sec)
 
 It also contains methods for setting up authentication:
 
-* [basic_auth]  HTTP basic auth credentials
+    #basic_auth    # HTTP basic auth credentials
 
 #### TODO:
 
@@ -67,7 +67,7 @@ It also contains methods for setting up authentication:
 HTTPI::Client
 -------------
 
-The HTTPI::Client uses one of the available adapters to execute HTTP requests.
+The HTTPI::Client uses one of the available adapters to execute HTTP requests.  
 It currently supports GET and POST requests:
 
 ### GET
@@ -80,7 +80,7 @@ It currently supports GET and POST requests:
     post(request, adapter = nil)
     post(url, body, adapter = nil)
 
-You can specify the adapter to use per request.
+You can specify the adapter to use per request.  
 Request methods always returns an HTTPI::Response.
 
 #### TODO:
@@ -90,7 +90,7 @@ Request methods always returns an HTTPI::Response.
 HTTPI::Adapter
 --------------
 
-HTTPI uses adapters to support multiple HTTP libraries.
+HTTPI uses adapters to support multiple HTTP libraries.  
 It currently contains adapters for:
 
 * [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
@@ -107,7 +107,7 @@ You can find a list of supported adapters via:
 HTTPI::Response
 ---------------
 
-As mentioned before, every request method return an HTTPI::Response.
+As mentioned before, every request method return an HTTPI::Response.  
 It contains the response code, headers and body.
 
     response = HTTPI::Client.get request
