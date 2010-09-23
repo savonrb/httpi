@@ -1,6 +1,10 @@
 require "uri"
 
 module HTTPI
+
+  # = HTTPI::Request
+  #
+  # Represents an HTTP request and contains various methods for customizing that request.
   class Request
 
     # Request accessor methods.

@@ -2,6 +2,10 @@ require "zlib"
 require "stringio"
 
 module HTTPI
+
+  # = HTTPI::Response
+  #
+  # Represents an HTTP response and contains various response details.
   class Response
 
     # Range of HTTP response codes considered to be successful.

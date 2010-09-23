@@ -2,6 +2,11 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
+
+    # = HTTPI::Adapter::Curb
+    #
+    # Adapter for the Curb client.
+    # http://rubygems.org/gems/curb
     class Curb
 
       def initialize

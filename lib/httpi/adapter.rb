@@ -2,6 +2,13 @@ require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
 
 module HTTPI
+
+  # = HTTPI::Adapter
+  #
+  # Manages the adapter classes. Currently supports:
+  #
+  # * httpclient
+  # * curb
   module Adapter
 
     # The def self.ault adapter.

@@ -2,6 +2,10 @@ require "httpi/request"
 require "httpi/adapter"
 
 module HTTPI
+
+  # = HTTPI::Client
+  #
+  # Executes HTTP requests using one of the adapters.
   class Client
     class << self
 

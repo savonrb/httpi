@@ -2,6 +2,11 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
+
+    # = HTTPI::Adapter::HTTPClient
+    #
+    # Adapter for the HTTPClient client.
+    # http://rubygems.org/gems/httpclient
     class HTTPClient
 
       def initialize
