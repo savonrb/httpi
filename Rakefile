@@ -4,7 +4,7 @@ begin
   require "yard"
   
   YARD::Rake::YardocTask.new do |t|
-    t.files = ["README.rdoc", "lib/**/*.rb"]
+    t.files = ["README.md", "lib/**/*.rb"]
   end
 rescue LoadError
   desc message = %{"gem install yard" to generate documentation}
