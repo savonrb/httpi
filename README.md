@@ -18,7 +18,7 @@ Let's create the most basic request object and execute a GET request:
     request = HTTPI::Request.new :url => "http://example.com"
     HTTPI::Client.get request
 
-And a POST request with a request object:
+A POST request with a request object:
 
     request = HTTPI::Request.new
     request.url = "http://post.example.com"
@@ -26,7 +26,7 @@ And a POST request with a request object:
   
     HTTPI::Client.post request
 
-Or a GET request using HTTP basic auth and the Curb adapter:
+And a GET request using HTTP basic auth and the Curb adapter:
 
     request = HTTPI::Request.new
     request.url = "http://auth.example.com"
@@ -45,7 +45,7 @@ And here's a POST:
 HTTPI::Request
 --------------
 
-The HTTPI::Request serves as a common denominator of options that HTTPI adapters need to support.  
+The `HTTPI::Request` serves as a common denominator of options that HTTPI adapters need to support.  
 It represents an HTTP request and lets you customize various settings through these accessors:
 
     #url           # the URL to access
@@ -57,7 +57,7 @@ It represents an HTTP request and lets you customize various settings through th
 
 It also contains methods for setting up authentication:
 
-    #basic_auth    # HTTP basic auth credentials
+    #basic_auth(username, password)  # HTTP basic auth credentials
 
 #### TODO:
 
@@ -67,21 +67,21 @@ It also contains methods for setting up authentication:
 HTTPI::Client
 -------------
 
-The HTTPI::Client uses one of the available adapters to execute HTTP requests.  
+The `HTTPI::Client` uses one of the available adapters to execute HTTP requests.  
 It currently supports GET and POST requests:
 
 ### GET
 
-    get(request, adapter = nil)
-    get(url, adapter = nil)
+    .get(request, adapter = nil)
+    .get(url, adapter = nil)
 
 ### POST
 
-    post(request, adapter = nil)
-    post(url, body, adapter = nil)
+    .post(request, adapter = nil)
+    .post(url, body, adapter = nil)
 
 You can specify the adapter to use per request.  
-Request methods always returns an HTTPI::Response.
+Request methods always returns an `HTTPI::Response`.
 
 #### TODO:
 
@@ -96,18 +96,18 @@ It currently contains adapters for:
 * [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
 * [curb](http://rubygems.org/gems/curb) ~> 0.7.8
 
-By default, HTTPI uses the HTTPClient. But changing the default is fairly easy:
+By default, HTTPI uses the `HTTPClient`. But changing the default is fairly easy:
 
-      HTTPI::Adapter.use = :curb
+    HTTPI::Adapter.use = :curb
 
 You can find a list of supported adapters via:
 
-      HTTPI::Adapter.adapters  # returns a Hash of supported adapters
+    HTTPI::Adapter.adapters  # returns a Hash of supported adapters
 
 HTTPI::Response
 ---------------
 
-As mentioned before, every request method return an HTTPI::Response.  
+As mentioned before, every request method return an `HTTPI::Response`.  
 It contains the response code, headers and body.
 
     response = HTTPI::Client.get request
@@ -118,7 +118,7 @@ It contains the response code, headers and body.
 
 #### TODO
 
-* Return the original HTTPI::Request for debugging purposes
+* Return the original `HTTPI::Request` for debugging purposes
 * Return the time it took to execute the request
 
 Participate
