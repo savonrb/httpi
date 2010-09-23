@@ -1,6 +1,17 @@
 require "rake"
 
 begin
+  require "yard"
+  
+  YARD::Rake::YardocTask.new do |t|
+    t.files = ["README.rdoc", "lib/**/*.rb"]
+  end
+rescue LoadError
+  desc message = %{"gem install yard" to generate documentation}
+  task("yard") { abort message }
+end
+
+begin
   require "metric_fu"
   
   MetricFu::Configuration.run do |c|
