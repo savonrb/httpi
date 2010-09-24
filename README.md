@@ -97,6 +97,7 @@ It also contains methods for setting up authentication:
 ### TODO
 
 * Add support for SSL client authentication
+* Add support for NTLM authentication
 
 HTTPI::Adapter
 --------------
