@@ -45,7 +45,7 @@ And here's a POST:
 HTTPI
 -------------
 
-The `HTTPI` module uses one of the available adapters to execute HTTP requests.  
+The `HTTPI` module uses one of the available adapters to execute HTTP requests.
 It currently supports GET and POST requests:
 
 ### GET
@@ -101,7 +101,7 @@ It also contains methods for setting up authentication:
 HTTPI::Adapter
 --------------
 
-HTTPI uses adapters to support multiple HTTP libraries.  
+HTTPI uses adapters to support multiple HTTP libraries.
 It currently contains adapters for:
 
 * [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
@@ -119,7 +119,7 @@ Valid options are:
 HTTPI::Response
 ---------------
 
-As mentioned before, every request method return an `HTTPI::Response`.  
+As mentioned before, every request method return an `HTTPI::Response`.
 It contains the response code, headers and body.
 
     response = HTTPI.get request
