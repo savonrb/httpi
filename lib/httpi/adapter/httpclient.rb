@@ -22,7 +22,7 @@ module HTTPI
       # Executes an HTTP GET request.
       # @see HTTPI.get
       def get(request)
-        get_request request do |client, url, headers|
+        do_request request do |client, url, headers|
           client.get url, nil, headers
         end
       end
@@ -30,19 +30,22 @@ module HTTPI
       # Executes an HTTP POST request.
       # @see HTTPI.post
       def post(request)
-        post_request request do |client, url, headers, body|
+        do_request request do |client, url, headers, body|
           client.post url, body, headers
+        end
+      end
+
+      # Executes an HTTP PUT request.
+      # @see HTTPI.put
+      def put(request)
+        do_request request do |client, url, headers, body|
+          client.put url, body, headers
         end
       end
 
     private
 
-      def get_request(request)
-        setup_client request
-        respond_with yield(client, request.url, request.headers)
-      end
-
-      def post_request(request)
+      def do_request(request)
         setup_client request
         respond_with yield(client, request.url, request.headers, request.body)
       end

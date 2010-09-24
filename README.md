@@ -38,15 +38,15 @@ HTTPI also comes with some shortcuts. This executes a GET request:
 
     HTTPI.get "http://example.com"
 
-And this executes a POST request:
+And this executes a PUT request:
 
-    HTTPI.post "http://example.com", "<some>xml</some>"
+    HTTPI.put "http://example.com", "<some>xml</some>"
 
 HTTPI
 -------------
 
 The `HTTPI` module uses one of the available adapters to execute HTTP requests.
-It currently supports GET and POST requests:
+It currently supports GET, POST and PUT requests:
 
 ### GET
 
@@ -57,6 +57,11 @@ It currently supports GET and POST requests:
 
     .post(request, adapter = nil)
     .post(url, body, adapter = nil)
+
+### PUT
+
+    .put(request, adapter = nil)
+    .put(url, body, adapter = nil)
 
 ### Notice
 
@@ -74,7 +79,7 @@ by your adapter in a block:
 
 ### TODO
 
-* Add support for HEAD, PUT and DELETE requests
+* Add support for HEAD and DELETE requests
 
 HTTPI::Request
 --------------

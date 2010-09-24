@@ -22,28 +22,26 @@ module HTTPI
       # Executes an HTTP GET request.
       # @see HTTPI.get
       def get(request)
-        get_request(request) { |client| client.http_get }
+        do_request(request) { |client| client.http_get }
       end
 
       # Executes an HTTP POST request.
       # @see HTTPI.post
       def post(request)
-        post_request(request) { |client, body| client.http_post body }
+        do_request(request) { |client, body| client.http_post body }
+      end
+
+      # Executes an HTTP PUT request.
+      # @see HTTPI.put
+      def put(request)
+        do_request(request) { |client, body| client.http_put body }
       end
 
     private
 
-      def get_request(request)
+      def do_request(request)
         setup_client request
         yield client
-        respond_with client
-      end
-
-      def post_request(request)
-        request.url.query = nil if request.url.query == "wsdl"
-        
-        setup_client request
-        yield client, request.body
         respond_with client
       end
 

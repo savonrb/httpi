@@ -4,25 +4,34 @@ require "httpi"
 describe HTTPI do
   let(:client) { HTTPI }
 
-  # Uses the WebDAV Testing Server:
-  # http://test.webdav.org/
+  # Uses example.com for basic request methods and webdav.org
+  # for HTTP basic and digest authentication.
+  #
+  # http://example.com
+  # http://test.webdav.org
 
   before :all do
     @username = @password = "user1"
     @error_message = "Authorization Required"
-    @not_found = "Not Found"
+    @example_web_page = "Example Web Page"
+    @put_not_allowed = "The requested method PUT is not allowed"
   end
 
   HTTPI::Adapter.adapters.keys.each do |adapter|
     context "using :#{adapter}" do
       it "should execute an HTTP GET request" do
-        response = HTTPI.get "http://test.webdav.org/dav/"
-        response.body.should include(@not_found)
+        response = HTTPI.get "http://example.com"
+        response.body.should include(@example_web_page)
       end
 
       it "should execute an HTTP POST request" do
-        response = HTTPI.post "http://test.webdav.org/dav/"
-        response.body.should include(@not_found)
+        response = HTTPI.post "http://example.com"
+        response.body.should include(@example_web_page)
+      end
+
+      it "should execute an HTTP PUT request" do
+        response = HTTPI.put "http://example.com"
+        response.body.should include(@put_not_allowed)
       end
 
       context "with HTTP basic authentication" do

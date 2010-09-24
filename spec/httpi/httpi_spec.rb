@@ -1,6 +1,9 @@
 require "spec_helper"
 require "httpi"
 
+require "httpclient"
+require "curb"
+
 describe HTTPI do
   let(:client) { HTTPI }
   let(:default_adapter) { HTTPI::Adapter.find HTTPI::Adapter.use }
@@ -101,7 +104,7 @@ describe HTTPI do
   describe ".post" do
     context "(with a block)" do
       it "should yield the HTTP client instance used for the request" do
-        client.get "http://example.com", :curb do |http|
+        client.post "http://example.com", "<some>xml</some>", :curb do |http|
           http.should be_a(Curl::Easy)
         end
       end
@@ -113,6 +116,62 @@ describe HTTPI do
 
     it "should raise an ArgumentError in case of an invalid URL" do
       lambda { client.post "invalid" }.should raise_error(ArgumentError)
+    end
+  end
+
+  describe ".put(request)" do
+    it "should execute an HTTP PUT request using the default adapter" do
+      request = HTTPI::Request.new
+      default_adapter.any_instance.expects(:put).with(request)
+      
+      client.put request
+    end
+  end
+
+  describe ".put(request, adapter)" do
+    it "should execute an HTTP PUT request using the given adapter" do
+      request = HTTPI::Request.new
+      curb.any_instance.expects(:put).with(request)
+      
+      client.put request, :curb
+    end
+  end
+
+  describe ".put(url, body)" do
+    it "should execute an HTTP PUT request using the default adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
+      default_adapter.any_instance.expects(:put).with(instance_of(HTTPI::Request))
+      
+      client.put "http://example.com", "<some>xml</some>"
+    end
+  end
+
+  describe ".put(url, body, adapter)" do
+    it "should execute an HTTP PUT request using the given adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
+      curb.any_instance.expects(:put).with(instance_of(HTTPI::Request))
+      
+      client.put "http://example.com", "<some>xml</some>", :curb
+    end
+  end
+
+  describe ".put" do
+    context "(with a block)" do
+      it "should yield the HTTP client instance used for the request" do
+        client.put "http://example.com", "<some>xml</xml>", :curb do |http|
+          http.should be_a(Curl::Easy)
+        end
+      end
+    end
+
+    it "should raise an ArgumentError in case of an invalid adapter" do
+      lambda { client.put HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
+    end
+
+    it "should raise an ArgumentError in case of an invalid URL" do
+      lambda { client.put "invalid" }.should raise_error(ArgumentError)
     end
   end
 

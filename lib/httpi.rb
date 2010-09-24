@@ -69,11 +69,47 @@ module HTTPI
     #     http.use_ssl = true  # Curb example
     #   end
     def post(*args)
-      request, adapter = extract_post_args(args)
+      request, adapter = request_and_adapter_from(args)
       
       with adapter do |adapter|
         yield adapter.client if block_given?
         adapter.post request
+      end
+    end
+
+    # Executes an HTTP PUT request and returns an <tt>HTTPI::Response</tt>.
+    #
+    # ==== Example
+    #
+    # Accepts an <tt>HTTPI::Request</tt> and an optional adapter:
+    #
+    #   request = HTTPI::Request.new
+    #   request.url = "http://example.com"
+    #   request.body = "<some>xml</some>"
+    #   
+    #   HTTPI.put request, :httpclient
+    #
+    # ==== Shortcut
+    #
+    # You can also just pass a URL, a request body and an optional adapter
+    # if you don't need to configure the request:
+    #
+    #   HTTPI.put "http://example.com", "<some>xml</some>", :curb
+    #
+    # ==== More control
+    #
+    # If you need more control over the request, you can access the HTTP
+    # client instance represented by your adapter in a block.
+    #
+    #   HTTPI.put request do |http|
+    #     http.use_ssl = true  # Curb example
+    #   end
+    def put(*args)
+      request, adapter = request_and_adapter_from(args)
+      
+      with adapter do |adapter|
+        yield adapter.client if block_given?
+        adapter.put request
       end
     end
 
@@ -82,7 +118,7 @@ module HTTPI
     # Checks whether +args+ contains of an <tt>HTTPI::Request</tt> or a URL
     # and a request body plus an optional adapter and returns an Array with
     # an <tt>HTTPI::Request</tt> and (if given) an adapter.
-    def extract_post_args(args)
+    def request_and_adapter_from(args)
       return args if args[0].kind_of? Request
       [Request.new(:url => args[0], :body => args[1]), args[2]]
     end
