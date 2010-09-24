@@ -59,7 +59,7 @@ It also contains methods for setting up authentication:
 
     #basic_auth(username, password)  # HTTP basic auth credentials
 
-### TODO:
+### TODO
 
 * Add support for HTTP digest authentication
 * Add support for SSL client authentication
@@ -94,7 +94,7 @@ by your adapter in a block:
       http.use_ssl = true  # Curb example
     end
 
-### TODO:
+### TODO
 
 * Add support for HEAD, PUT and DELETE requests
 
