@@ -59,7 +59,7 @@ It also contains methods for setting up authentication:
 
     #basic_auth(username, password)  # HTTP basic auth credentials
 
-#### TODO:
+### TODO:
 
 * Add support for HTTP digest authentication
 * Add support for SSL client authentication
@@ -80,10 +80,21 @@ It currently supports GET and POST requests:
     .post(request, adapter = nil)
     .post(url, body, adapter = nil)
 
-You can specify the adapter to use per request.  
-Request methods always returns an `HTTPI::Response`.
+### Notice
 
-#### TODO:
+* You can specify the adapter to use per request
+* And request methods always return an `HTTPI::Response`
+
+### More control
+
+If you need more control over the request, you can access the HTTP client instance represented
+by your adapter in a block:
+
+    HTTPI::Client.post request do |http|
+      http.use_ssl = true  # Curb example
+    end
+
+### TODO:
 
 * Add support for HEAD, PUT and DELETE requests
 
@@ -116,7 +127,7 @@ It contains the response code, headers and body.
     response.headers  # => { "Content-Encoding" => "gzip" }
     response.body     # => "<!DOCTYPE HTML PUBLIC ..."
 
-#### TODO
+### TODO
 
 * Return the original `HTTPI::Request` for debugging purposes
 * Return the time it took to execute the request

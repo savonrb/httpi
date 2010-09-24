@@ -24,9 +24,22 @@ module HTTPI
       # need to configure the request:
       #
       #   HTTPI::Client.get "http://example.com", :curb
+      #
+      # ==== More control
+      #
+      # If you need more control over the request, you can access the HTTP
+      # client instance represented by your adapter in a block.
+      #
+      #   HTTPI::Client.get request do |http|
+      #     http.follow_redirect_count = 3  # HTTPClient example
+      #   end
       def get(request, adapter = nil)
         request = Request.new :url => request if request.kind_of? String
-        find_adapter(adapter).get request
+        
+        with adapter do |adapter|
+          yield adapter.client if block_given?
+          adapter.get request
+        end
       end
 
       # Executes an HTTP POST request and returns an <tt>HTTPI::Response</tt>.
@@ -47,9 +60,22 @@ module HTTPI
       # if you don't need to configure the request:
       #
       #   HTTPI::Client.post "http://example.com", "<some>xml</some>", :curb
+      #
+      # ==== More control
+      #
+      # If you need more control over the request, you can access the HTTP
+      # client instance represented by your adapter in a block.
+      #
+      #   HTTPI::Client.post request do |http|
+      #     http.use_ssl = true  # Curb example
+      #   end
       def post(*args)
         request, adapter = extract_post_args(args)
-        find_adapter(adapter).post request
+        
+        with adapter do |adapter|
+          yield adapter.client if block_given?
+          adapter.post request
+        end
       end
 
     private
@@ -62,11 +88,11 @@ module HTTPI
         [Request.new(:url => args[0], :body => args[1]), args[2]]
       end
 
-      # Accepts an +adapter+ (defaults to <tt>Adapter.use</tt>) and returns
-      # a new instance of the adapter to use.
-      def find_adapter(adapter)
+      # Accepts an +adapter+ (defaults to <tt>Adapter.use</tt>) and yields a
+      # new instance of the adapter to a given block.
+      def with(adapter)
         adapter ||= Adapter.use
-        Adapter.find(adapter).new
+        yield Adapter.find(adapter).new
       end
 
     end

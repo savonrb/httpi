@@ -13,6 +13,10 @@ module HTTPI
         require "httpclient"
       end
 
+      def client
+        @client ||= ::HTTPClient.new
+      end
+
       def get(request)
         get_request request do |client, url, headers|
           client.get url, nil, headers
@@ -28,21 +32,19 @@ module HTTPI
     private
 
       def get_request(request)
-        client = client_for request
+        setup_client request
         respond_with yield(client, request.url, request.headers)
       end
 
       def post_request(request)
-        client = client_for request
+        setup_client request
         respond_with yield(client, request.url, request.headers, request.body)
       end
 
-      def client_for(request)
-        client = ::HTTPClient.new
+      def setup_client(request)
         client.proxy = request.proxy if request.proxy
         client.connect_timeout = request.open_timeout
         client.receive_timeout = request.read_timeout
-        client
       end
 
       def respond_with(response)

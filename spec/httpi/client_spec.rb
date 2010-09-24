@@ -43,6 +43,14 @@ describe HTTPI::Client do
   end
   
   describe ".get" do
+    context "(with a block)" do
+      it "should yield the HTTP client instance used for the request" do
+        client.get "http://example.com" do |http|
+          http.should be_an(HTTPClient)
+        end
+      end
+    end
+
     it "should raise an ArgumentError in case of an invalid adapter" do
       lambda { client.get HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
     end
@@ -91,6 +99,14 @@ describe HTTPI::Client do
   end
 
   describe ".post" do
+    context "(with a block)" do
+      it "should yield the HTTP client instance used for the request" do
+        client.get "http://example.com", :curb do |http|
+          http.should be_a(Curl::Easy)
+        end
+      end
+    end
+
     it "should raise an ArgumentError in case of an invalid adapter" do
       lambda { client.post HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
     end
