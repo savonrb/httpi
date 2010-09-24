@@ -13,12 +13,12 @@ The gem is available through [Rubygems](http://rubygems.org/gems/httpi) and can 
 Some examples
 -------------
 
-Let's create the most basic request object and execute a GET request:
+Executing a POST request with the most basic request object:
 
     request = HTTPI::Request.new :url => "http://example.com"
     HTTPI.get request
 
-A POST request with a request object:
+Here's a POST request with a request object:
 
     request = HTTPI::Request.new
     request.url = "http://post.example.com"
@@ -38,7 +38,7 @@ HTTPI also comes with some shortcuts. This executes a GET request:
 
     HTTPI.get "http://example.com"
 
-And here's a POST:
+And this executes a POST request:
 
     HTTPI.post "http://example.com", "<some>xml</some>"
 
