@@ -44,12 +44,18 @@ module HTTPI
     # Sets the Hash of HTTP headers.
     attr_writer :headers
 
-    attr_accessor :body, :open_timeout, :read_timeout
+    attr_accessor :body, :open_timeout, :read_timeout, :auth_type
+
+    # Returns whether any authentication credentials were specified.
+    def auth?
+      !!auth_type
+    end
 
     # Sets the HTTP basic auth credentials. Accepts an Array or two arguments for the
     # +username+ and +password+. Resets the credentials when +nil+ is passed and returns
     # an Array of credentials when no +args+ where given.
     def basic_auth(*args)
+      self.auth_type = :basic
       @basic_auth = extract_credentials @basic_auth, args.flatten
     end
 

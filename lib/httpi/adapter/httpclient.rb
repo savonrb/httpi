@@ -48,9 +48,18 @@ module HTTPI
       end
 
       def setup_client(request)
+        basic_setup request
+        auth_setup request if request.auth?
+      end
+
+      def basic_setup(request)
         client.proxy = request.proxy if request.proxy
         client.connect_timeout = request.open_timeout
         client.receive_timeout = request.read_timeout
+      end
+
+      def auth_setup(request)
+        client.set_auth nil, *request.basic_auth if request.auth_type == :basic
       end
 
       def respond_with(response)

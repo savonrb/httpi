@@ -48,11 +48,23 @@ module HTTPI
       end
 
       def setup_client(request)
+        basic_setup request
+        setup_auth request if request.auth?
+      end
+
+      def basic_setup(request)
         client.url = request.url.to_s
         client.timeout = request.read_timeout
         client.connect_timeout = request.open_timeout
         client.headers = request.headers
         client.verbose = false
+      end
+
+      def setup_auth(request)
+        client.http_auth_types = request.auth_type
+        case request.auth_type
+          when :basic then client.username, client.password = *request.basic_auth
+        end
       end
 
       def respond_with(client)
