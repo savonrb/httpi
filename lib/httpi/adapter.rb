@@ -11,7 +11,7 @@ module HTTPI
   # * curb
   module Adapter
 
-    # The def self.ault adapter.
+    # The default adapter.
     DEFAULT = :httpclient
 
     # Returns the adapter to use. Defaults to <tt>HTTPI::Adapter::DEFAULT</tt>.
