@@ -39,6 +39,18 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
+  describe "#head" do
+    before do
+      @request = HTTPI::Request.new :url => "http://example.com"
+      response = HTTP::Message.new_response Fixture.xml
+      httpclient.expects(:head).with(@request.url, nil, @request.headers).returns(response)
+    end
+
+    it "should return a valid HTTPI::Response" do
+      adapter.head(@request).should be_a_valid_httpi_response
+    end
+  end
+
   describe "#put" do
     before do
       @request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml

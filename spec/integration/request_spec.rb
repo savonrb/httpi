@@ -28,6 +28,11 @@ describe HTTPI do
         response.body.should include(@example_web_page)
       end
 
+      it "should execute an HTTP HEAD request" do
+        response = HTTPI.head "http://example.com", adapter
+        response.code.should == 200
+      end
+
       it "should execute an HTTP PUT request" do
         response = HTTPI.put "http://example.com", "<some>xml</some>", adapter
         response.body.should include("PUT is not allowed")

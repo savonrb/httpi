@@ -30,6 +30,15 @@ require "httpi/adapter"
 #
 #   HTTPI.post "http://example.com", "<some>xml</some>", :curb
 #
+# == HEAD
+#
+#   request = HTTPI::Request.new :url => "http://example.com"
+#   HTTPI.head request, :httpclient
+#
+# === Shortcuts
+#
+#   HTTPI.head "http://example.com", :curb
+#
 # == PUT
 #
 #   request = HTTPI::Request.new
@@ -79,6 +88,16 @@ module HTTPI
       with adapter do |adapter|
         yield adapter.client if block_given?
         adapter.post request
+      end
+    end
+
+    # Executes an HTTP HEAD request.
+    def head(request, adapter = nil)
+      request = Request.new :url => request if request.kind_of? String
+      
+      with adapter do |adapter|
+        yield adapter.client if block_given?
+        adapter.head request
       end
     end
 

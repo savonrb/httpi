@@ -31,6 +31,12 @@ module HTTPI
         do_request(request) { |client, body| client.http_post body }
       end
 
+      # Executes an HTTP HEAD request.
+      # @see HTTPI.head
+      def head(request)
+        do_request(request) { |client| client.http_head }
+      end
+
       # Executes an HTTP PUT request.
       # @see HTTPI.put
       def put(request)

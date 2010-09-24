@@ -43,6 +43,20 @@ describe HTTPI::Adapter::Curb do
     end
   end
 
+  describe "#head" do
+    before do
+      curb.expects(:http_head)
+      curb.expects(:response_code).returns(200)
+      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:body_str).returns(Fixture.xml)
+    end
+
+    it "should return a valid HTTPI::Response" do
+      request = HTTPI::Request.new :url => "http://example.com"
+      adapter.head(request).should be_a_valid_httpi_response
+    end
+  end
+
   describe "#put" do
     before do
       curb.expects(:http_put)

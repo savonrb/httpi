@@ -35,6 +35,14 @@ module HTTPI
         end
       end
 
+      # Executes an HTTP HEAD request.
+      # @see HTTPI.head
+      def head(request)
+        do_request request do |client, url, headers|
+          client.head url, nil, headers
+        end
+      end
+
       # Executes an HTTP PUT request.
       # @see HTTPI.put
       def put(request)

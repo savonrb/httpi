@@ -109,6 +109,46 @@ describe HTTPI do
     it_should_behave_like "a request method"
   end
 
+  describe ".head(request)" do
+    it "should execute an HTTP HEAD request using the default adapter" do
+      request = HTTPI::Request.new
+      default_adapter.any_instance.expects(:head).with(request)
+      
+      client.head request
+    end
+  end
+
+  describe ".head(request, adapter)" do
+    it "should execute an HTTP HEAD request using the given adapter" do
+      request = HTTPI::Request.new
+      curb.any_instance.expects(:head).with(request)
+      
+      client.head request, :curb
+    end
+  end
+
+  describe ".head(url)" do
+    it "should execute an HTTP HEAD request using the default adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      default_adapter.any_instance.expects(:head).with(instance_of(HTTPI::Request))
+      
+      client.head "http://example.com"
+    end
+  end
+
+  describe ".head(url, adapter)" do
+    it "should execute an HTTP HEAD request using the given adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      curb.any_instance.expects(:head).with(instance_of(HTTPI::Request))
+      
+      client.head "http://example.com", :curb
+    end
+  end
+
+  describe ".head" do
+    it_should_behave_like "a request method"
+  end
+
   describe ".put(request)" do
     it "should execute an HTTP PUT request using the default adapter" do
       request = HTTPI::Request.new

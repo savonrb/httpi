@@ -48,7 +48,7 @@ HTTPI
 -------------
 
 The `HTTPI` module uses one of the available adapters to execute HTTP requests.
-It currently supports GET, POST, PUT and DELETE requests:
+It supports GET, POST, HEAD, PUT and DELETE requests:
 
 ### GET
 
@@ -59,6 +59,11 @@ It currently supports GET, POST, PUT and DELETE requests:
 
     .post(request, adapter = nil)
     .post(url, body, adapter = nil)
+
+### HEAD
+
+    .head(request, adapter = nil)
+    .head(url, adapter = nil)
 
 ### PUT
 
@@ -83,10 +88,6 @@ by your adapter in a block:
     HTTPI.post request do |http|
       http.use_ssl = true  # Curb example
     end
-
-### TODO
-
-* Add support for HEAD requests
 
 HTTPI::Request
 --------------
