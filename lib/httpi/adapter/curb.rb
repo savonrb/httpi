@@ -62,11 +62,7 @@ module HTTPI
 
       def setup_auth(request)
         client.http_auth_types = request.auth_type
-
-        case request.auth_type
-          when :basic  then client.username, client.password = *request.basic_auth
-          when :digest then client.username, client.password = *request.digest_auth
-        end
+        client.username, client.password = *request.credentials
       end
 
       def respond_with(client)

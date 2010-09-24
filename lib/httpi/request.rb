@@ -51,6 +51,13 @@ module HTTPI
       !!auth_type
     end
 
+    # Shortcut method for returning the credentials for the authentication specified.
+    # Return +nil+ unless any authentication credentials were specified.
+    def credentials
+      return unless auth?
+      send "#{auth_type}_auth"
+    end
+
     # Sets the HTTP basic auth credentials. Accepts an Array or two arguments for the
     # +username+ and +password+. Resets the credentials when +nil+ is passed and returns
     # an Array of credentials when no +args+ where given.

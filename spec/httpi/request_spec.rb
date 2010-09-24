@@ -121,4 +121,43 @@ describe HTTPI::Request do
     end
   end
 
+  describe "#auth?" do
+    it "should return false unless any authentication credentials were specified" do
+      request.auth?.should be_false
+    end
+
+    it "should return true if HTTP basic auth authentication credentials were specified" do
+      request.basic_auth "username", "password"
+      request.auth?.should be_true
+    end
+
+    it "should return true if HTTP digest auth authentication credentials were specified" do
+      request.digest_auth "username", "password"
+      request.auth?.should be_true
+    end
+  end
+
+  describe "#credentials" do
+    it "return the credentials for HTTP basic auth" do
+      request.basic_auth "username", "basic"
+      request.credentials.should == ["username", "basic"]
+    end
+
+    it "return the credentials for HTTP digest auth" do
+      request.digest_auth "username", "digest"
+      request.credentials.should == ["username", "digest"]
+    end
+  end
+
+  describe "#auth_type" do
+    it "should return :basic for HTTP basic auth" do
+      request.basic_auth "username", "password"
+      request.auth_type.should == :basic
+    end
+
+    it "should return :digest for HTTP basic auth" do
+      request.digest_auth "username", "password"
+      request.auth_type.should == :digest
+    end
+  end
 end
