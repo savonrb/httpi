@@ -99,6 +99,26 @@ describe HTTPI::Request do
       request.basic_auth nil
       request.basic_auth.should be_nil
     end
- end
+  end
+
+  describe "#digest_auth" do
+    it "lets you specify the digest auth credentials" do
+      request.digest_auth "username", "password"
+      request.digest_auth.should == ["username", "password"]
+    end
+   
+    it "also accepts an Array of credentials" do
+      request.digest_auth ["username", "password"]
+      request.digest_auth.should == ["username", "password"]
+    end
+
+    it "lets you reset the credentials" do
+      request.digest_auth "username", "password"
+      request.digest_auth.should == ["username", "password"]
+
+      request.digest_auth nil
+      request.digest_auth.should be_nil
+    end
+  end
 
 end

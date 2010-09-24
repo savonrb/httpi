@@ -11,7 +11,7 @@ module HTTPI
     ACCESSORS = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout]
 
     # Request authentication methods.
-    AUTHENTICATION = [:basic_auth]
+    AUTHENTICATION = [:basic_auth, :digest_auth]
 
     # Accepts a Hash of +options+ which may contain any number of ACCESSORS and/or
     # AUTHENTICATION credentials to set.
@@ -57,6 +57,14 @@ module HTTPI
     def basic_auth(*args)
       self.auth_type = :basic
       @basic_auth = extract_credentials @basic_auth, args.flatten
+    end
+
+    # Sets the HTTP digest auth credentials. Accepts an Array or two arguments for the
+    # +username+ and +password+. Resets the credentials when +nil+ is passed and returns
+    # an Array of credentials when no +args+ where given.
+    def digest_auth(*args)
+      self.auth_type = :digest
+      @digest_auth = extract_credentials @digest_auth, args.flatten
     end
 
  private

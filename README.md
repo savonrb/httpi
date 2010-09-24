@@ -91,11 +91,11 @@ It represents an HTTP request and lets you customize various settings through th
 
 It also contains methods for setting up authentication:
 
-    #basic_auth(username, password)  # HTTP basic auth credentials
+    #basic_auth(username, password)   # HTTP basic auth credentials
+    #digest_auth(username, password)  # HTTP digest auth credentials
 
 ### TODO
 
-* Add support for HTTP digest authentication
 * Add support for SSL client authentication
 
 HTTPI::Adapter

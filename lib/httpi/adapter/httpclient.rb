@@ -59,7 +59,10 @@ module HTTPI
       end
 
       def auth_setup(request)
-        client.set_auth nil, *request.basic_auth if request.auth_type == :basic
+        case request.auth_type
+          when :basic  then client.set_auth request.url.to_s, *request.basic_auth
+          when :digest then client.set_auth request.url.to_s, *request.digest_auth
+        end
       end
 
       def respond_with(response)
