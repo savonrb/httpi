@@ -37,6 +37,12 @@ module HTTPI
         do_request(request) { |client, body| client.http_put body }
       end
 
+      # Executes an HTTP DELETE request.
+      # @see HTTPI.delete
+      def delete(request)
+        do_request(request) { |client| client.http_delete }
+      end
+
     private
 
       def do_request(request)

@@ -14,24 +14,28 @@ describe HTTPI do
     @username = @password = "user1"
     @error_message = "Authorization Required"
     @example_web_page = "Example Web Page"
-    @put_not_allowed = "The requested method PUT is not allowed"
   end
 
   HTTPI::Adapter.adapters.keys.each do |adapter|
     context "using :#{adapter}" do
       it "should execute an HTTP GET request" do
-        response = HTTPI.get "http://example.com"
+        response = HTTPI.get "http://example.com", adapter
         response.body.should include(@example_web_page)
       end
 
       it "should execute an HTTP POST request" do
-        response = HTTPI.post "http://example.com"
+        response = HTTPI.post "http://example.com", "<some>xml</some>", adapter
         response.body.should include(@example_web_page)
       end
 
       it "should execute an HTTP PUT request" do
-        response = HTTPI.put "http://example.com"
-        response.body.should include(@put_not_allowed)
+        response = HTTPI.put "http://example.com", "<some>xml</some>", adapter
+        response.body.should include("PUT is not allowed")
+      end
+
+      it "should execute an HTTP DELETE request" do
+        response = HTTPI.delete "http://example.com", adapter
+        response.body.should include("DELETE is not allowed")
       end
 
       context "with HTTP basic authentication" do

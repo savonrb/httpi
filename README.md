@@ -34,19 +34,19 @@ And a GET request using HTTP basic auth and the Curb adapter:
   
     HTTPI.get request, :curb
 
-HTTPI also comes with some shortcuts. This executes a GET request:
-
-    HTTPI.get "http://example.com"
-
-And this executes a PUT request:
+HTTPI also comes with some shortcuts. This executes a PUT request:
 
     HTTPI.put "http://example.com", "<some>xml</some>"
+
+And this executes a DELETE request:
+
+    HTTPI.delete "http://example.com"
 
 HTTPI
 -------------
 
 The `HTTPI` module uses one of the available adapters to execute HTTP requests.
-It currently supports GET, POST and PUT requests:
+It currently supports GET, POST, PUT and DELETE requests:
 
 ### GET
 
@@ -62,6 +62,11 @@ It currently supports GET, POST and PUT requests:
 
     .put(request, adapter = nil)
     .put(url, body, adapter = nil)
+
+### DELETE
+
+    .delete(request, adapter = nil)
+    .delete(url, adapter = nil)
 
 ### Notice
 
@@ -79,7 +84,7 @@ by your adapter in a block:
 
 ### TODO
 
-* Add support for HEAD and DELETE requests
+* Add support for HEAD requests
 
 HTTPI::Request
 --------------

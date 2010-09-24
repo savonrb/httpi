@@ -43,6 +43,13 @@ module HTTPI
         end
       end
 
+      # Executes an HTTP DELETE request.
+      # @see HTTPI.delete
+      def delete(request)
+        do_request request do |client, url, headers|
+          client.delete url, headers
+        end
+      end
     private
 
       def do_request(request)

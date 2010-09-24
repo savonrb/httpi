@@ -42,6 +42,15 @@ require "httpi/adapter"
 #
 #   HTTPI.put "http://example.com", "<some>xml</some>", :curb
 #
+# == DELETE
+#
+#   request = HTTPI::Request.new :url => "http://example.com"
+#   HTTPI.delete request, :httpclient
+#
+# === Shortcuts
+#
+#   HTTPI.delete "http://example.com", :curb
+#
 # == More control
 #
 # If you need more control over your request, you can access the HTTP client
@@ -80,6 +89,16 @@ module HTTPI
       with adapter do |adapter|
         yield adapter.client if block_given?
         adapter.put request
+      end
+    end
+
+    # Executes an HTTP DELETE request.
+    def delete(request, adapter = nil)
+      request = Request.new :url => request if request.kind_of? String
+      
+      with adapter do |adapter|
+        yield adapter.client if block_given?
+        adapter.delete request
       end
     end
 

@@ -44,23 +44,27 @@ describe HTTPI do
       client.get "http://example.com", :curb
     end
   end
-  
-  describe ".get" do
+
+  shared_examples_for "a request method" do
     context "(with a block)" do
       it "should yield the HTTP client instance used for the request" do
-        client.get "http://example.com" do |http|
+        client.delete "http://example.com" do |http|
           http.should be_an(HTTPClient)
         end
       end
     end
 
-    it "should raise an ArgumentError in case of an invalid adapter" do
-      lambda { client.get HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
+    it "and raise an ArgumentError in case of an invalid adapter" do
+      lambda { client.delete HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
     end
 
-    it "should raise an ArgumentError in case of an invalid URL" do
-      lambda { client.get "invalid" }.should raise_error(ArgumentError)
+    it "and raise an ArgumentError in case of an invalid URL" do
+      lambda { client.delete "invalid" }.should raise_error(ArgumentError)
     end
+  end
+
+  describe ".get" do
+    it_should_behave_like "a request method"
   end
 
   describe ".post(request)" do
@@ -102,21 +106,7 @@ describe HTTPI do
   end
 
   describe ".post" do
-    context "(with a block)" do
-      it "should yield the HTTP client instance used for the request" do
-        client.post "http://example.com", "<some>xml</some>", :curb do |http|
-          http.should be_a(Curl::Easy)
-        end
-      end
-    end
-
-    it "should raise an ArgumentError in case of an invalid adapter" do
-      lambda { client.post HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
-    end
-
-    it "should raise an ArgumentError in case of an invalid URL" do
-      lambda { client.post "invalid" }.should raise_error(ArgumentError)
-    end
+    it_should_behave_like "a request method"
   end
 
   describe ".put(request)" do
@@ -158,21 +148,47 @@ describe HTTPI do
   end
 
   describe ".put" do
-    context "(with a block)" do
-      it "should yield the HTTP client instance used for the request" do
-        client.put "http://example.com", "<some>xml</xml>", :curb do |http|
-          http.should be_a(Curl::Easy)
-        end
-      end
-    end
+    it_should_behave_like "a request method"
+  end
 
-    it "should raise an ArgumentError in case of an invalid adapter" do
-      lambda { client.put HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
+  describe ".delete(request)" do
+    it "should execute an HTTP DELETE request using the default adapter" do
+      request = HTTPI::Request.new
+      default_adapter.any_instance.expects(:delete).with(request)
+      
+      client.delete request
     end
+  end
 
-    it "should raise an ArgumentError in case of an invalid URL" do
-      lambda { client.put "invalid" }.should raise_error(ArgumentError)
+  describe ".delete(request, adapter)" do
+    it "should execute an HTTP DELETE request using the given adapter" do
+      request = HTTPI::Request.new
+      curb.any_instance.expects(:delete).with(request)
+      
+      client.delete request, :curb
     end
+  end
+
+  describe ".delete(url)" do
+    it "should execute an HTTP DELETE request using the default adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      default_adapter.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
+      
+      client.delete "http://example.com"
+    end
+  end
+
+  describe ".delete(url, adapter)" do
+    it "should execute an HTTP DELETE request using the given adapter" do
+      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
+      curb.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
+      
+      client.delete "http://example.com", :curb
+    end
+  end
+  
+  describe ".delete" do
+    it_should_behave_like "a request method"
   end
 
 end
