@@ -109,12 +109,7 @@ It currently contains adapters for:
 
 By default, HTTPI uses the `HTTPClient`. But changing the default is fairly easy:
 
-    HTTPI::Adapter.use = :curb
-
-Valid options are:
-
-* :httpclient
-* :curb
+    HTTPI::Adapter.use = :curb  # or :httpclient
 
 HTTPI::Response
 ---------------
