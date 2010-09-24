@@ -16,7 +16,7 @@ Some examples
 Let's create the most basic request object and execute a GET request:
 
     request = HTTPI::Request.new :url => "http://example.com"
-    HTTPI::Client.get request
+    HTTPI.get request
 
 A POST request with a request object:
 
@@ -24,7 +24,7 @@ A POST request with a request object:
     request.url = "http://post.example.com"
     request.body = "send me"
   
-    HTTPI::Client.post request
+    HTTPI.post request
 
 And a GET request using HTTP basic auth and the Curb adapter:
 
@@ -32,42 +32,20 @@ And a GET request using HTTP basic auth and the Curb adapter:
     request.url = "http://auth.example.com"
     request.basic_auth "username", "password"
   
-    HTTPI::Client.get request, :curb
+    HTTPI.get request, :curb
 
 HTTPI also comes with some shortcuts. This executes a GET request:
 
-    HTTPI::Client.get "http://example.com"
+    HTTPI.get "http://example.com"
 
 And here's a POST:
 
-    HTTPI::Client.post "http://example.com", "<some>xml</some>"
+    HTTPI.post "http://example.com", "<some>xml</some>"
 
-HTTPI::Request
---------------
-
-The `HTTPI::Request` serves as a common denominator of options that HTTPI adapters need to support.  
-It represents an HTTP request and lets you customize various settings through these accessors:
-
-    #url           # the URL to access
-    #proxy         # the proxy server to use
-    #headers       # a Hash of HTTP headers
-    #body          # the HTTP request body
-    #open_timeout  # the open timeout (sec)
-    #read_timeout  # the read timeout (sec)
-
-It also contains methods for setting up authentication:
-
-    #basic_auth(username, password)  # HTTP basic auth credentials
-
-### TODO
-
-* Add support for HTTP digest authentication
-* Add support for SSL client authentication
-
-HTTPI::Client
+HTTPI
 -------------
 
-The `HTTPI::Client` uses one of the available adapters to execute HTTP requests.  
+The `HTTPI` module uses one of the available adapters to execute HTTP requests.  
 It currently supports GET and POST requests:
 
 ### GET
@@ -90,13 +68,35 @@ It currently supports GET and POST requests:
 If you need more control over the request, you can access the HTTP client instance represented
 by your adapter in a block:
 
-    HTTPI::Client.post request do |http|
+    HTTPI.post request do |http|
       http.use_ssl = true  # Curb example
     end
 
 ### TODO
 
 * Add support for HEAD, PUT and DELETE requests
+
+HTTPI::Request
+--------------
+
+The `HTTPI::Request` serves as a common denominator of options that HTTPI adapters need to support.  
+It represents an HTTP request and lets you customize various settings through these accessors:
+
+    #url           # the URL to access
+    #proxy         # the proxy server to use
+    #headers       # a Hash of HTTP headers
+    #body          # the HTTP request body
+    #open_timeout  # the open timeout (sec)
+    #read_timeout  # the read timeout (sec)
+
+It also contains methods for setting up authentication:
+
+    #basic_auth(username, password)  # HTTP basic auth credentials
+
+### TODO
+
+* Add support for HTTP digest authentication
+* Add support for SSL client authentication
 
 HTTPI::Adapter
 --------------
@@ -121,7 +121,7 @@ HTTPI::Response
 As mentioned before, every request method return an `HTTPI::Response`.  
 It contains the response code, headers and body.
 
-    response = HTTPI::Client.get request
+    response = HTTPI.get request
      
     response.code     # => 200
     response.headers  # => { "Content-Encoding" => "gzip" }
