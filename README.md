@@ -111,9 +111,10 @@ By default, HTTPI uses the `HTTPClient`. But changing the default is fairly easy
 
     HTTPI::Adapter.use = :curb
 
-You can find a list of supported adapters via:
+Valid options are:
 
-    HTTPI::Adapter.adapters  # returns a Hash of supported adapters
+* :httpclient
+* :curb
 
 HTTPI::Response
 ---------------
