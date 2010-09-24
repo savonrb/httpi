@@ -9,20 +9,26 @@ module HTTPI
     # http://rubygems.org/gems/httpclient
     class HTTPClient
 
+      # Requires the "httpclient" gem.
       def initialize
         require "httpclient"
       end
 
+      # Returns a memoized <tt>HTTPClient</tt> instance.
       def client
         @client ||= ::HTTPClient.new
       end
 
+      # Executes an HTTP GET request.
+      # @see HTTPI.get
       def get(request)
         get_request request do |client, url, headers|
           client.get url, nil, headers
         end
       end
 
+      # Executes an HTTP POST request.
+      # @see HTTPI.post
       def post(request)
         post_request request do |client, url, headers, body|
           client.post url, body, headers

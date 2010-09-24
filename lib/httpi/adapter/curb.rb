@@ -9,18 +9,24 @@ module HTTPI
     # http://rubygems.org/gems/curb
     class Curb
 
+      # Requires the "curb" gem.
       def initialize
         require "curb"
       end
 
+      # Returns a memoized <tt>Curl::Easy</tt> instance.
       def client
         @client ||= Curl::Easy.new
       end
 
+      # Executes an HTTP GET request.
+      # @see HTTPI.get
       def get(request)
         get_request(request) { |client| client.http_get }
       end
 
+      # Executes an HTTP POST request.
+      # @see HTTPI.post
       def post(request)
         post_request(request) { |client, body| client.http_post body }
       end
