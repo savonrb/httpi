@@ -48,32 +48,31 @@ HTTPI
 -------------
 
 The `HTTPI` module uses one of the available adapters to execute HTTP requests.
-It supports GET, POST, HEAD, PUT and DELETE requests:
 
 ### GET
 
-    .get(request, adapter = nil)
-    .get(url, adapter = nil)
+    HTTPI.get(request, adapter = nil)
+    HTTPI.get(url, adapter = nil)
 
 ### POST
 
-    .post(request, adapter = nil)
-    .post(url, body, adapter = nil)
+    HTTPI.post(request, adapter = nil)
+    HTTPI.post(url, body, adapter = nil)
 
 ### HEAD
 
-    .head(request, adapter = nil)
-    .head(url, adapter = nil)
+    HTTPI.head(request, adapter = nil)
+    HTTPI.head(url, adapter = nil)
 
 ### PUT
 
-    .put(request, adapter = nil)
-    .put(url, body, adapter = nil)
+    HTTPI.put(request, adapter = nil)
+    HTTPI.put(url, body, adapter = nil)
 
 ### DELETE
 
-    .delete(request, adapter = nil)
-    .delete(url, adapter = nil)
+    HTTPI.delete(request, adapter = nil)
+    HTTPI.delete(url, adapter = nil)
 
 ### Notice
 
