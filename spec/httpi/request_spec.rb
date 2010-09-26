@@ -60,6 +60,13 @@ describe HTTPI::Request do
     end
   end
 
+  describe "#gzip" do
+    it "should add the proper 'Accept-encoding' header" do
+      request.gzip
+      request.headers["Accept-encoding"].should == "gzip,deflate"
+    end
+  end
+
   describe "#body" do
     it "lets you specify the HTTP request body" do
       request.body = "<some>xml</some>"

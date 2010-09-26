@@ -44,6 +44,11 @@ module HTTPI
     # Sets the Hash of HTTP headers.
     attr_writer :headers
 
+    # Adds a header information to accept gzipped content.
+    def gzip
+      headers["Accept-encoding"] = "gzip,deflate"
+    end
+
     attr_accessor :body, :open_timeout, :read_timeout, :auth_type
 
     # Returns whether any authentication credentials were specified.
