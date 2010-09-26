@@ -29,7 +29,7 @@ begin
   require "rspec/core/rake_task"
   
   RSpec::Core::RakeTask.new do |t|
-    t.pattern = "spec/httpi/*_spec.rb"
+    t.pattern = "spec/httpi/**/*_spec.rb"
     t.rspec_opts = %w(-fd -c)
   end
 
