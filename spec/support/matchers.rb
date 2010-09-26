@@ -1,8 +1,11 @@
-RSpec::Matchers.define :be_a_valid_httpi_response do
+RSpec::Matchers.define :match_response do |options|
+  defaults = { :code => 200, :headers => {}, :body => "" }
+  response = defaults.merge options
+  
   match do |actual|
     actual.should be_an(HTTPI::Response)
-    actual.code.should == 200
-    actual.headers.should be_a(Hash)
-    actual.body.should == Fixture.xml
+    actual.code.should == response[:code]
+    actual.headers.should == response[:headers]
+    actual.body.should == response[:body]
   end
 end

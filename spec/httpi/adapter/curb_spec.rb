@@ -25,7 +25,7 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com"
-      adapter.get(request).should be_a_valid_httpi_response
+      adapter.get(request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -39,7 +39,7 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com"
-      adapter.post(request).should be_a_valid_httpi_response
+      adapter.post(request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -53,7 +53,7 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com"
-      adapter.head(request).should be_a_valid_httpi_response
+      adapter.head(request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -67,7 +67,7 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com"
-      adapter.put(request).should be_a_valid_httpi_response
+      adapter.put(request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -81,7 +81,7 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com"
-      adapter.delete(request).should be_a_valid_httpi_response
+      adapter.delete(request).should match_response(:body => "")
     end
   end
 

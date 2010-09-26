@@ -23,7 +23,7 @@ describe HTTPI::Adapter::HTTPClient do
     end
 
     it "should return a valid HTTPI::Response" do
-      adapter.get(@request).should be_a_valid_httpi_response
+      adapter.get(@request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -35,7 +35,7 @@ describe HTTPI::Adapter::HTTPClient do
     end
 
     it "should return a valid HTTPI::Response" do
-      adapter.post(@request).should be_a_valid_httpi_response
+      adapter.post(@request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -47,7 +47,7 @@ describe HTTPI::Adapter::HTTPClient do
     end
 
     it "should return a valid HTTPI::Response" do
-      adapter.head(@request).should be_a_valid_httpi_response
+      adapter.head(@request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -59,7 +59,7 @@ describe HTTPI::Adapter::HTTPClient do
     end
 
     it "should return a valid HTTPI::Response" do
-      adapter.put(@request).should be_a_valid_httpi_response
+      adapter.put(@request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -67,11 +67,11 @@ describe HTTPI::Adapter::HTTPClient do
     before do
       @request = HTTPI::Request.new :url => "http://example.com"
       response = HTTP::Message.new_response "" 
-      httpclient.expects(:delete).with(@request.url, nil, @request.headers).returns(response)
+      httpclient.expects(:delete).with(@request.url, @request.headers).returns(response)
     end
 
     it "should return a valid HTTPI::Response" do
-      adapter.delete(@request).should be_a_valid_httpi_response
+      adapter.delete(@request).should match_response(:body => "")
     end
   end
 
