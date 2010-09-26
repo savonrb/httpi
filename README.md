@@ -3,7 +3,7 @@ HTTPI
 
 HTTPI provides a common interface for Ruby HTTP libraries.
 
-[Feedback](http://httpi.uservoice.com) | [Bugs](http://github.com/rubiii/httpi/issues) | [Docs](http://rubydoc.info/gems/httpi)
+[Wishlist](http://httpi.uservoice.com) | [Bugs](http://github.com/rubiii/httpi/issues) | [Docs](http://rubydoc.info/gems/httpi)
 
 Installation
 ------------
