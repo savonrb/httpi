@@ -61,9 +61,9 @@ describe HTTPI::Request do
   end
 
   describe "#gzip" do
-    it "should add the proper 'Accept-encoding' header" do
+    it "should add the proper 'Accept-Encoding' header" do
       request.gzip
-      request.headers["Accept-encoding"].should == "gzip,deflate"
+      request.headers["Accept-Encoding"].should == "gzip,deflate"
     end
   end
 

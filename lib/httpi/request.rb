@@ -46,7 +46,7 @@ module HTTPI
 
     # Adds a header information to accept gzipped content.
     def gzip
-      headers["Accept-encoding"] = "gzip,deflate"
+      headers["Accept-Encoding"] = "gzip,deflate"
     end
 
     attr_accessor :body, :open_timeout, :read_timeout, :auth_type
