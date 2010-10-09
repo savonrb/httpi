@@ -8,6 +8,11 @@ describe HTTPI::Response do
     it "should return the HTTP response code" do
       response.code.should == 200
     end
+
+    it "should always return an Integer" do
+      response = HTTPI::Response.new "200", {}, ""
+      response.code.should == 200
+    end
   end
 
   describe "#headers" do
