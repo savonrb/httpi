@@ -10,7 +10,7 @@ module HTTPI
     class HTTPClient
 
       # Requires the "httpclient" gem.
-      def initialize
+      def initialize(request = nil)
         require "httpclient"
       end
 

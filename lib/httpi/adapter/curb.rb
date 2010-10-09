@@ -10,7 +10,7 @@ module HTTPI
     class Curb
 
       # Requires the "curb" gem.
-      def initialize
+      def initialize(request = nil)
         require "curb"
       end
 

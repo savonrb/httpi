@@ -75,7 +75,7 @@ module HTTPI
     def get(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with adapter do |adapter|
+      with request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.get request
       end
@@ -85,7 +85,7 @@ module HTTPI
     def post(*args)
       request, adapter = request_and_adapter_from(args)
       
-      with adapter do |adapter|
+      with request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.post request
       end
@@ -95,7 +95,7 @@ module HTTPI
     def head(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with adapter do |adapter|
+      with request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.head request
       end
@@ -105,7 +105,7 @@ module HTTPI
     def put(*args)
       request, adapter = request_and_adapter_from(args)
       
-      with adapter do |adapter|
+      with request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.put request
       end
@@ -115,7 +115,7 @@ module HTTPI
     def delete(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with adapter do |adapter|
+      with request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.delete request
       end
@@ -131,11 +131,11 @@ module HTTPI
       [Request.new(:url => args[0], :body => args[1]), args[2]]
     end
 
-    # Accepts an +adapter+ (defaults to <tt>Adapter.use</tt>) and yields a
-    # new instance of the adapter to a given block.
-    def with(adapter)
+    # Expects a +request+ and an +adapter+ (defaults to <tt>Adapter.use</tt>)
+    # and yields a new instance of the adapter to a given block.
+    def with(request, adapter)
       adapter ||= Adapter.use
-      yield Adapter.find(adapter).new
+      yield Adapter.find(adapter).new(request)
     end
 
   end

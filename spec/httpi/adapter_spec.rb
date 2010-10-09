@@ -24,10 +24,11 @@ describe HTTPI::Adapter do
 
   describe ".adapters" do
     it "should return a memoized Hash of adapters" do
-      adapter.adapters.should have(2).items
+      adapter.adapters.should have(3).items
       adapter.adapters.should include(
         :httpclient => HTTPI::Adapter::HTTPClient,
-        :curb => HTTPI::Adapter::Curb
+        :curb => HTTPI::Adapter::Curb,
+        :net_http => HTTPI::Adapter::NetHTTP
       )
     end
   end

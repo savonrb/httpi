@@ -1,9 +1,6 @@
 require "spec_helper"
 require "httpi"
 
-require "httpclient"
-require "curb"
-
 describe HTTPI do
   let(:client) { HTTPI }
   let(:default_adapter) { HTTPI::Adapter.find HTTPI::Adapter.use }
