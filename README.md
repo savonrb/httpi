@@ -17,7 +17,7 @@ Some examples
 
 Executing a POST request with the most basic request object:
 
-    request = HTTPI::Request.new :url => "http://example.com"
+    request = HTTPI::Request.new "http://example.com"
     HTTPI.get request
 
 Here's a POST request with a request object:

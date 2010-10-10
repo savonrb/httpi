@@ -5,13 +5,18 @@ describe HTTPI::Request do
   let(:request) { HTTPI::Request.new }
 
   describe ".new" do
-    it "accepts a Hash of accessors to set" do
+    it "should accept just a url" do
+      request = HTTPI::Request.new "http://example.com"
+      request.url.should == URI("http://example.com")
+    end
+
+    it "should accept a Hash of accessors to set" do
       request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30
       request.url.should == URI("http://example.com")
       request.open_timeout.should == 30
     end
 
-    it "accepts a Hash of authentication credentials to set" do
+    it "should accept a Hash of authentication credentials to set" do
       request = HTTPI::Request.new :auth => { :basic => ["username", "password"] }
       request.auth.basic.should == ["username", "password"]
     end

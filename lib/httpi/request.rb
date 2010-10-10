@@ -13,8 +13,12 @@ module HTTPI
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
-      auth.mass_assign args.delete(:auth) if args[:auth]
-      mass_assign args unless args.empty?
+      if args.kind_of? String
+        self.url = args
+      elsif args.kind_of? Hash
+        auth.mass_assign args.delete(:auth) if args[:auth]
+        mass_assign args unless args.empty?
+      end
     end
 
     # Sets the +url+ to access. Raises an +ArgumentError+ unless the +url+ is valid.
