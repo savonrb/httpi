@@ -69,6 +69,9 @@ require "httpi/adapter"
 #     http.follow_redirect_count = 3  # HTTPClient example
 #   end
 module HTTPI
+
+  REQUEST_METHODS = [:get, :post, :head, :put, :delete]
+
   class << self
 
     # Executes an HTTP GET request.
@@ -119,6 +122,12 @@ module HTTPI
         yield adapter.client if block_given?
         adapter.delete request
       end
+    end
+
+    # Executes an HTTP request for the given +method+.
+    def request(method, request, adapter = nil)
+      raise ArgumentError, "Invalid request method: #{method}" unless REQUEST_METHODS.include? method
+      send method, request, adapter
     end
 
   private

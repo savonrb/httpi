@@ -42,28 +42,6 @@ describe HTTPI do
     end
   end
 
-  shared_examples_for "a request method" do
-    context "(with a block)" do
-      it "should yield the HTTP client instance used for the request" do
-        client.delete "http://example.com" do |http|
-          http.should be_an(HTTPClient)
-        end
-      end
-    end
-
-    it "and raise an ArgumentError in case of an invalid adapter" do
-      lambda { client.delete HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
-    end
-
-    it "and raise an ArgumentError in case of an invalid URL" do
-      lambda { client.delete "invalid" }.should raise_error(ArgumentError)
-    end
-  end
-
-  describe ".get" do
-    it_should_behave_like "a request method"
-  end
-
   describe ".post(request)" do
     it "should execute an HTTP POST request using the default adapter" do
       request = HTTPI::Request.new
@@ -102,10 +80,6 @@ describe HTTPI do
     end
   end
 
-  describe ".post" do
-    it_should_behave_like "a request method"
-  end
-
   describe ".head(request)" do
     it "should execute an HTTP HEAD request using the default adapter" do
       request = HTTPI::Request.new
@@ -140,10 +114,6 @@ describe HTTPI do
       
       client.head "http://example.com", :curb
     end
-  end
-
-  describe ".head" do
-    it_should_behave_like "a request method"
   end
 
   describe ".put(request)" do
@@ -184,10 +154,6 @@ describe HTTPI do
     end
   end
 
-  describe ".put" do
-    it_should_behave_like "a request method"
-  end
-
   describe ".delete(request)" do
     it "should execute an HTTP DELETE request using the default adapter" do
       request = HTTPI::Request.new
@@ -223,9 +189,51 @@ describe HTTPI do
       client.delete "http://example.com", :curb
     end
   end
-  
-  describe ".delete" do
-    it_should_behave_like "a request method"
+
+  describe ".request" do
+    it "should raise an ArgumentError in case of an invalid request method" do
+      lambda { client.request :invalid, HTTPI::Request.new }.should raise_error(ArgumentError)
+    end
+  end
+
+  HTTPI::REQUEST_METHODS.each do |method|
+
+    describe ".request(#{method}, request, adapter)" do
+      it "should delegate to the .#{method} method" do
+        HTTPI.expects(method)
+        client.request method, HTTPI::Request.new
+      end
+    end
+
+    describe ".#{method}" do
+      it "should raise an ArgumentError in case of an invalid adapter" do
+        lambda { client.request method, request, :invalid }.should raise_error(ArgumentError)
+      end
+
+      it "should raise an ArgumentError in case of an invalid request" do
+        lambda { client.request method, "invalid" }.should raise_error(ArgumentError)
+      end
+
+      HTTPI::Adapter.adapters.each do |adapter, adapter_class|
+        client_class = {
+          :httpclient => lambda { HTTPClient },
+          :curb       => lambda { Curl::Easy },
+          :net_http   => lambda { Net::HTTP }
+        }
+
+        context "using :#{adapter} with a block" do
+          let(:request) { HTTPI::Request.new :url => "http://example.com" }
+
+          before { adapter_class.any_instance.stubs(method) }
+
+          it "should yield the HTTP client instance used for the request" do
+            block = lambda { |http| http.should be_a(client_class[adapter].call) }
+            client.request(method, request, adapter, &block)
+          end
+        end
+      end
+
+    end
   end
 
 end
