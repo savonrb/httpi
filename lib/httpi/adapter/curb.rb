@@ -64,6 +64,7 @@ module HTTPI
 
       def basic_setup(request)
         client.url = request.url.to_s
+        client.proxy_url = request.proxy.to_s if request.proxy
         client.timeout = request.read_timeout if request.read_timeout
         client.connect_timeout = request.open_timeout if request.open_timeout
         client.headers = request.headers

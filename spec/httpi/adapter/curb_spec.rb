@@ -83,7 +83,28 @@ describe HTTPI::Adapter::Curb do
   describe "settings:" do
     before { curb.stubs(:http_get) }
 
-    describe "read_timeout" do
+    describe "url" do
+      it "should always set the request url" do
+        curb.expects(:url=).with(basic_request.url.to_s)
+        adapter.get(basic_request)
+      end
+    end
+
+    describe "proxy_url" do
+      it "should not be set if not specified" do
+        curb.expects(:proxy_url=).never
+        adapter.get(basic_request)
+      end
+
+      it "should be set if specified" do
+        request = basic_request { |request| request.proxy = "http://proxy.example.com" }
+        
+        curb.expects(:proxy_url=).with(request.proxy.to_s)
+        adapter.get(request)
+      end
+    end
+
+    describe "timeout" do
       it "should not be set if not specified" do
         curb.expects(:timeout=).never
         adapter.get(basic_request)
@@ -97,7 +118,7 @@ describe HTTPI::Adapter::Curb do
       end
     end
 
-    describe "open_timeout" do
+    describe "connect_timeout" do
       it "should not be set if not specified" do
         curb.expects(:connect_timeout=).never
         adapter.get(basic_request)
