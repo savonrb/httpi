@@ -24,8 +24,7 @@ describe HTTPI::Adapter::Curb do
     end
 
     it "should return a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com"
-      adapter.get(request).should match_response(:body => Fixture.xml)
+      adapter.get(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -38,8 +37,7 @@ describe HTTPI::Adapter::Curb do
     end
 
     it "should return a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com"
-      adapter.post(request).should match_response(:body => Fixture.xml)
+      adapter.post(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -52,8 +50,7 @@ describe HTTPI::Adapter::Curb do
     end
 
     it "should return a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com"
-      adapter.head(request).should match_response(:body => Fixture.xml)
+      adapter.head(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -66,8 +63,7 @@ describe HTTPI::Adapter::Curb do
     end
 
     it "should return a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com"
-      adapter.put(request).should match_response(:body => Fixture.xml)
+      adapter.put(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
@@ -80,9 +76,94 @@ describe HTTPI::Adapter::Curb do
     end
 
     it "should return a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com"
-      adapter.delete(request).should match_response(:body => "")
+      adapter.delete(basic_request).should match_response(:body => "")
     end
+  end
+
+  describe "settings:" do
+    before { curb.stubs(:http_get) }
+
+    describe "read_timeout" do
+      it "should not be set if not specified" do
+        curb.expects(:timeout=).never
+        adapter.get(basic_request)
+      end
+
+      it "should be set if specified" do
+        request = basic_request { |request| request.read_timeout = 30 }
+
+        curb.expects(:timeout=).with(30)
+        adapter.get(request)
+      end
+    end
+
+    describe "open_timeout" do
+      it "should not be set if not specified" do
+        curb.expects(:connect_timeout=).never
+        adapter.get(basic_request)
+      end
+
+      it "should be set if specified" do
+        request = basic_request { |request| request.open_timeout = 30 }
+
+        curb.expects(:connect_timeout=).with(30)
+        adapter.get(request)
+      end
+    end
+
+    describe "headers" do
+      it "should always be set" do
+        curb.expects(:headers=).with({})
+        adapter.get(basic_request)
+      end
+    end
+
+    describe "verbose" do
+      it "should always be set to false" do
+        curb.expects(:verbose=).with(false)
+        adapter.get(basic_request)
+      end
+    end
+
+    describe "http_auth_types" do
+      it "should be set to :basic for HTTP basic auth" do
+        request = basic_request { |request| request.auth.basic "username", "password" }
+        
+        curb.expects(:http_auth_types=).with(:basic)
+        adapter.get(request)
+      end
+
+      it "should be set to :digest for HTTP digest auth" do
+        request = basic_request { |request| request.auth.digest "username", "password" }
+        
+        curb.expects(:http_auth_types=).with(:digest)
+        adapter.get(request)
+      end
+    end
+
+    describe "username and password" do
+      it "should be set for HTTP basic auth" do
+        request = basic_request { |request| request.auth.basic "username", "password" }
+        
+        curb.expects(:username=).with("username")
+        curb.expects(:password=).with("password")
+        adapter.get(request)
+      end
+
+      it "should be set for HTTP digest auth" do
+        request = basic_request { |request| request.auth.digest "username", "password" }
+        
+        curb.expects(:username=).with("username")
+        curb.expects(:password=).with("password")
+        adapter.get(request)
+      end
+    end
+  end
+
+  def basic_request
+    request = HTTPI::Request.new :url => "http://example.com"
+    yield request if block_given?
+    request
   end
 
 end
