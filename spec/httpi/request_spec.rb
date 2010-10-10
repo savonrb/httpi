@@ -12,8 +12,8 @@ describe HTTPI::Request do
     end
 
     it "accepts a Hash of authentication credentials to set" do
-      request = HTTPI::Request.new :basic_auth => ["username", "password"]
-      request.basic_auth.should == ["username", "password"]
+      request = HTTPI::Request.new :auth => { :basic => ["username", "password"] }
+      request.auth.basic.should == ["username", "password"]
     end
   end
 
@@ -46,6 +46,29 @@ describe HTTPI::Request do
 
     it "raises an ArgumentError in case the url does not seem to be valid" do
       lambda { request.proxy = "invalid" }.should raise_error(ArgumentError)
+    end
+  end
+
+  describe "#ssl" do
+    it "should return false if no request url was specified" do
+      request.should_not be_ssl
+    end
+
+    it "should return false if the request url does not start with https" do
+      request.url = "http://example.com"
+      request.should_not be_ssl
+    end
+
+    it "should return true if the request url starts with https" do
+      request.url = "https://example.com"
+      request.should be_ssl
+    end
+
+    context "with an explicit value" do
+      it "should return the value" do
+        request.ssl = true
+        request.should be_ssl
+      end
     end
   end
 
@@ -88,83 +111,25 @@ describe HTTPI::Request do
     end
   end
 
-  describe "#basic_auth" do
-    it "lets you specify the basic auth credentials" do
-      request.basic_auth "username", "password"
-      request.basic_auth.should == ["username", "password"]
-    end
-   
-    it "also accepts an Array of credentials" do
-      request.basic_auth ["username", "password"]
-      request.basic_auth.should == ["username", "password"]
+  describe "#auth" do
+    it "should return the authentication object" do
+      request.auth.should be_an(HTTPI::Authentication)
     end
 
-    it "lets you reset the credentials" do
-      request.basic_auth "username", "password"
-      request.basic_auth.should == ["username", "password"]
-
-      request.basic_auth nil
-      request.basic_auth.should be_nil
-    end
-  end
-
-  describe "#digest_auth" do
-    it "lets you specify the digest auth credentials" do
-      request.digest_auth "username", "password"
-      request.digest_auth.should == ["username", "password"]
-    end
-   
-    it "also accepts an Array of credentials" do
-      request.digest_auth ["username", "password"]
-      request.digest_auth.should == ["username", "password"]
-    end
-
-    it "lets you reset the credentials" do
-      request.digest_auth "username", "password"
-      request.digest_auth.should == ["username", "password"]
-
-      request.digest_auth nil
-      request.digest_auth.should be_nil
+    it "should memoize the authentication object" do
+      request.auth.should equal(request.auth)
     end
   end
 
   describe "#auth?" do
-    it "should return false unless any authentication credentials were specified" do
+    it "should return true when auth credentials are specified" do
+      request.auth.basic "username", "password"
+      request.auth?.should be_true
+    end
+
+    it "should return false otherwise" do
       request.auth?.should be_false
     end
-
-    it "should return true if HTTP basic auth authentication credentials were specified" do
-      request.basic_auth "username", "password"
-      request.auth?.should be_true
-    end
-
-    it "should return true if HTTP digest auth authentication credentials were specified" do
-      request.digest_auth "username", "password"
-      request.auth?.should be_true
-    end
   end
 
-  describe "#credentials" do
-    it "return the credentials for HTTP basic auth" do
-      request.basic_auth "username", "basic"
-      request.credentials.should == ["username", "basic"]
-    end
-
-    it "return the credentials for HTTP digest auth" do
-      request.digest_auth "username", "digest"
-      request.credentials.should == ["username", "digest"]
-    end
-  end
-
-  describe "#auth_type" do
-    it "should return :basic for HTTP basic auth" do
-      request.basic_auth "username", "password"
-      request.auth_type.should == :basic
-    end
-
-    it "should return :digest for HTTP basic auth" do
-      request.digest_auth "username", "password"
-      request.auth_type.should == :digest
-    end
-  end
 end

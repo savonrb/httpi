@@ -48,7 +48,7 @@ describe HTTPI do
   shared_examples_for "it works with HTTP basic auth" do
     it "and access a secured page" do
       request = HTTPI::Request.new :url => "http://test.webdav.org/auth-basic/"
-      request.basic_auth @username, @password
+      request.auth.basic @username, @password
 
       response = HTTPI.get request, adapter
       response.body.should_not include(@error_message)
@@ -56,9 +56,9 @@ describe HTTPI do
   end
 
   shared_examples_for "it works with HTTP digest auth" do
-    it "requires a username and password" do
+    it "and access a secured page" do
       request = HTTPI::Request.new :url => "http://test.webdav.org/auth-digest/"
-      request.digest_auth @username, @password
+      request.auth.digest @username, @password
 
       response = HTTPI.get request, adapter
       response.body.should_not include(@error_message)

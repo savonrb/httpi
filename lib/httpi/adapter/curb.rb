@@ -71,8 +71,8 @@ module HTTPI
       end
 
       def setup_auth(request)
-        client.http_auth_types = request.auth_type
-        client.username, client.password = *request.credentials
+        client.http_auth_types = request.auth.type
+        client.username, client.password = *request.auth.credentials
       end
 
       def respond_with(client)

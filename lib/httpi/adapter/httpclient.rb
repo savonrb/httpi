@@ -22,7 +22,7 @@ module HTTPI
       # Executes an HTTP GET request.
       # @see HTTPI.get
       def get(request)
-        do_request request do |client, url, headers|
+        do_request request do |url, headers|
           client.get url, nil, headers
         end
       end
@@ -30,7 +30,7 @@ module HTTPI
       # Executes an HTTP POST request.
       # @see HTTPI.post
       def post(request)
-        do_request request do |client, url, headers, body|
+        do_request request do |url, headers, body|
           client.post url, body, headers
         end
       end
@@ -38,7 +38,7 @@ module HTTPI
       # Executes an HTTP HEAD request.
       # @see HTTPI.head
       def head(request)
-        do_request request do |client, url, headers|
+        do_request request do |url, headers|
           client.head url, nil, headers
         end
       end
@@ -46,7 +46,7 @@ module HTTPI
       # Executes an HTTP PUT request.
       # @see HTTPI.put
       def put(request)
-        do_request request do |client, url, headers, body|
+        do_request request do |url, headers, body|
           client.put url, body, headers
         end
       end
@@ -54,15 +54,16 @@ module HTTPI
       # Executes an HTTP DELETE request.
       # @see HTTPI.delete
       def delete(request)
-        do_request request do |client, url, headers|
+        do_request request do |url, headers|
           client.delete url, headers
         end
       end
+
     private
 
       def do_request(request)
         setup_client request
-        respond_with yield(client, request.url, request.headers, request.body)
+        respond_with yield(request.url, request.headers, request.body)
       end
 
       def setup_client(request)
@@ -77,7 +78,7 @@ module HTTPI
       end
 
       def auth_setup(request)
-        client.set_auth request.url.to_s, *request.credentials
+        client.set_auth request.url.to_s, *request.auth.credentials
       end
 
       def respond_with(response)

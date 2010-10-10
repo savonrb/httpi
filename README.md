@@ -32,7 +32,7 @@ And a GET request using HTTP basic auth and the Curb adapter:
 
     request = HTTPI::Request.new
     request.url = "http://auth.example.com"
-    request.basic_auth "username", "password"
+    request.auth.basic "username", "password"
   
     HTTPI.get request, :curb
 
@@ -92,19 +92,34 @@ HTTPI::Request
 --------------
 
 The `HTTPI::Request` serves as a common denominator of options that HTTPI adapters need to support.  
-It represents an HTTP request and lets you customize various settings through these accessors:
+It represents an HTTP request and lets you customize various settings through the following methods:
 
     #url           # the URL to access
     #proxy         # the proxy server to use
+    #ssl           # whether to use SSL
     #headers       # a Hash of HTTP headers
     #body          # the HTTP request body
     #open_timeout  # the open timeout (sec)
     #read_timeout  # the read timeout (sec)
 
-It also contains methods for setting up authentication:
+### Usage example
 
-    #basic_auth(username, password)   # HTTP basic auth credentials
-    #digest_auth(username, password)  # HTTP digest auth credentials
+    request = HTTPI::Request.new
+    request.url = "http://example.com"
+    request.read_timeout = 30
+
+HTTPI::Authentication
+---------------------
+
+`HTTPI::Authentication` supports HTTP basic and digest authentication.
+
+    #basic(username, password)   # HTTP basic auth credentials
+    #digest(username, password)  # HTTP digest auth credentials
+
+### Usage example
+
+    request = HTTPI::Request.new
+    request.auth.basic "username", "password"
 
 ### TODO
 
@@ -145,4 +160,4 @@ It contains the response code, headers and body.
 Participate
 -----------
 
-We appreciate any help and feedback, so please get in touch!
+Any help and feedback appreciated. So please get in touch!

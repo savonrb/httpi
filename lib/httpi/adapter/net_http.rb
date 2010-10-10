@@ -1,3 +1,4 @@
+require "uri"
 require "httpi/response"
 
 module HTTPI
@@ -9,7 +10,7 @@ module HTTPI
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP
 
-      # Requires the "net/https" library.
+      # Requires the "net/https" library and sets up a new client.
       def initialize(request)
         require "net/https"
         self.client = new_client request
@@ -77,7 +78,7 @@ module HTTPI
       end
 
       def setup_client(request)
-        client.use_ssl = !!(request.url.to_s =~ /^https/)
+        client.use_ssl = request.ssl?
         client.open_timeout = request.open_timeout
         client.read_timeout = request.read_timeout
       end
@@ -97,7 +98,7 @@ module HTTPI
       end
 
       def auth_setup(request_client, request)
-        request_client.basic_auth *request.credentials if request.auth_type == :basic
+        request_client.basic_auth *request.auth.credentials if request.auth.basic?
         request_client
       end
 
