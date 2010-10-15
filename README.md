@@ -121,6 +121,10 @@ HTTPI::Auth
     request = HTTPI::Request.new
     request.auth.basic "username", "password"
 
+### TODO
+
+* Add support for NTLM authentication
+
 HTTPI::Auth::SSL
 ----------------
 
@@ -137,10 +141,6 @@ HTTPI::Auth::SSL
     request.auth.ssl.cert_key_file = "client_key.pem"
     request.auth.ssl.cert_file = "client_cert.pem"
     request.auth.ssl.verify_mode = :none
-
-### TODO
-
-* Add support for NTLM authentication
 
 HTTPI::Adapter
 --------------
