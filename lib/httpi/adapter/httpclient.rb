@@ -73,12 +73,12 @@ module HTTPI
 
       def basic_setup(request)
         client.proxy = request.proxy if request.proxy
-        client.connect_timeout = request.open_timeout
-        client.receive_timeout = request.read_timeout
+        client.connect_timeout = request.open_timeout if request.open_timeout
+        client.receive_timeout = request.read_timeout if request.read_timeout
       end
 
       def auth_setup(request)
-        client.set_auth request.url.to_s, *request.auth.credentials
+        client.set_auth request.url, *request.auth.credentials
       end
 
       def respond_with(response)

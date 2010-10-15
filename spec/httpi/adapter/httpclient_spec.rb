@@ -16,63 +16,104 @@ describe HTTPI::Adapter::HTTPClient do
   end
 
   describe "#get" do
-    before do
-      @request = HTTPI::Request.new :url => "http://example.com"
-      response = HTTP::Message.new_response Fixture.xml
-      httpclient.expects(:get).with(@request.url, nil, @request.headers).returns(response)
-    end
-
     it "should return a valid HTTPI::Response" do
-      adapter.get(@request).should match_response(:body => Fixture.xml)
+      httpclient.expects(:get).with(basic_request.url, nil, basic_request.headers).returns(http_message)
+      adapter.get(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
   describe "#post" do
-    before do
-      @request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
-      response = HTTP::Message.new_response Fixture.xml
-      httpclient.expects(:post).with(@request.url, @request.body, @request.headers).returns(response)
-    end
-
     it "should return a valid HTTPI::Response" do
-      adapter.post(@request).should match_response(:body => Fixture.xml)
+      request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
+      httpclient.expects(:post).with(request.url, request.body, request.headers).returns(http_message)
+      
+      adapter.post(request).should match_response(:body => Fixture.xml)
     end
   end
 
   describe "#head" do
-    before do
-      @request = HTTPI::Request.new :url => "http://example.com"
-      response = HTTP::Message.new_response Fixture.xml
-      httpclient.expects(:head).with(@request.url, nil, @request.headers).returns(response)
-    end
-
     it "should return a valid HTTPI::Response" do
-      adapter.head(@request).should match_response(:body => Fixture.xml)
+      httpclient.expects(:head).with(basic_request.url, nil, basic_request.headers).returns(http_message)
+      adapter.head(basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
   describe "#put" do
-    before do
-      @request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
-      response = HTTP::Message.new_response Fixture.xml
-      httpclient.expects(:put).with(@request.url, @request.body, @request.headers).returns(response)
-    end
-
     it "should return a valid HTTPI::Response" do
-      adapter.put(@request).should match_response(:body => Fixture.xml)
+      request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
+      httpclient.expects(:put).with(request.url, request.body, request.headers).returns(http_message)
+      
+      adapter.put(request).should match_response(:body => Fixture.xml)
     end
   end
 
   describe "#delete" do
-    before do
-      @request = HTTPI::Request.new :url => "http://example.com"
-      response = HTTP::Message.new_response "" 
-      httpclient.expects(:delete).with(@request.url, @request.headers).returns(response)
+    it "should return a valid HTTPI::Response" do
+      httpclient.expects(:delete).with(basic_request.url, basic_request.headers).returns(http_message(""))
+      adapter.delete(basic_request).should match_response(:body => "")
+    end
+  end
+
+  describe "settings:" do
+    before { httpclient.stubs(:get).returns(http_message) }
+
+    describe "proxy" do
+      it "should have specs"
     end
 
-    it "should return a valid HTTPI::Response" do
-      adapter.delete(@request).should match_response(:body => "")
+    describe "connect_timeout" do
+      it "should not be set if not specified" do
+        httpclient.expects(:connect_timeout=).never
+        adapter.get(basic_request)
+      end
+
+      it "should be set if specified" do
+        request = basic_request { |request| request.open_timeout = 30 }
+
+        httpclient.expects(:connect_timeout=).with(30)
+        adapter.get(request)
+      end
     end
+
+    describe "receive_timeout" do
+      it "should not be set if not specified" do
+        httpclient.expects(:receive_timeout=).never
+        adapter.get(basic_request)
+      end
+
+      it "should be set if specified" do
+        request = basic_request { |request| request.read_timeout = 30 }
+
+        httpclient.expects(:receive_timeout=).with(30)
+        adapter.get(request)
+      end
+    end
+
+    describe "set_auth" do
+      it "should be set for HTTP basic auth" do
+        request = basic_request { |request| request.auth.basic "username", "password" }
+
+        httpclient.expects(:set_auth).with(request.url, *request.auth.credentials)
+        adapter.get(request)
+      end
+
+      it "should be set for HTTP digest auth" do
+        request = basic_request { |request| request.auth.digest "username", "password" }
+
+        httpclient.expects(:set_auth).with(request.url, *request.auth.credentials)
+        adapter.get(request)
+      end
+    end
+  end
+
+  def http_message(body = Fixture.xml)
+    HTTP::Message.new_response body
+  end
+
+  def basic_request
+    request = HTTPI::Request.new "http://example.com"
+    yield request if block_given?
+    request
   end
 
 end
