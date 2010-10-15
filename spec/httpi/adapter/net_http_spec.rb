@@ -109,6 +109,30 @@ describe HTTPI::Adapter::NetHTTP do
         adapter(request).get(request)
       end
     end
+
+    context "(for SSL client auth)" do
+      let(:ssl_auth_request) do
+        basic_request do |request|
+          request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+          request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+        end
+      end
+
+      it "key, cert and verify_mode should be set" do
+        net_http.expects(:cert=).with(ssl_auth_request.auth.ssl.cert)
+        net_http.expects(:key=).with(ssl_auth_request.auth.ssl.cert_key)
+        net_http.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
+        
+        adapter(ssl_auth_request).get(ssl_auth_request)
+      end
+
+      it "should set the client_ca if specified" do
+        ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
+        net_http.expects(:ca_file=).with(ssl_auth_request.auth.ssl.ca_cert_file)
+        
+        adapter(ssl_auth_request).get(ssl_auth_request)
+      end
+    end
   end
 
   def basic_request

@@ -15,11 +15,6 @@ describe HTTPI::Request do
       request.url.should == URI("http://example.com")
       request.open_timeout.should == 30
     end
-
-    it "should accept a Hash of authentication credentials to set" do
-      request = HTTPI::Request.new :auth => { :basic => ["username", "password"] }
-      request.auth.basic.should == ["username", "password"]
-    end
   end
 
   describe "#url" do
@@ -118,7 +113,7 @@ describe HTTPI::Request do
 
   describe "#auth" do
     it "should return the authentication object" do
-      request.auth.should be_an(HTTPI::Authentication)
+      request.auth.should be_an(HTTPI::Auth::Config)
     end
 
     it "should memoize the authentication object" do

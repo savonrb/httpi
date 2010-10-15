@@ -1,8 +1,8 @@
 require "spec_helper"
-require "httpi/authentication"
+require "httpi/auth/config"
 
-describe HTTPI::Authentication do
-  let(:auth) { HTTPI::Authentication.new }
+describe HTTPI::Auth::Config do
+  let(:auth) { HTTPI::Auth::Config.new }
 
   describe "#basic" do
     it "lets you specify the basic auth credentials" do
@@ -18,6 +18,17 @@ describe HTTPI::Authentication do
     it "sets the authentication type to :basic" do
       auth.basic "username", "password"
       auth.type.should == :basic
+    end
+  end
+
+  describe "#basic?" do
+    it "should default to return false" do
+      auth.should_not be_basic
+    end
+
+    it "should return true for HTTP basic auth" do
+      auth.basic "username", "password"
+      auth.should be_basic
     end
   end
 
@@ -46,6 +57,41 @@ describe HTTPI::Authentication do
     it "should return true for HTTP digest auth" do
       auth.digest "username", "password"
       auth.should be_digest
+    end
+  end
+
+  describe "#http?" do
+    it "should default to return false" do
+      auth.should_not be_http
+    end
+
+    it "should return true for HTTP basic auth" do
+      auth.basic "username", "password"
+      auth.should be_http
+    end
+
+    it "should return true for HTTP digest auth" do
+      auth.digest "username", "password"
+      auth.should be_http
+    end
+  end
+
+  describe "#ssl" do
+    it "should return the HTTPI::Auth::SSL object" do
+      auth.ssl.should be_a(HTTPI::Auth::SSL)
+    end
+  end
+
+  describe "#ssl?" do
+    it "should default to return false" do
+      auth.should_not be_ssl
+    end
+
+    it "should return true for SSL client auth" do
+      auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+      auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+      
+      auth.should be_ssl
     end
   end
 

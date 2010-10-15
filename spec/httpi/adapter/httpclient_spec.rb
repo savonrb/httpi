@@ -7,6 +7,7 @@ require "httpclient"
 describe HTTPI::Adapter::HTTPClient do
   let(:adapter) { HTTPI::Adapter::HTTPClient.new }
   let(:httpclient) { HTTPClient.any_instance }
+  let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
 
   describe ".new" do
     it "should require the HTTPClient gem" do
@@ -102,6 +103,30 @@ describe HTTPI::Adapter::HTTPClient do
 
         httpclient.expects(:set_auth).with(request.url, *request.auth.credentials)
         adapter.get(request)
+      end
+    end
+
+    context "(for SSL client auth)" do
+      let(:ssl_auth_request) do
+        basic_request do |request|
+          request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+          request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+        end
+      end
+
+      it "client_cert, client_key and verify_mode should be set" do
+        ssl_config.expects(:client_cert=).with(ssl_auth_request.auth.ssl.cert)
+        ssl_config.expects(:client_key=).with(ssl_auth_request.auth.ssl.cert_key)
+        ssl_config.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
+        
+        adapter.get(ssl_auth_request)
+      end
+
+      it "should set the client_ca if specified" do
+        ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
+        ssl_config.expects(:client_ca=).with(ssl_auth_request.auth.ssl.ca_cert)
+        
+        adapter.get(ssl_auth_request)
       end
     end
   end

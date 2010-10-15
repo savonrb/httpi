@@ -59,7 +59,8 @@ module HTTPI
 
       def setup_client(request)
         basic_setup request
-        setup_auth request if request.auth?
+        setup_http_auth request if request.auth.http?
+        setup_ssl_auth request.auth.ssl if request.auth.ssl?
       end
 
       def basic_setup(request)
@@ -71,9 +72,16 @@ module HTTPI
         client.verbose = false
       end
 
-      def setup_auth(request)
+      def setup_http_auth(request)
         client.http_auth_types = request.auth.type
         client.username, client.password = *request.auth.credentials
+      end
+
+      def setup_ssl_auth(ssl)
+        client.cert_key = ssl.cert_key_file
+        client.cert = ssl.cert_file
+        client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
+        client.ssl_verify_peer = ssl.verify_mode == :peer
       end
 
       def respond_with(client)

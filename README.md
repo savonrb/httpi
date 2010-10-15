@@ -36,7 +36,7 @@ And a GET request using HTTP basic auth and the Curb adapter:
   
     HTTPI.get request, :curb
 
-HTTPI also comes with some shortcuts. This executes a PUT request:
+HTTPI also comes shortcuts. This executes a PUT request:
 
     HTTPI.put "http://example.com", "<some>xml</some>"
 
@@ -108,10 +108,10 @@ It represents an HTTP request and lets you customize various settings through th
     request.url = "http://example.com"
     request.read_timeout = 30
 
-HTTPI::Authentication
----------------------
+HTTPI::Auth
+-----------
 
-`HTTPI::Authentication` supports HTTP basic and digest authentication.
+`HTTPI::Auth` supports HTTP basic and digest authentication.
 
     #basic(username, password)   # HTTP basic auth credentials
     #digest(username, password)  # HTTP digest auth credentials
@@ -121,9 +121,25 @@ HTTPI::Authentication
     request = HTTPI::Request.new
     request.auth.basic "username", "password"
 
+HTTPI::Auth::SSL
+----------------
+
+`HTTPI::Auth::SSL` manages SSL client authentication.
+
+    #cert_key_file  # the private key file to use
+    #cert_file      # the certificate file to use
+    #ca_cert_file   # the ca certificate file to use
+    #verify_mode    # one of [:none, :peer, :fail_if_no_peer_cert, :client_once]
+
+### Usage example
+
+    request = HTTPI::Request.new
+    request.auth.ssl.cert_key_file = "client_key.pem"
+    request.auth.ssl.cert_file = "client_cert.pem"
+    request.auth.ssl.verify_mode = :none
+
 ### TODO
 
-* Add support for SSL client authentication
 * Add support for NTLM authentication
 
 HTTPI::Adapter

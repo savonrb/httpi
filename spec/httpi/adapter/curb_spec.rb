@@ -179,6 +179,30 @@ describe HTTPI::Adapter::Curb do
         adapter.get(request)
       end
     end
+
+    context "(for SSL client auth)" do
+      let(:ssl_auth_request) do
+        basic_request do |request|
+          request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+          request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+        end
+      end
+
+      it "cert_key, cert and ssl_verify_peer should be set" do
+        curb.expects(:cert_key=).with(ssl_auth_request.auth.ssl.cert_key_file)
+        curb.expects(:cert=).with(ssl_auth_request.auth.ssl.cert_file)
+        curb.expects(:ssl_verify_peer=).with(true)
+        
+        adapter.get(ssl_auth_request)
+      end
+
+      it "should set the cacert if specified" do
+        ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
+        curb.expects(:cacert=).with(ssl_auth_request.auth.ssl.ca_cert_file)
+        
+        adapter.get(ssl_auth_request)
+      end
+    end
   end
 
   def basic_request

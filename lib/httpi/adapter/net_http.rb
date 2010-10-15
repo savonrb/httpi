@@ -71,6 +71,7 @@ module HTTPI
 
       def do_request(type, request)
         setup_client request
+        setup_ssl_auth request.auth.ssl if request.auth.ssl?
         
         respond_with(client.start do |http|
           yield http, request_client(type, request)
@@ -83,6 +84,13 @@ module HTTPI
         client.read_timeout = request.read_timeout if request.read_timeout
       end
 
+      def setup_ssl_auth(ssl)
+        client.key = ssl.cert_key
+        client.cert = ssl.cert
+        client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+        client.verify_mode = ssl.openssl_verify_mode
+      end
+
       def request_client(type, request)
         request_class = case type
           when :get    then Net::HTTP::Get
@@ -93,11 +101,6 @@ module HTTPI
         end
         
         request_client = request_class.new request.url.request_uri, request.headers
-        request_client = auth_setup request_client, request if request.auth?
-        request_client
-      end
-
-      def auth_setup(request_client, request)
         request_client.basic_auth *request.auth.credentials if request.auth.basic?
         request_client
       end

@@ -1,5 +1,5 @@
 require "uri"
-require "httpi/authentication"
+require "httpi/auth/config"
 
 module HTTPI
 
@@ -15,9 +15,8 @@ module HTTPI
     def initialize(args = {})
       if args.kind_of? String
         self.url = args
-      elsif args.kind_of? Hash
-        auth.mass_assign args.delete(:auth) if args[:auth]
-        mass_assign args unless args.empty?
+      elsif args.kind_of?(Hash) && !args.empty?
+        mass_assign args
       end
     end
 
@@ -63,7 +62,7 @@ module HTTPI
 
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth
-      @auth ||= Authentication.new
+      @auth ||= Auth::Config.new
     end
 
     # Returns whether any authentication credentials were specified.
