@@ -5,8 +5,16 @@ class Fixture
       @xml ||= load :xml
     end
 
+    def xml_dime
+      @xml_dime ||= load :xml_dime
+    end
+
     def gzip
       @gzip ||= load :xml, :gz
+    end
+
+    def dime
+      @dime ||= load :xml_dime, :dime
     end
 
   private
