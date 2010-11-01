@@ -207,7 +207,7 @@ describe HTTPI do
 
     describe ".#{method}" do
       it "should raise an ArgumentError in case of an invalid adapter" do
-        lambda { client.request method, request, :invalid }.should raise_error(ArgumentError)
+        lambda { client.request method, HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
       end
 
       it "should raise an ArgumentError in case of an invalid request" do
