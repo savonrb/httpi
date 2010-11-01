@@ -19,7 +19,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_get)
       curb.expects(:response_code).returns(200)
-      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:header_str).returns("")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -32,7 +32,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_post)
       curb.expects(:response_code).returns(200)
-      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:header_str).returns("")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -45,7 +45,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_head)
       curb.expects(:response_code).returns(200)
-      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:header_str).returns("")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -58,7 +58,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_put)
       curb.expects(:response_code).returns(200)
-      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:header_str).returns("")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -71,7 +71,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_delete)
       curb.expects(:response_code).returns(200)
-      curb.expects(:headers).returns(Hash.new)
+      curb.expects(:header_str).returns("")
       curb.expects(:body_str).returns("")
     end
 
