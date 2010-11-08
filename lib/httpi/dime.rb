@@ -22,14 +22,15 @@ module HTTPI
                                                       # 4 bits  Reserved (skipped in the above command)
 
         # Fetch big-endian lengths
-        lengths = {}
-        lengths[:options] = (bytes.shift << 8) | bytes.shift                                              # 2 bytes   Length of the "options" field
-        lengths[:id]      = (bytes.shift << 8) | bytes.shift                                              # 2 bytes   Length of the "ID" or "name" field
-        lengths[:type]    = (bytes.shift << 8) | bytes.shift                                              # 2 bytes   Length of the "type" field
-        lengths[:data]    = (bytes.shift << 24) | (bytes.shift << 16) | (bytes.shift << 8) | bytes.shift  # 4 bytes   Size of the included file
+        lengths = [] # we can't use a hash since the order will be screwed in Ruby 1.8
+        lengths << [:options, (bytes.shift << 8) | bytes.shift]                                             # 2 bytes   Length of the "options" field
+        lengths << [:id,      (bytes.shift << 8) | bytes.shift]                                             # 2 bytes   Length of the "ID" or "name" field
+        lengths << [:type,    (bytes.shift << 8) | bytes.shift]                                             # 2 bytes   Length of the "type" field
+        lengths << [:data,    (bytes.shift << 24) | (bytes.shift << 16) | (bytes.shift << 8) | bytes.shift] # 4 bytes   Size of the included file
 
         # Read in padded data
-        lengths.each do |attribute, length|
+        lengths.each do |attribute_set|
+          attribute, length = attribute_set
           content = bytes.slice!(0, length).pack('C*')
           if attribute == :data && record.type_format == BINARY
             content = StringIO.new(content)
