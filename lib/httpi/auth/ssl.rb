@@ -20,6 +20,9 @@ module HTTPI
       # Accessor for the cert key file to validate SSL certificates.
       attr_accessor :cert_key_file
 
+      # Accessor for the cert key password to validate SSL certificates.
+      attr_accessor :cert_key_password
+
       # Accessor for the cert file to validate SSL connections.
       attr_accessor :cert_file
 
@@ -55,7 +58,7 @@ module HTTPI
 
       # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +cert_key_file+.
       def cert_key
-        @cert_key ||= OpenSSL::PKey::RSA.new File.read(cert_key_file)
+        @cert_key ||= OpenSSL::PKey::RSA.new(File.read(cert_key_file), cert_key_password)
       end
 
       # Sets the +OpenSSL+ certificate key.

@@ -139,6 +139,7 @@ HTTPI::Auth::SSL
 
     request = HTTPI::Request.new
     request.auth.ssl.cert_key_file = "client_key.pem"
+    request.auth.ssl.cert_key_password = "C3rtP@ssw0rd"
     request.auth.ssl.cert_file = "client_cert.pem"
     request.auth.ssl.verify_mode = :none
 
