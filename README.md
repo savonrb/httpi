@@ -168,6 +168,8 @@ It contains the response code, headers and body.
     response.headers  # => { "Content-Encoding" => "gzip" }
     response.body     # => "<!DOCTYPE HTML PUBLIC ...>"
 
+The `response.body` handles gzipped and [DIME](http://en.wikipedia.org/wiki/Direct_Internet_Message_Encapsulation) encoded responses.
+
 ### TODO
 
 * Return the original `HTTPI::Request` for debugging purposes
