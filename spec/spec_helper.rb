@@ -1,6 +1,5 @@
-require "rspec"
-require "mocha"
-require "webmock/rspec"
+require "bundler"
+Bundler.require :default, :development
 
 RSpec.configure do |config|
   config.include WebMock::API
