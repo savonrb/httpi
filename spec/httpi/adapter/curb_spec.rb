@@ -41,6 +41,13 @@ describe HTTPI::Adapter::Curb do
     end
   end
 
+  describe "#post includes body of request" do
+    it "should send the body in the request" do
+      curb.expects(:http_post).with('xml=hi&name=123')
+      adapter.post(basic_request { |request| request.body = 'xml=hi&name=123' } )
+    end
+  end
+
   describe "#head" do
     before do
       curb.expects(:http_head)
@@ -64,6 +71,13 @@ describe HTTPI::Adapter::Curb do
 
     it "should return a valid HTTPI::Response" do
       adapter.put(basic_request).should match_response(:body => Fixture.xml)
+    end
+  end
+
+  describe "#put includes body of request" do
+    it "should send the body in the request" do
+      curb.expects(:http_put).with('xml=hi&name=123')
+      adapter.put(basic_request { |request| request.body = 'xml=hi&name=123' } )
     end
   end
 
