@@ -88,6 +88,22 @@ by your adapter in a block:
       http.use_ssl = true  # Curb example
     end
 
+HTTPI::Adapter
+--------------
+
+HTTPI uses adapters to support multiple HTTP libraries.
+It currently contains adapters for:
+
+* [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
+* [curb](http://rubygems.org/gems/curb) ~> 0.7.8
+* [net/http](http://ruby-doc.org/stdlib/libdoc/net/http/rdoc)
+
+By default, HTTPI uses the `HTTPClient` adapter. But changing the default is fairly easy:
+
+    HTTPI::Adapter.use = :curb  # or one of [:httpclient, :net_http]
+
+Notice: HTTPI does not force you to install any of these libraries. Instead you need to make sure to install the HTTP library of your choice and/or add it to your Gemfile. HTTPI will then load the library when executing HTTP requests.
+
 HTTPI::Request
 --------------
 
@@ -142,20 +158,6 @@ HTTPI::Auth::SSL
     request.auth.ssl.cert_key_password = "C3rtP@ssw0rd"
     request.auth.ssl.cert_file = "client_cert.pem"
     request.auth.ssl.verify_mode = :none
-
-HTTPI::Adapter
---------------
-
-HTTPI uses adapters to support multiple HTTP libraries.
-It currently contains adapters for:
-
-* [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
-* [curb](http://rubygems.org/gems/curb) ~> 0.7.8
-* [net/http](http://ruby-doc.org/stdlib/libdoc/net/http/rdoc)
-
-By default, HTTPI uses the `HTTPClient`. But changing the default is fairly easy:
-
-    HTTPI::Adapter.use = :curb  # or one of [:httpclient, :net_http]
 
 HTTPI::Response
 ---------------
