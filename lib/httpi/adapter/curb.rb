@@ -28,7 +28,7 @@ module HTTPI
       # Executes an HTTP POST request.
       # @see HTTPI.post
       def post(request)
-        do_request(request) { |client, body| client.http_post body }
+        do_request(request) { |client| client.http_post request.body }
       end
 
       # Executes an HTTP HEAD request.
@@ -40,7 +40,7 @@ module HTTPI
       # Executes an HTTP PUT request.
       # @see HTTPI.put
       def put(request)
-        do_request(request) { |client, body| client.http_put body }
+        do_request(request) { |client| client.http_put request.body }
       end
 
       # Executes an HTTP DELETE request.
