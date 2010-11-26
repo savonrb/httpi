@@ -12,7 +12,7 @@ module HTTPI
 
       # Returns whether SSL configuration is present.
       def present?
-        cert && cert_key
+        (verify_mode == :none) || (cert && cert_key)
       rescue TypeError, Errno::ENOENT
         false
       end
