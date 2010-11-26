@@ -27,7 +27,7 @@ describe HTTPI::Adapter::HTTPClient do
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
       httpclient.expects(:post).with(request.url, request.body, request.headers).returns(http_message)
-      
+
       adapter.post(request).should match_response(:body => Fixture.xml)
     end
   end
@@ -43,7 +43,7 @@ describe HTTPI::Adapter::HTTPClient do
     it "should return a valid HTTPI::Response" do
       request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
       httpclient.expects(:put).with(request.url, request.body, request.headers).returns(http_message)
-      
+
       adapter.put(request).should match_response(:body => Fixture.xml)
     end
   end
@@ -118,15 +118,40 @@ describe HTTPI::Adapter::HTTPClient do
         ssl_config.expects(:client_cert=).with(ssl_auth_request.auth.ssl.cert)
         ssl_config.expects(:client_key=).with(ssl_auth_request.auth.ssl.cert_key)
         ssl_config.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
-        
+
         adapter.get(ssl_auth_request)
       end
 
       it "should set the client_ca if specified" do
         ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
         ssl_config.expects(:client_ca=).with(ssl_auth_request.auth.ssl.ca_cert)
-        
+
         adapter.get(ssl_auth_request)
+      end
+    end
+
+    context "(for SSL client auth with a verify mode of :none with no certs provided)" do
+      let(:ssl_auth_request) do
+        basic_request do |request|
+          request.auth.ssl.verify_mode = :none
+        end
+      end
+
+      it "verify_mode should be set" do
+        ssl_config.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
+
+        adapter.get(ssl_auth_request)
+      end
+
+      it "should not set client_cert and client_key "do
+        ssl_config.expects(:client_cert=).never
+        ssl_config.expects(:client_key=).never
+
+        adapter.get(ssl_auth_request)
+      end
+
+      it "should raise an exception" do
+        lambda { adapter.get(ssl_auth_request)  }.should_not raise_error
       end
     end
   end

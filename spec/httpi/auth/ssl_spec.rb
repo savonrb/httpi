@@ -18,18 +18,24 @@ describe HTTPI::Auth::SSL do
     it "should return false if only a client key was specified" do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert_key_file = "spec/fixtures/client_key.pem"
-      
+
       ssl.should_not be_present
     end
 
     it "should return false if only a client key was specified" do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert_file = "spec/fixtures/client_cert.pem"
-      
+
       ssl.should_not be_present
     end
 
     it "should return true if both client key and cert are present" do
+      ssl.should be_present
+    end
+
+    it "should return true of the verify_mode is :none" do
+      ssl = HTTPI::Auth::SSL.new
+      ssl.verify_mode = :none
       ssl.should be_present
     end
   end
@@ -41,7 +47,7 @@ describe HTTPI::Auth::SSL do
 
     it "should set the verify mode to use" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.verify_mode = :none
       ssl.verify_mode.should == :none
     end
@@ -66,7 +72,7 @@ describe HTTPI::Auth::SSL do
   describe "#ca_cert" do
     it "should return an OpenSSL::X509::Certificate for the given ca_cert_file" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
       ssl.ca_cert.should be_a(OpenSSL::X509::Certificate)
     end
@@ -75,28 +81,28 @@ describe HTTPI::Auth::SSL do
   describe "#openssl_verify_mode" do
     it "should return the OpenSSL verify mode for :none" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.verify_mode = :none
       ssl.openssl_verify_mode.should == OpenSSL::SSL::VERIFY_NONE
     end
 
     it "should return the OpenSSL verify mode for :peer" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.verify_mode = :peer
       ssl.openssl_verify_mode.should == OpenSSL::SSL::VERIFY_PEER
     end
 
     it "should return the OpenSSL verify mode for :fail_if_no_peer_cert" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.verify_mode = :fail_if_no_peer_cert
       ssl.openssl_verify_mode.should == OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT
     end
 
     it "should return the OpenSSL verify mode for :client_once" do
       ssl = HTTPI::Auth::SSL.new
-      
+
       ssl.verify_mode = :client_once
       ssl.openssl_verify_mode.should == OpenSSL::SSL::VERIFY_CLIENT_ONCE
     end
