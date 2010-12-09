@@ -1,5 +1,6 @@
 require "uri"
 require "httpi/auth/config"
+require "rack/utils"
 
 module HTTPI
 
@@ -47,11 +48,13 @@ module HTTPI
 
     # Returns a Hash of HTTP headers. Defaults to return an empty Hash.
     def headers
-      @headers ||= {}
+      @headers ||= Rack::Utils::HeaderHash.new
     end
 
     # Sets the Hash of HTTP headers.
-    attr_writer :headers
+    def headers=(headers)
+      @headers = Rack::Utils::HeaderHash.new(headers)
+    end
 
     # Adds a header information to accept gzipped content.
     def gzip

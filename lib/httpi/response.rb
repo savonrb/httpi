@@ -1,6 +1,7 @@
 require "zlib"
 require "stringio"
 require "httpi/dime"
+require "rack/utils"
 
 module HTTPI
 
@@ -15,7 +16,7 @@ module HTTPI
     # Initializer expects an HTTP response +code+, +headers+ and +body+.
     def initialize(code, headers, body)
       self.code = code.to_i
-      self.headers = headers
+      self.headers = Rack::Utils::HeaderHash.new(headers)
       self.raw_body = body
     end
 
