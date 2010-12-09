@@ -92,7 +92,7 @@ module HTTPI
       end
 
       def respond_with(response)
-        Response.new response.code, Hash[response.header.all.flatten], response.content
+        Response.new response.code, Hash[response.header.all], response.content
       end
 
     end
