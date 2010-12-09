@@ -16,32 +16,38 @@ describe HTTPI do
     @username = @password = "user1"
     @error_message = "Authorization Required"
     @example_web_page = "Example Web Page"
+    @content_type = "text/html"
   end
 
   shared_examples_for "an HTTP client" do
     it "and execute an HTTP GET request" do
       response = HTTPI.get "http://example.com", adapter
       response.body.should include(@example_web_page)
+      response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP POST request" do
       response = HTTPI.post "http://example.com", "<some>xml</some>", adapter
       response.body.should include(@example_web_page)
+      response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP HEAD request" do
       response = HTTPI.head "http://example.com", adapter
       response.code.should == 200
+      response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP PUT request" do
       response = HTTPI.put "http://example.com", "<some>xml</some>", adapter
       response.body.should include("PUT is not allowed")
+      response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP DELETE request" do
       response = HTTPI.delete "http://example.com", adapter
       response.body.should include("DELETE is not allowed")
+      response.headers["Content-Type"].should include(@content_type)
     end
   end
 
