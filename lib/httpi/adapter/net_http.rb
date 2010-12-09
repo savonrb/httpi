@@ -106,9 +106,10 @@ module HTTPI
       end
 
       def respond_with(response)
-        Response.new response.code, response.to_hash, response.body
+        headers = response.to_hash
+        headers.each {|k,v| headers[k] = v[0]}
+        Response.new response.code, headers, response.body
       end
-
     end
   end
 end
