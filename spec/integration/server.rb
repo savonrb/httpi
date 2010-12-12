@@ -16,6 +16,13 @@ IntegrationServer = Rack::Builder.new do
     }
   end
 
+  map "/x-header" do
+    run lambda {|env|
+      body = "X-Header is #{env["HTTP_X_HEADER"]}"
+      [200, {"Content-Type" => "text/plain", "Content-Length" => body.size.to_s}, [body]]
+    }
+  end
+
   map "/auth" do
     map "/basic" do
       run Rack::Auth::Basic do |user, password|

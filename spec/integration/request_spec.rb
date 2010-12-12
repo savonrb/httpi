@@ -18,6 +18,14 @@ describe HTTPI do
   end
 
   shared_examples_for "an HTTP client" do
+    it "and send HTTP headers" do
+      request = HTTPI::Request.new :url => "http://localhost:4000/x-header"
+      request.headers["X-Header"] = "HTTPI"
+
+      response = HTTPI.get request, adapter
+      response.body.should include("X-Header is HTTPI")
+    end
+
     it "and execute an HTTP GET request" do
       response = HTTPI.get "http://localhost:4000", adapter
       response.body.should include(@example_web_page)
