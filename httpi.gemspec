@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "httpclient", "~> 2.1.5"
   s.add_development_dependency "curb", "~> 0.7.8"
 
-  s.add_development_dependency "rspec", "2.0.0"
+  s.add_development_dependency "rspec", "~> 2.2"
   s.add_development_dependency "mocha", "~> 0.9.9"
   s.add_development_dependency "webmock", "~> 1.4.0"
 

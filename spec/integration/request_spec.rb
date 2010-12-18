@@ -1,51 +1,57 @@
 require "spec_helper"
 require "httpi"
+require "integration/server"
+
+MockServer.new(IntegrationServer, 4000).start
 
 describe HTTPI do
   let(:client) { HTTPI }
 
-  # Uses example.com for basic request methods and webdav.org
-  # for HTTP basic and digest authentication.
-  #
-  # http://example.com
-  # http://test.webdav.org
-
   before :all do
     WebMock.allow_net_connect!
     
-    @username = @password = "user1"
+    @username = "admin"
+    @password = "pwd"
     @error_message = "Authorization Required"
-    @example_web_page = "Example Web Page"
-    @content_type = "text/html"
+    @example_web_page = "Hello"
+    @content_type = "text/plain"
   end
 
   shared_examples_for "an HTTP client" do
+    it "and send HTTP headers" do
+      request = HTTPI::Request.new :url => "http://localhost:4000/x-header"
+      request.headers["X-Header"] = "HTTPI"
+
+      response = HTTPI.get request, adapter
+      response.body.should include("X-Header is HTTPI")
+    end
+
     it "and execute an HTTP GET request" do
-      response = HTTPI.get "http://example.com", adapter
+      response = HTTPI.get "http://localhost:4000", adapter
       response.body.should include(@example_web_page)
       response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP POST request" do
-      response = HTTPI.post "http://example.com", "<some>xml</some>", adapter
+      response = HTTPI.post "http://localhost:4000", "<some>xml</some>", adapter
       response.body.should include(@example_web_page)
       response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP HEAD request" do
-      response = HTTPI.head "http://example.com", adapter
+      response = HTTPI.head "http://localhost:4000", adapter
       response.code.should == 200
       response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP PUT request" do
-      response = HTTPI.put "http://example.com", "<some>xml</some>", adapter
+      response = HTTPI.put "http://localhost:4000", "<some>xml</some>", adapter
       response.body.should include("PUT is not allowed")
       response.headers["Content-Type"].should include(@content_type)
     end
 
     it "and execute an HTTP DELETE request" do
-      response = HTTPI.delete "http://example.com", adapter
+      response = HTTPI.delete "http://localhost:4000", adapter
       response.body.should include("DELETE is not allowed")
       response.headers["Content-Type"].should include(@content_type)
     end
@@ -53,7 +59,7 @@ describe HTTPI do
 
   shared_examples_for "it works with HTTP basic auth" do
     it "and access a secured page" do
-      request = HTTPI::Request.new :url => "http://test.webdav.org/auth-basic/"
+      request = HTTPI::Request.new :url => "http://localhost:4000/auth/basic"
       request.auth.basic @username, @password
 
       response = HTTPI.get request, adapter
@@ -63,7 +69,7 @@ describe HTTPI do
 
   shared_examples_for "it works with HTTP digest auth" do
     it "and access a secured page" do
-      request = HTTPI::Request.new :url => "http://test.webdav.org/auth-digest/"
+      request = HTTPI::Request.new :url => "http://localhost:4000/auth/digest"
       request.auth.digest @username, @password
 
       response = HTTPI.get request, adapter
