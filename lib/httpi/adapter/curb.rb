@@ -12,6 +12,9 @@ module HTTPI
       # Requires the "curb" gem.
       def initialize(request = nil)
         require "curb"
+      rescue LoadError
+        raise LoadError, "HTTPI is set up to use the 'curb' gem, but it's not in the LOAD_PATH. " \
+          "Please make sure the gem can be required before executing an HTTP request."
       end
 
       # Returns a memoized <tt>Curl::Easy</tt> instance.
