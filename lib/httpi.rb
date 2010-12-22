@@ -1,3 +1,4 @@
+require "logger"
 require "httpi/version"
 require "httpi/request"
 require "httpi/adapter"
@@ -72,13 +73,15 @@ module HTTPI
 
   REQUEST_METHODS = [:get, :post, :head, :put, :delete]
 
+  DEFAULT_LOG_LEVEL = :debug
+
   class << self
 
     # Executes an HTTP GET request.
     def get(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with request, adapter do |adapter|
+      with_adapter :get, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.get request
       end
@@ -88,7 +91,7 @@ module HTTPI
     def post(*args)
       request, adapter = request_and_adapter_from(args)
       
-      with request, adapter do |adapter|
+      with_adapter :post, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.post request
       end
@@ -98,7 +101,7 @@ module HTTPI
     def head(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with request, adapter do |adapter|
+      with_adapter :head, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.head request
       end
@@ -108,7 +111,7 @@ module HTTPI
     def put(*args)
       request, adapter = request_and_adapter_from(args)
       
-      with request, adapter do |adapter|
+      with_adapter :put, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.put request
       end
@@ -118,7 +121,7 @@ module HTTPI
     def delete(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
       
-      with request, adapter do |adapter|
+      with_adapter :delete, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.delete request
       end
@@ -128,6 +131,42 @@ module HTTPI
     def request(method, request, adapter = nil)
       raise ArgumentError, "Invalid request method: #{method}" unless REQUEST_METHODS.include? method
       send method, request, adapter
+    end
+
+    # Sets whether to log HTTP requests.
+    attr_writer :log
+
+    # Returns whether to log HTTP requests. Defaults to +true+.
+    def log?
+      @log != false
+    end
+
+    # Sets the logger to use.
+    attr_writer :logger
+
+    # Returns the logger. Defaults to an instance of +Logger+ writing to STDOUT.
+    def logger
+      @logger ||= ::Logger.new STDOUT
+    end
+
+    # Sets the log level.
+    attr_writer :log_level
+
+    # Returns the log level. Defaults to :debug.
+    def log_level
+      @log_level ||= :debug
+    end
+
+    # Logs given +messages+.
+    def log(*messages)
+      logger.send log_level, messages.join(" ") if log?
+    end
+
+    # Reset the default config.
+    def reset_config!
+      @log = nil
+      @logger = nil
+      @log_level = nil
     end
 
   private
@@ -140,11 +179,14 @@ module HTTPI
       [Request.new(:url => args[0], :body => args[1]), args[2]]
     end
 
-    # Expects a +request+ and an +adapter+ (defaults to <tt>Adapter.use</tt>)
-    # and yields a new instance of the adapter to a given block.
-    def with(request, adapter)
+    # Expects a request +method+, a +request+ and an +adapter+ (defaults to
+    # <tt>Adapter.use</tt>) and yields an instance of the adapter to a given block.
+    def with_adapter(method, request, adapter)
       adapter ||= Adapter.use
-      yield Adapter.find(adapter).new(request)
+      adapter, adapter_class = Adapter.find adapter
+      
+      HTTPI.log "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
+      yield adapter_class.new(request)
     end
 
   end

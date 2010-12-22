@@ -10,9 +10,7 @@ module HTTPI
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP
 
-      # Requires the "net/https" library and sets up a new client.
       def initialize(request)
-        require "net/https"
         self.client = new_client request
       end
 

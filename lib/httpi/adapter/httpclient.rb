@@ -9,12 +9,7 @@ module HTTPI
     # http://rubygems.org/gems/httpclient
     class HTTPClient
 
-      # Requires the "httpclient" gem.
       def initialize(request = nil)
-        require "httpclient"
-      rescue LoadError
-        raise LoadError, "HTTPI is set up to use the 'httpclient' gem, but it's not in the LOAD_PATH. " \
-          "Please make sure the gem can be required before executing an HTTP request."
       end
 
       # Returns a memoized <tt>HTTPClient</tt> instance.

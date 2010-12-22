@@ -9,13 +9,6 @@ describe HTTPI::Adapter::HTTPClient do
   let(:httpclient) { HTTPClient.any_instance }
   let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
 
-  describe ".new" do
-    it "should require the HTTPClient gem" do
-      HTTPI::Adapter::HTTPClient.any_instance.expects(:require).with("httpclient")
-      HTTPI::Adapter::HTTPClient.new
-    end
-  end
-
   describe "#get" do
     it "should return a valid HTTPI::Response" do
       httpclient.expects(:get).with(basic_request.url, nil, basic_request.headers).returns(http_message)

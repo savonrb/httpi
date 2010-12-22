@@ -3,8 +3,8 @@ require "httpi"
 
 describe HTTPI do
   let(:client) { HTTPI }
-  let(:default_adapter) { HTTPI::Adapter.find HTTPI::Adapter.use }
-  let(:curb) { HTTPI::Adapter.find :curb }
+  let(:default_adapter) { HTTPI::Adapter.find(HTTPI::Adapter.use)[1] }
+  let(:curb) { HTTPI::Adapter.find(:curb)[1] }
 
   describe ".get(request)" do
     it "should execute an HTTP GET request using the default adapter" do
@@ -197,7 +197,6 @@ describe HTTPI do
   end
 
   HTTPI::REQUEST_METHODS.each do |method|
-
     describe ".request(#{method}, request, adapter)" do
       it "should delegate to the .#{method} method" do
         HTTPI.expects(method)
@@ -206,25 +205,30 @@ describe HTTPI do
     end
 
     describe ".#{method}" do
+      let(:request) { HTTPI::Request.new :url => "http://example.com" }
+
       it "should raise an ArgumentError in case of an invalid adapter" do
-        lambda { client.request method, HTTPI::Request.new, :invalid }.should raise_error(ArgumentError)
+        lambda { client.request method, request, :invalid }.should raise_error(ArgumentError)
       end
 
       it "should raise an ArgumentError in case of an invalid request" do
         lambda { client.request method, "invalid" }.should raise_error(ArgumentError)
       end
 
-      HTTPI::Adapter.adapters.each do |adapter, adapter_class|
+      HTTPI::Adapter.adapters.each do |adapter, values|
         client_class = {
           :httpclient => lambda { HTTPClient },
           :curb       => lambda { Curl::Easy },
           :net_http   => lambda { Net::HTTP }
         }
 
-        context "using :#{adapter} with a block" do
-          let(:request) { HTTPI::Request.new :url => "http://example.com" }
+        context "using #{adapter}" do
+          before { values[:class].any_instance.expects(method) }
 
-          before { adapter_class.any_instance.stubs(method) }
+          it "should log that we're executing an HTTP request" do
+            HTTPI.expects(:log).with("HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
+            client.request method, request, adapter
+          end
 
           it "should yield the HTTP client instance used for the request" do
             block = lambda { |http| http.should be_a(client_class[adapter].call) }
@@ -233,6 +237,75 @@ describe HTTPI do
         end
       end
 
+      HTTPI::Adapter.adapters.reject { |key, value| key == HTTPI::Adapter::FALLBACK }.each do |adapter, values|
+        context "when #{adapter} could not be loaded" do
+          before do
+            HTTPI::Adapter.expects(:require).with(values[:require]).raises(LoadError)
+            HTTPI::Adapter.expects(:require).with("net/https")
+            HTTPI::Adapter::NetHTTP.any_instance.expects(method)
+          end
+
+          it "should fall back to using the FALLBACK adapter" do
+            HTTPI.expects(:log).with(
+              "HTTPI tried to use the #{adapter} adapter, but was unable to find the library in the LOAD_PATH.",
+              "Falling back to using the #{HTTPI::Adapter::FALLBACK} adapter now."
+            )
+            HTTPI.expects(:log).with("HTTPI executes HTTP #{method.to_s.upcase} using the #{HTTPI::Adapter::FALLBACK} adapter")
+            
+            client.request method, request, adapter
+          end
+        end
+      end
+    end
+  end
+
+  context "with resetting the defaults" do
+    before { HTTPI.reset_config! }
+
+    after do
+      HTTPI.reset_config!
+      HTTPI.log = false  # disable for specs
+    end
+
+    describe ".log" do
+      it "should default to true" do
+        HTTPI.log?.should be_true
+      end
+
+      it "should set whether to log" do
+        HTTPI.log = false
+        HTTPI.log?.should be_false
+      end
+    end
+
+    describe ".logger" do
+      it "should default to Logger writing to STDOUT" do
+        HTTPI.logger.should be_a(Logger)
+      end
+
+      it "should set the logger to use" do
+        MyLogger = Class.new
+        HTTPI.logger = MyLogger
+        HTTPI.logger.should == MyLogger
+      end
+    end
+
+    describe ".log_level" do
+      it "should default to :debug" do
+        HTTPI.log_level.should == :debug
+      end
+
+      it "should set the log level to use" do
+        HTTPI.log_level = :info
+        HTTPI.log_level.should == :info
+      end
+    end
+
+    describe ".log" do
+      it "should log given messages" do
+        HTTPI.logger.expects(:debug).with("Log this")
+        HTTPI.log "Log", "this"
+      end
     end
   end
 

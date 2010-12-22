@@ -8,13 +8,6 @@ describe HTTPI::Adapter::Curb do
   let(:adapter) { HTTPI::Adapter::Curb.new }
   let(:curb) { Curl::Easy.any_instance }
 
-  describe ".new" do
-    it "should require the Curb gem" do
-      HTTPI::Adapter::Curb.any_instance.expects(:require).with("curb")
-      HTTPI::Adapter::Curb.new
-    end
-  end
-
   describe "#get" do
     before do
       curb.expects(:http_get)

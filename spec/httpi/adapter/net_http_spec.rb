@@ -9,13 +9,6 @@ describe HTTPI::Adapter::NetHTTP do
     @adapter ||= HTTPI::Adapter::NetHTTP.new request
   end
 
-  describe ".new" do
-    it "should require the Net::HTTP library" do
-      HTTPI::Adapter::NetHTTP.any_instance.expects(:require).with("net/https")
-      HTTPI::Adapter::NetHTTP.new HTTPI::Request.new(:url => "http://example.com")
-    end
-  end
-
   describe "#get" do
     it "should return a valid HTTPI::Response" do
       stub_request(:get, basic_request.url.to_s).to_return(:body => Fixture.xml)
