@@ -178,6 +178,15 @@ The `response.body` handles gzipped and [DIME](http://en.wikipedia.org/wiki/Dire
 * Return the original `HTTPI::Request` for debugging purposes
 * Return the time it took to execute the request
 
+Logging
+-------
+
+HTTPI by default logs each HTTP request to STDOUT using a log level of :debug.
+
+    HTTPI.log       = false     # disabling logging
+    HTTPI.logger    = MyLogger  # changing the logger
+    HTTPI.log_level = :info     # changing the log level
+
 Participate
 -----------
 
