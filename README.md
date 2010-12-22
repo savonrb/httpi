@@ -25,7 +25,7 @@ Here's a POST request with a request object:
     request = HTTPI::Request.new
     request.url = "http://post.example.com"
     request.body = "send me"
-  
+    
     HTTPI.post request
 
 And a GET request using HTTP basic auth and the Curb adapter:
@@ -33,7 +33,7 @@ And a GET request using HTTP basic auth and the Curb adapter:
     request = HTTPI::Request.new
     request.url = "http://auth.example.com"
     request.auth.basic "username", "password"
-  
+    
     HTTPI.get request, :curb
 
 HTTPI also comes shortcuts. This executes a PUT request:
@@ -102,7 +102,7 @@ By default, HTTPI uses the `HTTPClient` adapter. But changing the default is fai
 
     HTTPI::Adapter.use = :curb  # or one of [:httpclient, :net_http]
 
-Notice: HTTPI does not force you to install any of these libraries. Instead you need to make sure to install the HTTP library of your choice and/or add it to your Gemfile. HTTPI will then load the library when executing HTTP requests.
+Notice: HTTPI does not force you to install any of these libraries. So please make sure to install the HTTP library of your choice and/or add it to your Gemfile. HTTPI will then load the library when executing HTTP requests. HTTPI will fall back to using net/http when any other adapter could not be loaded.
 
 HTTPI::Request
 --------------
