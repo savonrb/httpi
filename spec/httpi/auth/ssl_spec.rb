@@ -61,11 +61,21 @@ describe HTTPI::Auth::SSL do
     it "should return an OpenSSL::X509::Certificate for the given cert_file" do
       ssl.cert.should be_a(OpenSSL::X509::Certificate)
     end
+
+    it "should return nil if no cert_file was given" do
+      ssl = HTTPI::Auth::SSL.new
+      ssl.cert.should be_nil
+    end
   end
 
   describe "#cert_key" do
     it "should return a OpenSSL::PKey::RSA for the given cert_key" do
       ssl.cert_key.should be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "should return nil if no cert_key_file was given" do
+      ssl = HTTPI::Auth::SSL.new
+      ssl.cert_key.should be_nil
     end
   end
 
