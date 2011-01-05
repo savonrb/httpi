@@ -54,7 +54,7 @@ module HTTPI
 
     # Returns whether this is a DIME response.
     def dime_response?
-      headers['Content-Type'] == 'application/dime'
+      headers["Content-Type"] == "application/dime"
     end
 
     # Returns the gzip decoded response body.
