@@ -28,6 +28,12 @@ describe HTTPI::Response do
         response.code.should == 200
       end
     end
+
+    describe "#multipart" do
+      it "should return false" do
+        response.should_not be_multipart
+      end
+    end
   end
 
   context "empty" do
@@ -36,6 +42,16 @@ describe HTTPI::Response do
     describe "#body" do
       it "should return an empty String" do
         response.body.should == ""
+      end
+    end
+  end
+
+  context "multipart" do
+    let(:response) { HTTPI::Response.new 200, { "Content-Type" => "multipart/related" }, "multipart" }
+
+    describe "#multipart" do
+      it "should return true" do
+        response.should be_multipart
       end
     end
   end

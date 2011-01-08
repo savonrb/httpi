@@ -27,6 +27,12 @@ module HTTPI
       !SuccessfulResponseCodes.include? code.to_i
     end
 
+    # Returns whether the HTTP response is a multipart response.
+    def multipart?
+      !!(headers["Content-Type"] =~ /^multipart/i)
+    end
+
+    # Returns any DIME attachments.
     def attachments
       decode_body unless @body
       @attachments ||= []
@@ -48,7 +54,6 @@ module HTTPI
       body = gzipped_response? ? decoded_gzip_body : raw_body
       @body = dime_response? ? decoded_dime_body(body) : body
     end
-
 
     # Returns whether the response is gzipped.
     def gzipped_response?
