@@ -10,6 +10,7 @@ module HTTPI
   #
   # * httpclient
   # * curb
+  # * net/http
   module Adapter
 
     # The default adapter.
