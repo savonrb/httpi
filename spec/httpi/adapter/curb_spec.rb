@@ -199,6 +199,14 @@ describe HTTPI::Adapter::Curb do
         curb.expects(:cert_key=).with(ssl_auth_request.auth.ssl.cert_key_file)
         curb.expects(:cert=).with(ssl_auth_request.auth.ssl.cert_file)
         curb.expects(:ssl_verify_peer=).with(true)
+        curb.expects(:certtype=).with(ssl_auth_request.auth.ssl.cert_type.to_s.upcase)
+        
+        adapter.get(ssl_auth_request)
+      end
+      
+      it "should set the cert_type to DER if specified" do
+        ssl_auth_request.auth.ssl.cert_type = :der
+        curb.expects(:certtype=).with(:der.to_s.upcase)
         
         adapter.get(ssl_auth_request)
       end
