@@ -291,8 +291,8 @@ describe HTTPI do
     end
 
     describe ".log_level" do
-      it "should default to :debug" do
-        HTTPI.log_level.should == :debug
+      it "should default to :warn" do
+        HTTPI.log_level.should == :warn
       end
 
       it "should set the log level to use" do
@@ -303,6 +303,7 @@ describe HTTPI do
 
     describe ".log" do
       it "should log given messages" do
+        HTTPI.log_level = :debug
         HTTPI.logger.expects(:debug).with("Log this")
         HTTPI.log "Log", "this"
       end
