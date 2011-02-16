@@ -57,7 +57,7 @@ module HTTPI
       require adapters[adapter][:require]
       [adapter, adapters[adapter][:class]]
     rescue LoadError
-      HTTPI.log "HTTPI tried to use the #{adapter} adapter, but was unable to find the library in the LOAD_PATH.",
+      HTTPI.logger.warn "HTTPI tried to use the #{adapter} adapter, but was unable to find the library in the LOAD_PATH.",
         "Falling back to using the #{FALLBACK} adapter now."
       
       require adapters[FALLBACK][:require]

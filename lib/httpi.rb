@@ -185,7 +185,7 @@ module HTTPI
       adapter ||= Adapter.use
       adapter, adapter_class = Adapter.find adapter
       
-      HTTPI.log "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
+      HTTPI.logger.debug "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
       yield adapter_class.new(request)
     end
 
