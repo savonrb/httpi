@@ -10,7 +10,22 @@ module HTTPI
     class Config
 
       # Supported authentication types.
-      TYPES = [:basic, :digest, :ssl]
+      TYPES = [:basic, :digest, :ssl, :ntlm]
+
+
+      # Accessor for the NTLM auth credentials.
+      def ntlm(*args)
+        return @ntlm if args.empty?
+
+        self.type = :ntlm
+        @ntlm = args.flatten.compact
+      end
+      
+      # Returns whether to use NTLM auth.
+      def ntlm?
+        type == :ntlm
+      end
+
 
       # Accessor for the HTTP basic auth credentials.
       def basic(*args)

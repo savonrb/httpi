@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
 
   s.add_dependency "rack"
+  s.add_dependency "ntlm-http", ">= 0.1.1"
 
   s.add_development_dependency "httpclient", "~> 2.1.5"
   s.add_development_dependency "curb", "~> 0.7.8"

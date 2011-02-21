@@ -68,6 +68,7 @@ module HTTPI
         basic_setup request
         setup_http_auth request if request.auth.http?
         setup_ssl_auth request.auth.ssl if request.auth.ssl?
+        setup_ntlm_auth request if request.auth.ntlm?
       end
 
       def basic_setup(request)
@@ -77,6 +78,10 @@ module HTTPI
       end
 
       def setup_http_auth(request)
+        client.set_auth request.url, *request.auth.credentials
+      end
+      
+      def setup_ntlm_auth(request)
         client.set_auth request.url, *request.auth.credentials
       end
 
