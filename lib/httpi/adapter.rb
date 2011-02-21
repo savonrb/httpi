@@ -35,7 +35,7 @@ module HTTPI
       @adapters ||= {
         :httpclient => { :class => HTTPClient, :require => "httpclient" },
         :curb       => { :class => Curb,       :require => "curb" },
-        :net_http   => { :class => NetHTTP,    :require => "net/https" }
+        :net_http   => { :class => NetHTTP,    :require => ["net/https", "net/ntlm_http"] }
       }
     end
 
@@ -54,7 +54,7 @@ module HTTPI
 
     # Tries to load and return the given +adapter+ name and class and falls back to the +FALLBACK+ adapter.
     def self.load_adapter(adapter)
-      require adapters[adapter][:require]
+      adapters[adapter][:require].to_a.map{|inc| require inc}
       [adapter, adapters[adapter][:class]]
     rescue LoadError
       HTTPI.logger.warn "HTTPI tried to use the #{adapter} adapter, but was unable to find the library in the LOAD_PATH.",
