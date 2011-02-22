@@ -79,6 +79,12 @@ describe HTTPI::Response do
       it "should return the (gzip decoded) HTTP response body" do
         response.body.should == Fixture.xml
       end
+
+      it "should bubble Zlib errors" do
+        arbitrary_error = Class.new(ArgumentError)
+        Zlib::GzipReader.expects(:new).raises(arbitrary_error)
+        lambda { response.body }.should raise_error(arbitrary_error)
+      end
     end
 
     describe "#raw_body" do
