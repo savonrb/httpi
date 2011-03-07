@@ -83,7 +83,7 @@ module HTTPI
         client.certtype = ssl.cert_type.to_s.upcase
         client.ssl_verify_peer = ssl.verify_mode == :peer
       end
-      
+
       def setup_ntlm_auth(request)
         client.username, client.password = *request.auth.credentials
         client.http_auth_types = request.auth.type
@@ -99,7 +99,7 @@ module HTTPI
       def parse_header_string(header_string)
         status, headers = nil, {}
         return [status, headers] unless header_string
-        
+
         header_string.split(/\r\n/).each do |header|
           if header =~ %r|^HTTP/1.[01] \d\d\d (.*)|
             status = $1
@@ -116,7 +116,7 @@ module HTTPI
             end
           end
         end
-        
+
         [status, headers]
       end
 
