@@ -1,6 +1,6 @@
 ## 0.9.0 (2011-03-08)
 
-* Feature: improved the adapter loading process ([d4a091](https://github.com/rubiii/savon/commit/d4a091)) [rubiii].
+* Feature: improved the adapter loading process ([d4a091](https://github.com/rubiii/httpi/commit/d4a091)) [rubiii].
 
   Instead of using HTTPClient as the default and falling back to NetHTTP, the loading process now does the following:
 
@@ -18,15 +18,15 @@
 
 ## 0.8.0 (2011-03-07)
 
-* Feature: added support for NTLM authentication ([96ceb1](https://github.com/rubiii/savon/commit/96ceb1)) [MattHall].
+* Feature: added support for NTLM authentication ([96ceb1](https://github.com/rubiii/httpi/commit/96ceb1)) [MattHall].
 
   You should now be able to use NTLM authentication by specifying your credentials via `HTTPI::Auth::Config#ntlm`:
 
       request = HTTPI::Request.new
       request.auth.ntlm "username", "password"
 
-* Improvement: changed the default log level to :warn ([d01591](https://github.com/rubiii/savon/commit/d01591))
-  and log at appropriate levels ([21ee1b](https://github.com/rubiii/savon/commit/21ee1b)) [ichverstehe].
+* Improvement: changed the default log level to :warn ([d01591](https://github.com/rubiii/httpi/commit/d01591))
+  and log at appropriate levels ([21ee1b](https://github.com/rubiii/httpi/commit/21ee1b)) [ichverstehe].
 
 * Fix: [issue 18](https://github.com/rubiii/httpi/issues/18) don't mask exceptions in decoded_gzip_body
-  ([f3811b](https://github.com/rubiii/savon/commit/f3811b)) [fj].
+  ([f3811b](https://github.com/rubiii/httpi/commit/f3811b)) [fj].
