@@ -25,7 +25,7 @@ Here's a POST request with a request object:
     request = HTTPI::Request.new
     request.url = "http://post.example.com"
     request.body = "send me"
-    
+
     HTTPI.post request
 
 And a GET request using HTTP basic auth and the Curb adapter:
@@ -33,7 +33,7 @@ And a GET request using HTTP basic auth and the Curb adapter:
     request = HTTPI::Request.new
     request.url = "http://auth.example.com"
     request.auth.basic "username", "password"
-    
+
     HTTPI.get request, :curb
 
 HTTPI also comes shortcuts. This executes a PUT request:
@@ -98,11 +98,14 @@ It currently contains adapters for:
 * [curb](http://rubygems.org/gems/curb) ~> 0.7.8
 * [net/http](http://ruby-doc.org/stdlib/libdoc/net/http/rdoc)
 
-By default, HTTPI uses the `HTTPClient` adapter. But changing the default is fairly easy:
+You can manually specify the adapter to use via:
 
     HTTPI::Adapter.use = :curb  # or one of [:httpclient, :net_http]
 
-Notice: HTTPI does not force you to install any of these libraries. So please make sure to install the HTTP library of your choice and/or add it to your Gemfile. HTTPI will then load the library when executing HTTP requests. HTTPI will fall back to using net/http when any other adapter could not be loaded.
+If you don't specify which adapter to use, HTTPI try to load HTTPClient, then Curb and finally NetHTTP.
+
+Notice: HTTPI does not force you to install any of these libraries. If you'd like to use on of the more advanced libraries (HTTPClient or Curb),
+you have to make sure they're in your LOAD_PATH. HTTPI will then load the library when executing HTTP requests.
 
 HTTPI::Request
 --------------
@@ -131,15 +134,12 @@ HTTPI::Auth
 
     #basic(username, password)   # HTTP basic auth credentials
     #digest(username, password)  # HTTP digest auth credentials
+    #ntlm(username, password)    # NTLM auth credentials
 
 ### Usage example
 
     request = HTTPI::Request.new
     request.auth.basic "username", "password"
-
-### TODO
-
-* Add support for NTLM authentication
 
 HTTPI::Auth::SSL
 ----------------
@@ -166,7 +166,7 @@ As mentioned before, every request method return an `HTTPI::Response`.
 It contains the response code, headers and body.
 
     response = HTTPI.get request
-     
+
     response.code     # => 200
     response.headers  # => { "Content-Encoding" => "gzip" }
     response.body     # => "<!DOCTYPE HTML PUBLIC ...>"
