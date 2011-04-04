@@ -1,3 +1,7 @@
+## 0.9.1 (2011-04-04)
+
+* Fix: [issue 25](https://github.com/rubiii/httpi/issues/22) problem with HTTPI using the Net::HTTP adapter [hakanensari].
+
 ## 0.9.0 (2011-03-08)
 
 * Feature: improved the adapter loading process ([d4a091](https://github.com/rubiii/httpi/commit/d4a091)) [rubiii].
