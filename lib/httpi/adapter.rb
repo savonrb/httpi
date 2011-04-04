@@ -50,7 +50,7 @@ module HTTPI
       def default_adapter
         return :httpclient if defined?(::HTTPClient)
         return :curb if defined?(::Curl::Easy)
-        return :net_http if defined?(::NetHTTP)
+        return :net_http if defined?(::Net::HTTP)
 
         DEPENDENCIES.each do |(adapter, dependencies)|
           begin
