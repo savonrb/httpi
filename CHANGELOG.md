@@ -1,3 +1,8 @@
+## 0.9.2 (2011-04-05)
+
+* Fix: issues [161](https://github.com/rubiii/httpi/issues/161) and [165](https://github.com/rubiii/httpi/issues/165)
+  reported at [rubiii/savon](https://github.com/rubiii/savon).
+
 ## 0.9.1 (2011-04-04)
 
 * Fix: [issue 25](https://github.com/rubiii/httpi/issues/22) problem with HTTPI using the Net::HTTP adapter [hakanensari].
