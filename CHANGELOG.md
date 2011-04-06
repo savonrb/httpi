@@ -1,6 +1,6 @@
 ## 0.9.2 (2011-04-05)
 
-* Fix: issues [161](https://github.com/rubiii/httpi/issues/161) and [165](https://github.com/rubiii/httpi/issues/165)
+* Fix: issues [161](https://github.com/rubiii/savon/issues/161) and [165](https://github.com/rubiii/savon/issues/165)
   reported at [rubiii/savon](https://github.com/rubiii/savon).
 
 ## 0.9.1 (2011-04-04)
