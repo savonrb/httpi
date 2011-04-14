@@ -9,7 +9,7 @@ module HTTPI
     # Adapter for the Net::HTTP client.
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP
-      
+
       def initialize(request)
         self.client = new_client request
       end
@@ -70,7 +70,7 @@ module HTTPI
       def do_request(type, request)
         setup_client request
         setup_ssl_auth request.auth.ssl if request.auth.ssl?
-        
+
         respond_with(client.start do |http|
           yield http, request_client(type, request)
         end)
@@ -88,7 +88,6 @@ module HTTPI
         client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
         client.verify_mode = ssl.openssl_verify_mode
       end
-      
 
       def request_client(type, request)
         request_class = case type
@@ -98,20 +97,21 @@ module HTTPI
           when :put    then Net::HTTP::Put
           when :delete then Net::HTTP::Delete
         end
-        
+
         request_client = request_class.new request.url.request_uri, request.headers
-        
+
         request_client.basic_auth *request.auth.credentials if request.auth.basic?
         request_client.ntlm_auth *request.auth.credentials if request.auth.ntlm?
-        
+
         request_client
       end
 
       def respond_with(response)
         headers = response.to_hash
-        headers.each {|k,v| headers[k] = v[0]}
+        headers.each { |key, value| headers[key] = value[0] }
         Response.new response.code, headers, response.body
       end
+
     end
   end
 end

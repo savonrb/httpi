@@ -12,7 +12,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_get)
       curb.expects(:response_code).returns(200)
-      curb.expects(:header_str).returns("")
+      curb.expects(:header_str).returns("Accept-encoding: utf-8")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -25,7 +25,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_post)
       curb.expects(:response_code).returns(200)
-      curb.expects(:header_str).returns("")
+      curb.expects(:header_str).returns("Accept-encoding: utf-8")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -45,7 +45,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_head)
       curb.expects(:response_code).returns(200)
-      curb.expects(:header_str).returns("")
+      curb.expects(:header_str).returns("Accept-encoding: utf-8")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -58,7 +58,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_put)
       curb.expects(:response_code).returns(200)
-      curb.expects(:header_str).returns("")
+      curb.expects(:header_str).returns("Accept-encoding: utf-8")
       curb.expects(:body_str).returns(Fixture.xml)
     end
 
@@ -78,7 +78,7 @@ describe HTTPI::Adapter::Curb do
     before do
       curb.expects(:http_delete)
       curb.expects(:response_code).returns(200)
-      curb.expects(:header_str).returns("")
+      curb.expects(:header_str).returns("Accept-encoding: utf-8")
       curb.expects(:body_str).returns("")
     end
 
@@ -105,7 +105,7 @@ describe HTTPI::Adapter::Curb do
 
       it "should be set if specified" do
         request = basic_request { |request| request.proxy = "http://proxy.example.com" }
-        
+
         curb.expects(:proxy_url=).with(request.proxy.to_s)
         adapter.get(request)
       end
@@ -156,14 +156,14 @@ describe HTTPI::Adapter::Curb do
     describe "http_auth_types" do
       it "should be set to :basic for HTTP basic auth" do
         request = basic_request { |request| request.auth.basic "username", "password" }
-        
+
         curb.expects(:http_auth_types=).with(:basic)
         adapter.get(request)
       end
 
       it "should be set to :digest for HTTP digest auth" do
         request = basic_request { |request| request.auth.digest "username", "password" }
-        
+
         curb.expects(:http_auth_types=).with(:digest)
         adapter.get(request)
       end
@@ -172,7 +172,7 @@ describe HTTPI::Adapter::Curb do
     describe "username and password" do
       it "should be set for HTTP basic auth" do
         request = basic_request { |request| request.auth.basic "username", "password" }
-        
+
         curb.expects(:username=).with("username")
         curb.expects(:password=).with("password")
         adapter.get(request)
@@ -180,7 +180,7 @@ describe HTTPI::Adapter::Curb do
 
       it "should be set for HTTP digest auth" do
         request = basic_request { |request| request.auth.digest "username", "password" }
-        
+
         curb.expects(:username=).with("username")
         curb.expects(:password=).with("password")
         adapter.get(request)
@@ -200,21 +200,21 @@ describe HTTPI::Adapter::Curb do
         curb.expects(:cert=).with(ssl_auth_request.auth.ssl.cert_file)
         curb.expects(:ssl_verify_peer=).with(true)
         curb.expects(:certtype=).with(ssl_auth_request.auth.ssl.cert_type.to_s.upcase)
-        
+
         adapter.get(ssl_auth_request)
       end
-      
+
       it "should set the cert_type to DER if specified" do
         ssl_auth_request.auth.ssl.cert_type = :der
         curb.expects(:certtype=).with(:der.to_s.upcase)
-        
+
         adapter.get(ssl_auth_request)
       end
 
       it "should set the cacert if specified" do
         ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
         curb.expects(:cacert=).with(ssl_auth_request.auth.ssl.ca_cert_file)
-        
+
         adapter.get(ssl_auth_request)
       end
     end

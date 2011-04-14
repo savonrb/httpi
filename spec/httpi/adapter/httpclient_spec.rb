@@ -150,7 +150,9 @@ describe HTTPI::Adapter::HTTPClient do
   end
 
   def http_message(body = Fixture.xml)
-    HTTP::Message.new_response body
+    message = HTTP::Message.new_response body
+    message.header.set "Accept-encoding", "utf-8"
+    message
   end
 
   def basic_request

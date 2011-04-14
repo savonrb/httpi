@@ -1,3 +1,7 @@
+## 0.9.3 (UPCOMING)
+
+* Fix: [issue 31](https://github.com/rubiii/httpi/issues/31) missing headers when using httpclient.
+
 ## 0.9.2 (2011-04-05)
 
 * Fix: issues [161](https://github.com/rubiii/savon/issues/161) and [165](https://github.com/rubiii/savon/issues/165)
