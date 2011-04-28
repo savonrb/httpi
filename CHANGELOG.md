@@ -1,6 +1,8 @@
-## 0.9.3 (UPCOMING)
+## 0.9.3 (2010-04-28)
 
 * Fix: [issue 31](https://github.com/rubiii/httpi/issues/31) missing headers when using httpclient.
+
+* Fix: [issue 30](https://github.com/rubiii/httpi/issues/30) fix for using SSL with Net::HTTP.
 
 ## 0.9.2 (2011-04-05)
 
