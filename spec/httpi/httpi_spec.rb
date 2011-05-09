@@ -7,7 +7,7 @@ describe HTTPI do
   let(:curb) { HTTPI::Adapter.load(:curb)[1] }
 
   describe ".get(request)" do
-    it "should execute an HTTP GET request using the default adapter" do
+    it "executes a GET request using the default adapter" do
       request = HTTPI::Request.new
       httpclient.any_instance.expects(:get).with(request)
 
@@ -16,7 +16,7 @@ describe HTTPI do
   end
 
   describe ".get(request, adapter)" do
-    it "should execute an HTTP GET request using the given adapter" do
+    it "executes a GET request using the given adapter" do
       request = HTTPI::Request.new
       curb.any_instance.expects(:get).with(request)
 
@@ -25,7 +25,7 @@ describe HTTPI do
   end
 
   describe ".get(url)" do
-    it "should execute an HTTP GET request using the default adapter" do
+    it "executes a GET request using the default adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       httpclient.any_instance.expects(:get).with(instance_of(HTTPI::Request))
 
@@ -34,7 +34,7 @@ describe HTTPI do
   end
 
   describe ".get(url, adapter)" do
-    it "should execute an HTTP GET request using the given adapter" do
+    it "executes a GET request using the given adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       curb.any_instance.expects(:get).with(instance_of(HTTPI::Request))
 
@@ -43,7 +43,7 @@ describe HTTPI do
   end
 
   describe ".post(request)" do
-    it "should execute an HTTP POST request using the default adapter" do
+    it "executes a POST request using the default adapter" do
       request = HTTPI::Request.new
       httpclient.any_instance.expects(:post).with(request)
 
@@ -52,7 +52,7 @@ describe HTTPI do
   end
 
   describe ".post(request, adapter)" do
-    it "should execute an HTTP POST request using the given adapter" do
+    it "executes a POST request using the given adapter" do
       request = HTTPI::Request.new
       curb.any_instance.expects(:post).with(request)
 
@@ -61,7 +61,7 @@ describe HTTPI do
   end
 
   describe ".post(url, body)" do
-    it "should execute an HTTP POST request using the default adapter" do
+    it "executes a POST request using the default adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
       httpclient.any_instance.expects(:post).with(instance_of(HTTPI::Request))
@@ -71,7 +71,7 @@ describe HTTPI do
   end
 
   describe ".post(url, body, adapter)" do
-    it "should execute an HTTP POST request using the given adapter" do
+    it "executes a POST request using the given adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
       curb.any_instance.expects(:post).with(instance_of(HTTPI::Request))
@@ -81,7 +81,7 @@ describe HTTPI do
   end
 
   describe ".head(request)" do
-    it "should execute an HTTP HEAD request using the default adapter" do
+    it "executes a HEAD request using the default adapter" do
       request = HTTPI::Request.new
       httpclient.any_instance.expects(:head).with(request)
 
@@ -90,7 +90,7 @@ describe HTTPI do
   end
 
   describe ".head(request, adapter)" do
-    it "should execute an HTTP HEAD request using the given adapter" do
+    it "executes a HEAD request using the given adapter" do
       request = HTTPI::Request.new
       curb.any_instance.expects(:head).with(request)
 
@@ -99,7 +99,7 @@ describe HTTPI do
   end
 
   describe ".head(url)" do
-    it "should execute an HTTP HEAD request using the default adapter" do
+    it "executes a HEAD request using the default adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       httpclient.any_instance.expects(:head).with(instance_of(HTTPI::Request))
 
@@ -108,7 +108,7 @@ describe HTTPI do
   end
 
   describe ".head(url, adapter)" do
-    it "should execute an HTTP HEAD request using the given adapter" do
+    it "executes a HEAD request using the given adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       curb.any_instance.expects(:head).with(instance_of(HTTPI::Request))
 
@@ -117,7 +117,7 @@ describe HTTPI do
   end
 
   describe ".put(request)" do
-    it "should execute an HTTP PUT request using the default adapter" do
+    it "executes a PUT request using the default adapter" do
       request = HTTPI::Request.new
       httpclient.any_instance.expects(:put).with(request)
 
@@ -126,7 +126,7 @@ describe HTTPI do
   end
 
   describe ".put(request, adapter)" do
-    it "should execute an HTTP PUT request using the given adapter" do
+    it "executes a PUT request using the given adapter" do
       request = HTTPI::Request.new
       curb.any_instance.expects(:put).with(request)
 
@@ -135,7 +135,7 @@ describe HTTPI do
   end
 
   describe ".put(url, body)" do
-    it "should execute an HTTP PUT request using the default adapter" do
+    it "executes a PUT request using the default adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
       httpclient.any_instance.expects(:put).with(instance_of(HTTPI::Request))
@@ -145,7 +145,7 @@ describe HTTPI do
   end
 
   describe ".put(url, body, adapter)" do
-    it "should execute an HTTP PUT request using the given adapter" do
+    it "executes a PUT request using the given adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
       curb.any_instance.expects(:put).with(instance_of(HTTPI::Request))
@@ -155,7 +155,7 @@ describe HTTPI do
   end
 
   describe ".delete(request)" do
-    it "should execute an HTTP DELETE request using the default adapter" do
+    it "executes a DELETE request using the default adapter" do
       request = HTTPI::Request.new
       httpclient.any_instance.expects(:delete).with(request)
 
@@ -164,7 +164,7 @@ describe HTTPI do
   end
 
   describe ".delete(request, adapter)" do
-    it "should execute an HTTP DELETE request using the given adapter" do
+    it "executes a DELETE request using the given adapter" do
       request = HTTPI::Request.new
       curb.any_instance.expects(:delete).with(request)
 
@@ -173,7 +173,7 @@ describe HTTPI do
   end
 
   describe ".delete(url)" do
-    it "should execute an HTTP DELETE request using the default adapter" do
+    it "executes a DELETE request using the default adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       httpclient.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
 
@@ -182,7 +182,7 @@ describe HTTPI do
   end
 
   describe ".delete(url, adapter)" do
-    it "should execute an HTTP DELETE request using the given adapter" do
+    it "executes a DELETE request using the given adapter" do
       HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
       curb.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
 
@@ -191,14 +191,14 @@ describe HTTPI do
   end
 
   describe ".request" do
-    it "should raise an ArgumentError in case of an invalid request method" do
-      lambda { client.request :invalid, HTTPI::Request.new }.should raise_error(ArgumentError)
+    it "raises an ArgumentError in case of an invalid request method" do
+      expect { client.request :invalid, HTTPI::Request.new }.to raise_error(ArgumentError)
     end
   end
 
   HTTPI::REQUEST_METHODS.each do |method|
     describe ".request(#{method}, request, adapter)" do
-      it "should delegate to the .#{method} method" do
+      it "delegates to the .#{method} method" do
         HTTPI.expects(method)
         client.request method, HTTPI::Request.new
       end
@@ -207,12 +207,12 @@ describe HTTPI do
     describe ".#{method}" do
       let(:request) { HTTPI::Request.new :url => "http://example.com" }
 
-      it "should raise an ArgumentError in case of an invalid adapter" do
-        lambda { client.request method, request, :invalid }.should raise_error(ArgumentError)
+      it "raises an ArgumentError in case of an invalid adapter" do
+        expect { client.request method, request, :invalid }.to raise_error(ArgumentError)
       end
 
-      it "should raise an ArgumentError in case of an invalid request" do
-        lambda { client.request method, "invalid" }.should raise_error(ArgumentError)
+      it "raises an ArgumentError in case of an invalid request" do
+        expect { client.request method, "invalid" }.to raise_error(ArgumentError)
       end
 
       HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
@@ -225,13 +225,13 @@ describe HTTPI do
         context "using #{adapter}" do
           before { opts[:class].any_instance.expects(method) }
 
-          it "should log that we're executing an HTTP request" do
+          it "logs that we're executing a request" do
             HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
             client.request method, request, adapter
           end
 
-          it "should yield the HTTP client instance used for the request" do
-            block = lambda { |http| http.should be_a(client_class[adapter].call) }
+          it "yields the HTTP client instance used for the request" do
+            block = lambda { |http| http.be_a(client_class[adapter].call) }
             client.request(method, request, adapter, &block)
           end
         end
@@ -239,7 +239,7 @@ describe HTTPI do
     end
   end
 
-  context "with resetting the defaults" do
+  context "(with reset)" do
     before { HTTPI.reset_config! }
 
     after do
@@ -248,41 +248,25 @@ describe HTTPI do
     end
 
     describe ".log" do
-      it "should default to true" do
+      it "defaults to true" do
         HTTPI.log?.should be_true
-      end
-
-      it "should set whether to log" do
-        HTTPI.log = false
-        HTTPI.log?.should be_false
       end
     end
 
     describe ".logger" do
-      it "should default to Logger writing to STDOUT" do
+      it "defaults to Logger writing to STDOUT" do
         HTTPI.logger.should be_a(Logger)
-      end
-
-      it "should set the logger to use" do
-        MyLogger = Class.new
-        HTTPI.logger = MyLogger
-        HTTPI.logger.should == MyLogger
       end
     end
 
     describe ".log_level" do
-      it "should default to :warn" do
+      it "defaults to :warn" do
         HTTPI.log_level.should == :warn
-      end
-
-      it "should set the log level to use" do
-        HTTPI.log_level = :info
-        HTTPI.log_level.should == :info
       end
     end
 
     describe ".log" do
-      it "should log given messages" do
+      it "logs the given messages" do
         HTTPI.log_level = :debug
         HTTPI.logger.expects(:debug).with("Log this")
         HTTPI.log "Log", "this"

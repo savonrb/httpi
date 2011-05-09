@@ -9,7 +9,7 @@ describe HTTPI::Auth::Config do
       auth.basic "username", "password"
       auth.basic.should == ["username", "password"]
     end
-   
+
     it "also accepts an Array of credentials" do
       auth.basic ["username", "password"]
       auth.basic.should == ["username", "password"]
@@ -22,11 +22,11 @@ describe HTTPI::Auth::Config do
   end
 
   describe "#basic?" do
-    it "should default to return false" do
+    it "defaults to return false" do
       auth.should_not be_basic
     end
 
-    it "should return true for HTTP basic auth" do
+    it "returns true for HTTP basic auth" do
       auth.basic "username", "password"
       auth.should be_basic
     end
@@ -37,7 +37,7 @@ describe HTTPI::Auth::Config do
       auth.digest "username", "password"
       auth.digest.should == ["username", "password"]
     end
-   
+
     it "also accepts an Array of credentials" do
       auth.digest ["username", "password"]
       auth.digest.should == ["username", "password"]
@@ -50,65 +50,65 @@ describe HTTPI::Auth::Config do
   end
 
   describe "#digest?" do
-    it "should default to return false" do
+    it "defaults to return false" do
       auth.should_not be_digest
     end
 
-    it "should return true for HTTP digest auth" do
+    it "returns true for HTTP digest auth" do
       auth.digest "username", "password"
       auth.should be_digest
     end
   end
 
   describe "#http?" do
-    it "should default to return false" do
+    it "defaults to return false" do
       auth.should_not be_http
     end
 
-    it "should return true for HTTP basic auth" do
+    it "returns true for HTTP basic auth" do
       auth.basic "username", "password"
       auth.should be_http
     end
 
-    it "should return true for HTTP digest auth" do
+    it "returns true for HTTP digest auth" do
       auth.digest "username", "password"
       auth.should be_http
     end
   end
 
   describe "#ssl" do
-    it "should return the HTTPI::Auth::SSL object" do
+    it "returns the HTTPI::Auth::SSL object" do
       auth.ssl.should be_a(HTTPI::Auth::SSL)
     end
   end
 
   describe "#ssl?" do
-    it "should default to return false" do
+    it "defaults to return false" do
       auth.should_not be_ssl
     end
 
-    it "should return true for SSL client auth" do
+    it "returns true for SSL client auth" do
       auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
       auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
-      
+
       auth.should be_ssl
     end
   end
 
   describe "#type" do
-    it "should return the authentication type" do
+    it "returns the authentication type" do
       auth.basic "username", "password"
       auth.type.should == :basic
     end
   end
 
   describe "#credentials" do
-    it "return the credentials for HTTP basic auth" do
+    it "returns the credentials for HTTP basic auth" do
       auth.basic "username", "basic"
       auth.credentials.should == ["username", "basic"]
     end
 
-    it "return the credentials for HTTP digest auth" do
+    it "returns the credentials for HTTP digest auth" do
       auth.digest "username", "digest"
       auth.credentials.should == ["username", "digest"]
     end

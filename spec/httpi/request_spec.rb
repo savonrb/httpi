@@ -5,12 +5,12 @@ describe HTTPI::Request do
   let(:request) { HTTPI::Request.new }
 
   describe ".new" do
-    it "should accept just a url" do
+    it "accepts a url" do
       request = HTTPI::Request.new "http://example.com"
       request.url.should == URI("http://example.com")
     end
 
-    it "should accept a Hash of accessors to set" do
+    it "accepts a Hash of accessors to set" do
       request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30
       request.url.should == URI("http://example.com")
       request.open_timeout.should == 30
@@ -28,8 +28,8 @@ describe HTTPI::Request do
       request.url.should == URI("http://example.com")
     end
 
-    it "raises an ArgumentError in case the url does not seem to be valid" do
-      lambda { request.url = "invalid" }.should raise_error(ArgumentError)
+    it "raises an ArgumentError in case of an invalid url" do
+      expect { request.url = "invalid" }.to raise_error(ArgumentError)
     end
   end
 
@@ -44,28 +44,28 @@ describe HTTPI::Request do
       request.proxy.should == URI("http://proxy.example.com")
     end
 
-    it "raises an ArgumentError in case the url does not seem to be valid" do
-      lambda { request.proxy = "invalid" }.should raise_error(ArgumentError)
+    it "raises an ArgumentError in case of an invalid url" do
+      expect { request.proxy = "invalid" }.to raise_error(ArgumentError)
     end
   end
 
   describe "#ssl" do
-    it "should return false if no request url was specified" do
+    it "returns false if no request url was specified" do
       request.should_not be_ssl
     end
 
-    it "should return false if the request url does not start with https" do
+    it "returns false if the request url does not start with https" do
       request.url = "http://example.com"
       request.should_not be_ssl
     end
 
-    it "should return true if the request url starts with https" do
+    it "returns true if the request url starts with https" do
       request.url = "https://example.com"
       request.should be_ssl
     end
 
     context "with an explicit value" do
-      it "should return the value" do
+      it "returns the value" do
         request.ssl = true
         request.should be_ssl
       end
@@ -84,7 +84,7 @@ describe HTTPI::Request do
   end
 
   describe "#gzip" do
-    it "should add the proper 'Accept-Encoding' header" do
+    it "adds the proper 'Accept-Encoding' header" do
       request.gzip
       request.headers["Accept-Encoding"].should == "gzip,deflate"
     end
@@ -112,22 +112,22 @@ describe HTTPI::Request do
   end
 
   describe "#auth" do
-    it "should return the authentication object" do
+    it "returns the authentication object" do
       request.auth.should be_an(HTTPI::Auth::Config)
     end
 
-    it "should memoize the authentication object" do
+    it "memoizes the authentication object" do
       request.auth.should equal(request.auth)
     end
   end
 
   describe "#auth?" do
-    it "should return true when auth credentials are specified" do
+    it "returns true when auth credentials are specified" do
       request.auth.basic "username", "password"
       request.auth?.should be_true
     end
 
-    it "should return false otherwise" do
+    it "returns false otherwise" do
       request.auth?.should be_false
     end
   end
