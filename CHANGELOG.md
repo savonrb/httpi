@@ -1,3 +1,7 @@
+## UPCOMING
+
+* Fixed a bug where setting the default adapter did not load the adapter's client library.
+
 ## 0.9.3 (2010-04-28)
 
 * Fix: [issue 31](https://github.com/rubiii/httpi/issues/31) missing headers when using httpclient.

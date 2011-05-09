@@ -215,7 +215,7 @@ describe HTTPI do
         lambda { client.request method, "invalid" }.should raise_error(ArgumentError)
       end
 
-      HTTPI::Adapter::ADAPTERS.each do |adapter, adapter_class|
+      HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
         client_class = {
           :httpclient => lambda { HTTPClient },
           :curb       => lambda { Curl::Easy },
@@ -223,7 +223,7 @@ describe HTTPI do
         }
 
         context "using #{adapter}" do
-          before { adapter_class.any_instance.expects(method) }
+          before { opts[:class].any_instance.expects(method) }
 
           it "should log that we're executing an HTTP request" do
             HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
