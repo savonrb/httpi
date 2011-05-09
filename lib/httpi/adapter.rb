@@ -35,7 +35,7 @@ module HTTPI
         @adapter ||= default_adapter
       end
 
-      def load(adapter = nil)
+      def load(adapter)
         adapter = adapter ? validate_adapter!(adapter) : use
         [adapter, ADAPTERS[adapter][:class]]
       end

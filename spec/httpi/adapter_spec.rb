@@ -34,16 +34,22 @@ describe HTTPI::Adapter do
   end
 
   describe ".load" do
-    it "should return the adapter name and it's class for a given adapter" do
-      adapter.load(:curb).should == [:curb, HTTPI::Adapter::Curb]
+    context "called with a valid adapter" do
+      it "should return the adapter's name and class" do
+        adapter.load(:curb).should == [:curb, HTTPI::Adapter::Curb]
+      end
     end
 
-    it "should return the HTTPClient adapter name and it's class by default" do
-      adapter.load.should == [:httpclient, HTTPI::Adapter::HTTPClient]
+    context "called with nil" do
+      it "should return the default adapter's name and class" do
+        adapter.load(nil).should == [:httpclient, HTTPI::Adapter::HTTPClient]
+      end
     end
 
-    it "should raise an ArgumentError in case of an invalid adapter" do
-      lambda { adapter.use = :unknown }.should raise_error(ArgumentError)
+    context "called with an invalid adapter" do
+      it "should raise an ArgumentError" do
+        lambda { adapter.use = :unknown }.should raise_error(ArgumentError)
+      end
     end
   end
 
