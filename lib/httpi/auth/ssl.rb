@@ -17,7 +17,7 @@ module HTTPI
       rescue TypeError, Errno::ENOENT
         false
       end
-      
+
       # Accessor for the cert key file to validate SSL certificates.
       attr_accessor :cert_key_file
 
@@ -29,18 +29,18 @@ module HTTPI
 
       # Accessor for the cacert file to validate SSL certificates.
       attr_accessor :ca_cert_file
-      
+
       # Returns the cert type to validate SSL certificates PEM|DER.
       def cert_type
         @cert_type ||= :pem
       end
-      
+
       # Sets the cert type to validate SSL certificates PEM|DER.
       def cert_type=(type)
         raise ArgumentError, "Invalid SSL cert type: #{type}" unless CERT_TYPES.include? type
         @cert_type = type
       end
-      
+
       # Returns the SSL verify mode. Defaults to <tt>:peer</tt>.
       def verify_mode
         @verify_mode ||= :peer

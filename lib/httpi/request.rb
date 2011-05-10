@@ -77,7 +77,7 @@ module HTTPI
     def mass_assign(args)
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
- 
+
   private
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
