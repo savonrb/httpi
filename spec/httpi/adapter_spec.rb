@@ -12,10 +12,10 @@ describe HTTPI::Adapter do
     end
 
     it "sets the adapter to use" do
-      adapter.use.should_not == :curb
+      adapter.use.should_not == :net_http
 
-      adapter.use = :curb
-      adapter.use.should == :curb
+      adapter.use = :net_http
+      adapter.use.should == :net_http
     end
 
     it "defaults to use the HTTPClient adapter" do
