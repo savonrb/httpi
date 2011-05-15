@@ -1,8 +1,17 @@
-## UPCOMING
+## 0.9.4 (2011-05-15)
 
-* Fixed a bug where setting the default adapter did not load the adapter's client library.
+* Fix: issues [34](https://github.com/rubiii/httpi/issues/34) and
+  [29](https://github.com/rubiii/httpi/issues/29) - replaced the dependency
+  on `ntlm-http` with a dependency on `pyu-ntlm-http` which comes with quite
+  a few bugfixes.
 
-## 0.9.3 (2010-04-28)
+* Fix: Setting the default adapter did not always load the adapter's client library.
+
+* Improvement: Added a shortcut method to set the default adapter to use.
+
+      HTTPI.adapter = :net_http
+
+## 0.9.3 (2011-04-28)
 
 * Fix: [issue 31](https://github.com/rubiii/httpi/issues/31) missing headers when using httpclient.
 
