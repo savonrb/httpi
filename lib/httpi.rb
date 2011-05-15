@@ -133,6 +133,11 @@ module HTTPI
       send method, request, adapter
     end
 
+    # Shortcut for setting the default adapter to use.
+    def adapter=(adapter)
+      Adapter.use = adapter
+    end
+
     # Sets whether to log HTTP requests.
     attr_writer :log
 
