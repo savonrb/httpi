@@ -1,92 +1,98 @@
-HTTPI ![http://travis-ci.org/rubiii/httpi](http://travis-ci.org/rubiii/httpi.png)
+HTTPI [![Build Status](http://travis-ci.org/rubiii/httpi.png)](http://travis-ci.org/rubiii/httpi)
 =====
 
 HTTPI provides a common interface for Ruby HTTP libraries.
 
-[Wishlist](http://httpi.uservoice.com) | [Bugs](http://github.com/rubiii/httpi/issues) | [Docs](http://rubydoc.info/gems/httpi/frames)
+[Bugs](http://github.com/rubiii/httpi/issues) | [RDoc](http://rubydoc.info/gems/httpi/frames)
 
 Installation
 ------------
 
-The gem is available through [Rubygems](http://rubygems.org/gems/httpi) and can be installed via:
+HTTPI is available through [Rubygems](http://rubygems.org/gems/httpi) and can be installed via:
 
-    $ gem install httpi
+```
+$ gem install httpi
+```
 
-Some examples
--------------
 
-Executing a POST request with the most basic request object:
+Getting started
+---------------
 
-    request = HTTPI::Request.new "http://example.com"
-    HTTPI.get request
+In order to provide a common interface, HTTPI provides the `HTTPI::Request` object for you to
+configure your request. Here's a very simple GET request.
 
-Here's a POST request with a request object:
+``` ruby
+request = HTTPI::Request.new("http://example.com")
+HTTPI.get request
+```
 
-    request = HTTPI::Request.new
-    request.url = "http://post.example.com"
-    request.body = "send me"
+To execute a POST request, you may want to specify a payload.
 
-    HTTPI.post request
+``` ruby
+request = HTTPI::Request.new
+request.url = "http://post.example.com"
+request.body = "some data"
 
-And a GET request using HTTP basic auth and the Curb adapter:
+HTTPI.post request
+```
 
-    request = HTTPI::Request.new
-    request.url = "http://auth.example.com"
-    request.auth.basic "username", "password"
-
-    HTTPI.get request, :curb
-
-HTTPI also comes shortcuts. This executes a PUT request:
-
-    HTTPI.put "http://example.com", "<some>xml</some>"
-
-And this executes a DELETE request:
-
-    HTTPI.delete "http://example.com"
 
 HTTPI
--------------
+-----
 
 The `HTTPI` module uses one of the available adapters to execute HTTP requests.
 
-### GET
+#### GET
 
-    HTTPI.get(request, adapter = nil)
-    HTTPI.get(url, adapter = nil)
+``` ruby
+HTTPI.get(request, adapter = nil)
+HTTPI.get(url, adapter = nil)
+```
 
-### POST
+#### POST
 
-    HTTPI.post(request, adapter = nil)
-    HTTPI.post(url, body, adapter = nil)
+``` ruby
+HTTPI.post(request, adapter = nil)
+HTTPI.post(url, body, adapter = nil)
+```
 
-### HEAD
+#### HEAD
 
-    HTTPI.head(request, adapter = nil)
-    HTTPI.head(url, adapter = nil)
+``` ruby
+HTTPI.head(request, adapter = nil)
+HTTPI.head(url, adapter = nil)
+```
 
-### PUT
+#### PUT
 
-    HTTPI.put(request, adapter = nil)
-    HTTPI.put(url, body, adapter = nil)
+``` ruby
+HTTPI.put(request, adapter = nil)
+HTTPI.put(url, body, adapter = nil)
+```
 
-### DELETE
+#### DELETE
 
-    HTTPI.delete(request, adapter = nil)
-    HTTPI.delete(url, adapter = nil)
+``` ruby
+HTTPI.delete(request, adapter = nil)
+HTTPI.delete(url, adapter = nil)
+```
 
-### Notice
+#### Notice
 
 * You can specify the adapter to use per request
 * And request methods always return an `HTTPI::Response`
 
-### More control
+#### More control
 
-If you need more control over the request, you can access the HTTP client instance represented
-by your adapter in a block:
+If you need more control over the request, you can access the HTTP client instance
+represented by your adapter in a block:
 
-    HTTPI.post request do |http|
-      http.use_ssl = true  # Curb example
-    end
+``` ruby
+HTTPI.post request do |http|
+  http.use_ssl = true  # Curb example
+end
+```
+
 
 HTTPI::Adapter
 --------------
@@ -100,94 +106,118 @@ It currently contains adapters for:
 
 You can manually specify the adapter to use via:
 
-    HTTPI::Adapter.use = :curb  # or one of [:httpclient, :net_http]
+``` ruby
+HTTPI.adapter = :curb  # or one of [:httpclient, :net_http]
+```
 
 If you don't specify which adapter to use, HTTPI try to load HTTPClient, then Curb and finally NetHTTP.
 
-Notice: HTTPI does not force you to install any of these libraries. If you'd like to use on of the more advanced libraries (HTTPClient or Curb),
-you have to make sure they're in your LOAD_PATH. HTTPI will then load the library when executing HTTP requests.
+#### Notice
+
+HTTPI does not force you to install any of these libraries. If you'd like to use on of the more advanced
+libraries (HTTPClient or Curb), you have to make sure they're in your LOAD_PATH. HTTPI will then load the
+library when executing HTTP requests.
+
 
 HTTPI::Request
 --------------
 
-The `HTTPI::Request` serves as a common denominator of options that HTTPI adapters need to support.  
-It represents an HTTP request and lets you customize various settings through the following methods:
+#### URL
 
-    #url           # the URL to access
-    #proxy         # the proxy server to use
-    #ssl           # whether to use SSL
-    #headers       # a Hash of HTTP headers
-    #body          # the HTTP request body
-    #open_timeout  # the open timeout (sec)
-    #read_timeout  # the read timeout (sec)
+``` ruby
+request.url = "http://example.com"
+request.url # => #<URI::HTTP:0x101c1ab18 URL:http://example.com>
+```
 
-### Usage example
+#### Proxy
 
-    request = HTTPI::Request.new
-    request.url = "http://example.com"
-    request.read_timeout = 30
+``` ruby
+request.proxy = "http://example.com"
+request.proxy # => #<URI::HTTP:0x101c1ab18 URL:http://example.com>
+```
+
+#### Headers
+
+``` ruby
+request.headers["Accept-Charset"] = "utf-8"
+request.headers = { "Accept-Charset" => "utf-8" }
+request.headers # => { "Accept-Charset" => "utf-8" }
+```
+
+#### Body
+
+``` ruby
+request.body = "some data"
+request.body # => "some data"
+```
+
+#### Open timeout
+
+``` ruby
+request.open_timeout = 30 # sec
+```
+
+#### Read timeout
+
+``` ruby
+request.read_timeout = 30 # sec
+```
+
 
 HTTPI::Auth
 -----------
 
 `HTTPI::Auth` supports HTTP basic and digest authentication.
 
-    #basic(username, password)   # HTTP basic auth credentials
-    #digest(username, password)  # HTTP digest auth credentials
-    #ntlm(username, password)    # NTLM auth credentials
+``` ruby
+request.auth.basic("username", "password")   # HTTP basic auth credentials
+request.auth.digest("username", "password")  # HTTP digest auth credentials
+request.auth.ntlm("username", "password")    # NTLM auth credentials
+```
 
-### Usage example
-
-    request = HTTPI::Request.new
-    request.auth.basic "username", "password"
 
 HTTPI::Auth::SSL
 ----------------
 
 `HTTPI::Auth::SSL` manages SSL client authentication.
 
-    #cert_key_file  # the private key file to use
-    #cert_file      # the certificate file to use
-    #ca_cert_file   # the ca certificate file to use
-    #verify_mode    # one of [:none, :peer, :fail_if_no_peer_cert, :client_once]
+``` ruby
+request.auth.ssl.cert_key_file     = "client_key.pem"   # the private key file to use
+request.auth.ssl.cert_key_password = "C3rtP@ssw0rd"     # the key file's password
+request.auth.ssl.cert_file         = "client_cert.pem"  # the certificate file to use
+request.auth.ssl.ca_cert_file      = "ca_cert.pem"      # the ca certificate file to use
+request.auth.ssl.verify_mode       = :none              # or one of [:peer, :fail_if_no_peer_cert, :client_once]
+```
 
-### Usage example
-
-    request = HTTPI::Request.new
-    request.auth.ssl.cert_key_file = "client_key.pem"
-    request.auth.ssl.cert_key_password = "C3rtP@ssw0rd"
-    request.auth.ssl.cert_file = "client_cert.pem"
-    request.auth.ssl.verify_mode = :none
 
 HTTPI::Response
 ---------------
 
-As mentioned before, every request method return an `HTTPI::Response`.
-It contains the response code, headers and body.
+Every request returns an `HTTPI::Response`. It contains the response code, headers and body.
 
-    response = HTTPI.get request
+``` ruby
+response = HTTPI.get request
 
-    response.code     # => 200
-    response.headers  # => { "Content-Encoding" => "gzip" }
-    response.body     # => "<!DOCTYPE HTML PUBLIC ...>"
+response.code     # => 200
+response.headers  # => { "Content-Encoding" => "gzip" }
+response.body     # => "<!DOCTYPE HTML PUBLIC ...>"
+```
 
 The `response.body` handles gzipped and [DIME](http://en.wikipedia.org/wiki/Direct_Internet_Message_Encapsulation) encoded responses.
 
-### TODO
+#### TODO
 
 * Return the original `HTTPI::Request` for debugging purposes
 * Return the time it took to execute the request
+
 
 Logging
 -------
 
 HTTPI by default logs each HTTP request to STDOUT using a log level of :debug.
 
-    HTTPI.log       = false     # disabling logging
-    HTTPI.logger    = MyLogger  # changing the logger
-    HTTPI.log_level = :info     # changing the log level
-
-Participate
------------
-
-Any help and feedback appreciated. So please get in touch!
+``` ruby
+HTTPI.log       = false     # disable logging
+HTTPI.logger    = MyLogger  # change the logger
+HTTPI.log_level = :info     # change the log level
+```
