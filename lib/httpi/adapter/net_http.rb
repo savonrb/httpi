@@ -11,7 +11,7 @@ module HTTPI
     class NetHTTP
 
       def self.settings
-        {:net_http => {:class => self, :dependencies => ["net/http", "net/ntlm_http"] }}
+        {:net_http => {:class => HTTPI::Adapter::NetHTTP, :dependencies => ["net/http", "net/ntlm_http"] }}
       end
 
       def initialize(request)

@@ -29,16 +29,10 @@ describe HTTPI::Adapter do
     end
   end
 
-  describe ".load" do
+  describe ".use" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:net_http).should == [:net_http, HTTPI::Adapter::NetHTTP]
-      end
-    end
-
-    context "called with nil" do
-      it "returns an empty array" do
-        adapter.load(nil).should == []
+        (adapter.use = :net_http).should == :net_http
       end
     end
 

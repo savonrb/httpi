@@ -2,9 +2,10 @@ require "spec_helper"
 require "httpi"
 
 describe HTTPI do
+  let(:net_http) { HTTPI::Adapter::NetHTTP }
   let(:client) { HTTPI }
-  let(:net_http) { HTTPI::Adapter.load(:net_http)[1] }
-  before do
+
+  around do
     HTTPI.adapter = :net_http
   end
 
@@ -189,12 +190,6 @@ describe HTTPI do
     end
   end
 
-  describe ".adapter=" do
-    it "sets the default adapter to use" do
-      HTTPI::Adapter.expects(:use=).with(:net_http)
-      HTTPI.adapter = :net_http
-    end
-  end
 
   HTTPI::REQUEST_METHODS.each do |method|
     describe ".request(#{method}, request, adapter)" do

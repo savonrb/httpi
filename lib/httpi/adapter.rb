@@ -28,24 +28,11 @@ module HTTPI
         @adapter
       end
 
-      def load(adapter)
-        adapter = adapter ? validate_adapter!(adapter) : use
-        if adapter
-          [adapter, adapters[adapter][:class] ]
-        else
-          []
-        end
-      end
-
     private
 
       def validate_adapter!(adapter)
-        raise ArgumentError, "Invalid HTTPI adapter: #{adapter}" unless adapters[adapter]
+        raise ArgumentError, "Invalid HTTPI adapter: #{adapter}" unless adapters.key?(adapter)
         adapter
-      end
-
-      def default_adapter
-        :net_http
       end
 
       def load_dependencies(adapter)
