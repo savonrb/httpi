@@ -77,7 +77,7 @@ describe HTTPI do
     end
   end
 
-  HTTPI::Adapter.adapters.keys.each do |adapter|
+  HTTPI::Adapter::ADAPTERS.keys.each do |adapter|
     context "using :#{adapter}" do
       let(:adapter) { adapter }
       it_should_behave_like "an HTTP client"
@@ -85,7 +85,7 @@ describe HTTPI do
     end
   end
 
-  (HTTPI::Adapter.adapters.keys - [:net_http]).each do |adapter|
+  (HTTPI::Adapter::ADAPTERS.keys - [:net_http]).each do |adapter|
     context "using :#{adapter}" do
       let(:adapter) { adapter }
       it_should_behave_like "it works with HTTP digest auth"
