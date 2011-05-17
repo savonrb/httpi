@@ -75,13 +75,16 @@ module HTTPI
 
     # Expects a Hash of +args+ to assign.
     def mass_assign(args)
+      puts "mass assign: #{args.inspect}"
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
+      puts "mass assign result: #{url} (instance var: #{instance_variable_get("@url")})"
     end
 
   private
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
     def normalize_url!(url)
+      puts "normalize: #{url.to_s}"
       raise ArgumentError, "Invalid URL: #{url}" unless url.to_s =~ /^http/
       url.kind_of?(URI) ? url : URI(url)
     end
