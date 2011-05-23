@@ -17,6 +17,12 @@ describe HTTPI do
     HTTPI.adapter = adapter_class
   end
 
+  describe ".adapter?" do
+    it "returns whether an adapter was specified" do
+      HTTPI.adapter?.should == adapter_class
+    end
+  end
+
   HTTPI::REQUEST_METHODS.each do |method|
     describe ".#{method}" do
       it "accepts a request" do

@@ -29,6 +29,9 @@ module HTTPI
     # Accesor for the adapter to use.
     attr_accessor :adapter
 
+    # Returns whether an adapter was specified.
+    alias adapter? adapter
+
     REQUEST_METHODS.each do |method|
       class_eval %{
         def #{method}(*args)
