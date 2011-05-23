@@ -187,8 +187,9 @@ module HTTPI
 
     # Expects a request +method+, a +request+ and an +adapter+ (defaults to
     # <tt>Adapter.use</tt>) and yields an instance of the adapter to a given block.
-    def with_adapter(method, request, adapter)
-      adapter, adapter_class = Adapter.load adapter
+    def with_adapter(method, request, adapter=nil)
+      adapter = adapter.nil? ? (Adapter.use || Adapter.use = :net_http) : Adapter.use = adapter
+      adapter_class = (Adapter.adapters[ adapter ] || {})[:class]
 
       log :debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
       yield adapter_class.new(request)

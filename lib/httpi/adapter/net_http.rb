@@ -10,6 +10,10 @@ module HTTPI
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP
 
+      def self.settings
+        {:net_http => {:class => HTTPI::Adapter::NetHTTP, :dependencies => ["net/http", "net/ntlm_http"] }}
+      end
+
       def initialize(request)
         self.client = new_client request
       end
@@ -113,5 +117,6 @@ module HTTPI
       end
 
     end
+    adapters.merge! NetHTTP.settings
   end
 end

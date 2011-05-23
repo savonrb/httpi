@@ -18,13 +18,10 @@ describe HTTPI::Adapter do
       adapter.use.should == :net_http
     end
 
-    it "defaults to use the HTTPClient adapter" do
-      adapter.use.should == :httpclient
-    end
-
     it "loads the adapter's client library" do
-      adapter.expects(:require).with("httpclient")
-      adapter.use = :httpclient
+      adapter.expects(:require).with("net/http")
+      adapter.expects(:require).with("net/ntlm_http")
+      adapter.use = :net_http
     end
 
     it "raises an ArgumentError in case of an invalid adapter" do
@@ -32,16 +29,10 @@ describe HTTPI::Adapter do
     end
   end
 
-  describe ".load" do
+  describe ".use" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:curb).should == [:curb, HTTPI::Adapter::Curb]
-      end
-    end
-
-    context "called with nil" do
-      it "returns the default adapter's name and class" do
-        adapter.load(nil).should == [:httpclient, HTTPI::Adapter::HTTPClient]
+        (adapter.use = :net_http).should == :net_http
       end
     end
 
