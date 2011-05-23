@@ -1,26 +1,15 @@
-class Fixture
-  class << self
+module HTTPI
+  module SpecSupport
 
-    def xml
-      @xml ||= load :xml
-    end
+    FIXTURES = {
+      :xml      => "xml.xml",
+      :xml_dime => "xml_dime.xml",
+      :gzip     => "xml.gz",
+      :dime     => "xml_dime.dime"
+    }
 
-    def xml_dime
-      @xml_dime ||= load :xml_dime
-    end
-
-    def gzip
-      @gzip ||= load :xml, :gz
-    end
-
-    def dime
-      @dime ||= load :xml_dime, :dime
-    end
-
-  private
-
-    def load(fixture, type = :xml)
-      File.read File.expand_path("../../fixtures/#{fixture}.#{type}", __FILE__)
+    def fixture(fixture)
+      File.read File.expand_path("../../fixtures/#{FIXTURES[fixture]}", __FILE__)
     end
 
   end

@@ -6,16 +6,15 @@ require "httpi/version"
 Gem::Specification.new do |s|
   s.name        = "httpi"
   s.version     = HTTPI::VERSION
-  s.authors     = ["Daniel Harrington", "Martin Tepper"]
+  s.authors     = ["Daniel Harrington", "Martin Tepper", "James Cook"]
   s.email       = "me@rubiii.com"
   s.homepage    = "http://github.com/rubiii/#{s.name}"
-  s.summary     = "Interface for Ruby HTTP libraries"
-  s.description = "HTTPI provides a common interface for Ruby HTTP libraries."
+  s.summary     = "Common interface for Ruby's HTTP libraries"
+  s.description = "HTTPI provides a common interface for Ruby's HTTP libraries."
 
   s.rubyforge_project = s.name
 
   s.add_dependency "rack"
-  s.add_dependency "pyu-ntlm-http",           ">= 0.1.3.1"
 
   s.add_development_dependency "rspec",       "~> 2.2"
   s.add_development_dependency "autotest"

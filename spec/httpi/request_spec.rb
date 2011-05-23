@@ -1,51 +1,64 @@
 require "spec_helper"
-require "httpi/request"
 
 describe HTTPI::Request do
-  let(:request) { HTTPI::Request.new }
+
+  let(:request) do
+    HTTPI::Request.new
+  end
 
   describe ".new" do
     it "accepts a url" do
-      request = HTTPI::Request.new "http://example.com"
-      request.url.should == URI("http://example.com")
+      request = HTTPI::Request.new some(:url)
+      request.url.should == URI(some(:url))
     end
 
-    it "accepts a Hash of accessors to set" do
-      request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30
-      request.url.should == URI("http://example.com")
-      request.open_timeout.should == 30
+    it "accepts a url and headers" do
+      request = HTTPI::Request.new some(:url), some(:headers)
+
+      request.url.should == URI(some(:url))
+      request.headers.should == some(:headers)
+    end
+
+    it "accepts a url, headers and a body" do
+      request = HTTPI::Request.new some(:url), some(:headers), some(:body)
+
+      request.url.should == URI(some(:url))
+      request.headers.should == some(:headers)
+      request.body.should == some(:body)
     end
   end
 
   describe "#url" do
-    it "lets you specify the URL to access as a String" do
-      request.url = "http://example.com"
-      request.url.should == URI("http://example.com")
+    it "accepts a String" do
+      request.url = some(:url)
+      request.url.should == URI(some(:url))
     end
 
-    it "also accepts a URI object" do
-      request.url = URI("http://example.com")
-      request.url.should == URI("http://example.com")
+    it "accepts a URI" do
+      request.url = URI(some(:url))
+      request.url.should == URI(some(:url))
     end
 
-    it "raises an ArgumentError in case of an invalid url" do
-      expect { request.url = "invalid" }.to raise_error(ArgumentError)
+    it "raises in case of an invalid url" do
+      expect { request.url = "invalid" }.
+        to raise_error(ArgumentError, "Invalid URL: invalid" )
     end
   end
 
   describe "#proxy" do
-    it "lets you specify the proxy URL to use as a String" do
-      request.proxy = "http://proxy.example.com"
-      request.proxy.should == URI("http://proxy.example.com")
+    it "accepts a String" do
+      request.proxy = some(:url)
+      request.proxy.should == URI(some(:url))
     end
 
-    it "also accepts a URI object" do
-      request.proxy = URI("http://proxy.example.com")
-      request.proxy.should == URI("http://proxy.example.com")
+    it "accepts a URI" do
+      request.proxy = URI(some(:url))
+      request.proxy.should == URI(some(:url))
     end
 
-    it "raises an ArgumentError in case of an invalid url" do
-      expect { request.proxy = "invalid" }.to raise_error(ArgumentError)
+    it "raises in case of an invalid url" do
+      expect { request.proxy = "proxy" }.
+        to raise_error(ArgumentError, "Invalid URL: proxy" )
     end
   end
 
@@ -55,12 +68,12 @@ describe HTTPI::Request do
     end
 
     it "returns false if the request url does not start with https" do
-      request.url = "http://example.com"
+      request.url = some(:url)
       request.should_not be_ssl
     end
 
     it "returns true if the request url starts with https" do
-      request.url = "https://example.com"
+      request.url = some(:ssl_url)
       request.should be_ssl
     end
 
@@ -73,9 +86,9 @@ describe HTTPI::Request do
   end
 
   describe "#headers" do
-    it "lets you specify a Hash of HTTP request headers" do
-      request.headers = { "Accept-Encoding" => "gzip" }
-      request.headers.should == { "Accept-Encoding" => "gzip" }
+    it "accepts a Hash of HTTP request headers" do
+      request.headers = some(:headers)
+      request.headers.should == some(:headers)
     end
 
     it "defaults to return an empty Hash" do
@@ -91,32 +104,32 @@ describe HTTPI::Request do
   end
 
   describe "#body" do
-    it "lets you specify the HTTP request body" do
-      request.body = "<some>xml</some>"
-      request.body.should == "<some>xml</some>"
+    it "sets the request body" do
+      request.body = some(:body)
+      request.body.should == some(:body)
     end
   end
 
   describe "#open_timeout" do
-    it "lets you specify the open timeout" do
+    it "sets the open timeout" do
       request.open_timeout = 30
       request.open_timeout.should == 30
     end
   end
 
   describe "#read_timeout" do
-    it "lets you specify the read timeout" do
+    it "sets the read timeout" do
       request.read_timeout = 45
       request.read_timeout.should == 45
     end
   end
 
   describe "#auth" do
-    it "returns the authentication object" do
+    it "returns the authentication" do
       request.auth.should be_an(HTTPI::Auth::Config)
     end
 
-    it "memoizes the authentication object" do
+    it "memoizes the authentication" do
       request.auth.should equal(request.auth)
     end
   end

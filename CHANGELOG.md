@@ -1,3 +1,16 @@
+## 1.0.0 (2011-05-23)
+
+* Refactoring: Split up adapters into their own gems. This is a significant change
+  to the original concept of the library which now allows anyone to write custom
+  adapters using a common interface.
+
+  The `httpi` gem contains the interface. Please take a look at the readme for a
+  list of adapters to use. For example, if you used to use HTTPI with the `Net::HTTP`
+  adapter (and you're using Bundler), you need to switch to use the adapter gem:
+
+      # gem "httpi"              # old
+      gem "httpi-net-http"       # v1.0.0
+
 ## 0.9.4 (2011-05-15)
 
 * Fix: issues [34](https://github.com/rubiii/httpi/issues/34) and

@@ -1,5 +1,4 @@
 require "spec_helper"
-require "httpi/auth/ssl"
 
 describe HTTPI::Auth::SSL do
 
@@ -10,7 +9,7 @@ describe HTTPI::Auth::SSL do
   end
 
   describe "#present?" do
-    it "defaults to return false" do
+    it "defaults to false" do
       ssl = HTTPI::Auth::SSL.new
       ssl.should_not be_present
     end
@@ -41,7 +40,7 @@ describe HTTPI::Auth::SSL do
   end
 
   describe "#verify_mode" do
-    it "defaults to return :peer" do
+    it "defaults to :peer" do
       ssl.verify_mode.should == :peer
     end
 
@@ -52,8 +51,9 @@ describe HTTPI::Auth::SSL do
       ssl.verify_mode.should == :none
     end
 
-    it "raises an ArgumentError if the given mode is not supported" do
-      expect { ssl.verify_mode = :invalid }.to raise_error(ArgumentError)
+    it "raises if the given mode is not supported" do
+      expect { ssl.verify_mode = :invalid }.
+        to raise_error(ArgumentError, "Invalid SSL verify mode: invalid")
     end
   end
 

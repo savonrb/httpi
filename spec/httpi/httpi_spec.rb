@@ -1,270 +1,77 @@
 require "spec_helper"
-require "httpi"
 
 describe HTTPI do
-  let(:net_http) { HTTPI::Adapter::NetHTTP }
-  let(:client) { HTTPI }
 
-  around do
-    HTTPI.adapter = :net_http
-  end
-
-  describe ".get(request)" do
-    it "executes a GET request using the default adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:get).with(request)
-
-      client.get request
+  let(:adapter_class) do
+    Class.new do
+      def initialize(request)
+      end
     end
   end
 
-  describe ".get(request, adapter)" do
-    it "executes a GET request using the given adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:get).with(request)
-
-      client.get request, :net_http
-    end
+  let(:adapter) do
+    adapter_class.any_instance
   end
 
-  describe ".get(url, adapter)" do
-    it "executes a GET request using the given adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      net_http.any_instance.expects(:get).with(instance_of(HTTPI::Request))
-
-      client.get "http://example.com", :net_http
-    end
+  before do
+    HTTPI.adapter = adapter_class
   end
 
-  describe ".post(request)" do
-    it "executes a POST request using the default adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:post).with(request)
+  HTTPI::REQUEST_METHODS.each do |method|
+    describe ".#{method}" do
+      it "accepts a request" do
+        request = HTTPI::Request.new(some(:url))
+        adapter.expects(method).with(request)
 
-      client.post request
-    end
-  end
+        HTTPI.send(method, request)
+      end
 
-  describe ".post(request, adapter)" do
-    it "executes a POST request using the given adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:post).with(request)
+      it "accepts a url" do
+        expect_to_be_set(:url, some(:url))
+        adapter.expects(method).with(instance_of(HTTPI::Request))
 
-      client.post request, :net_http
-    end
-  end
+        HTTPI.send(method, some(:url))
+      end
 
-  describe ".post(url, body)" do
-    it "executes a POST request using the default adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
-      net_http.any_instance.expects(:post).with(instance_of(HTTPI::Request))
+      it "accepts a url and headers" do
+        expect_to_be_set(:url, some(:url))
+        expect_to_be_set(:headers, some(:headers))
+        adapter.expects(method).with(instance_of(HTTPI::Request))
 
-      client.post "http://example.com", "<some>xml</some>"
-    end
-  end
+        HTTPI.send(method, some(:url), some(:headers))
+      end
 
-  describe ".post(url, body, adapter)" do
-    it "executes a POST request using the given adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
-      net_http.any_instance.expects(:post).with(instance_of(HTTPI::Request))
+      it "accepts a url, headers and a body" do
+        expect_to_be_set(:url, some(:url))
+        expect_to_be_set(:headers, some(:headers))
+        expect_to_be_set(:body, some(:body))
+        adapter.expects(method).with(instance_of(HTTPI::Request))
 
-      client.post "http://example.com", "<some>xml</some>", :net_http
-    end
-  end
-
-  describe ".head(request)" do
-    it "executes a HEAD request using the default adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:head).with(request)
-
-      client.head request
-    end
-  end
-
-  describe ".head(request, adapter)" do
-    it "executes a HEAD request using the given adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:head).with(request)
-
-      client.head request, :net_http
-    end
-  end
-
-  describe ".head(url)" do
-    it "executes a HEAD request using the default adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      net_http.any_instance.expects(:head).with(instance_of(HTTPI::Request))
-
-      client.head "http://example.com"
-    end
-  end
-
-  describe ".head(url, adapter)" do
-    it "executes a HEAD request using the given adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      net_http.any_instance.expects(:head).with(instance_of(HTTPI::Request))
-
-      client.head "http://example.com", :net_http
-    end
-  end
-
-  describe ".put(request)" do
-    it "executes a PUT request using the default adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:put).with(request)
-
-      client.put request
-    end
-  end
-
-  describe ".put(request, adapter)" do
-    it "executes a PUT request using the given adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:put).with(request)
-
-      client.put request, :net_http
-    end
-  end
-
-  describe ".put(url, body)" do
-    it "executes a PUT request using the default adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
-      net_http.any_instance.expects(:put).with(instance_of(HTTPI::Request))
-
-      client.put "http://example.com", "<some>xml</some>"
-    end
-  end
-
-  describe ".put(url, body, adapter)" do
-    it "executes a PUT request using the given adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      HTTPI::Request.any_instance.expects(:body=).with("<some>xml</some>")
-      net_http.any_instance.expects(:put).with(instance_of(HTTPI::Request))
-
-      client.put "http://example.com", "<some>xml</some>", :net_http
-    end
-  end
-
-  describe ".delete(request)" do
-    it "executes a DELETE request using the default adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:delete).with(request)
-
-      client.delete request
-    end
-  end
-
-  describe ".delete(request, adapter)" do
-    it "executes a DELETE request using the given adapter" do
-      request = HTTPI::Request.new "http://localhost"
-      net_http.any_instance.expects(:delete).with(request)
-
-      client.delete request, :net_http
-    end
-  end
-
-  describe ".delete(url)" do
-    it "executes a DELETE request using the default adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      net_http.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
-
-      client.delete "http://example.com"
-    end
-  end
-
-  describe ".delete(url, adapter)" do
-    it "executes a DELETE request using the given adapter" do
-      HTTPI::Request.any_instance.expects(:url=).with("http://example.com")
-      net_http.any_instance.expects(:delete).with(instance_of(HTTPI::Request))
-
-      client.delete "http://example.com", :net_http
+        HTTPI.send(method, some(:url), some(:headers), some(:body))
+      end
     end
   end
 
   describe ".request" do
-    it "raises an ArgumentError in case of an invalid request method" do
-      expect { client.request :invalid, HTTPI::Request.new }.to raise_error(ArgumentError)
+    it "raises in case of an invalid request method" do
+      expect { HTTPI.request :invalid, HTTPI::Request.new }.
+        to raise_error(ArgumentError, "Unknown request method: invalid")
     end
   end
-
 
   HTTPI::REQUEST_METHODS.each do |method|
-    describe ".request(#{method}, request, adapter)" do
+    describe ".request(:#{method}, *args)" do
       it "delegates to the .#{method} method" do
-        HTTPI.expects(method)
-        client.request method, HTTPI::Request.new
-      end
-    end
+        args = [some(:url), some(:headers), some(:body)]
 
-    describe ".#{method}" do
-      let(:request) { HTTPI::Request.new :url => "http://example.com" }
-
-      it "raises an ArgumentError in case of an invalid adapter" do
-        expect { client.request method, request, :invalid }.to raise_error(ArgumentError)
-      end
-
-      it "raises an ArgumentError in case of an invalid request" do
-        expect { client.request method, "invalid" }.to raise_error(ArgumentError)
-      end
-
-      HTTPI::Adapter.adapters.each do |adapter, opts|
-        client_class = {
-          :net_http   => lambda { Net::HTTP }
-        }
-
-        context "using #{adapter}" do
-          before { opts[:class].any_instance.expects(method) }
-
-          it "logs that we're executing a request" do
-            HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
-            client.request method, request, adapter
-          end
-
-          it "yields the HTTP client instance used for the request" do
-            block = lambda { |http| http.be_a(client_class[adapter].call) }
-            client.request(method, request, adapter, &block)
-          end
-        end
+        HTTPI.expects(method).with(*args)
+        HTTPI.request(method, *args)
       end
     end
   end
 
-  context "(with reset)" do
-    before { HTTPI.reset_config! }
-
-    after do
-      HTTPI.reset_config!
-      HTTPI.log = false  # disable for specs
-    end
-
-    describe ".log" do
-      it "defaults to true" do
-        HTTPI.log?.should be_true
-      end
-    end
-
-    describe ".logger" do
-      it "defaults to Logger writing to STDOUT" do
-        HTTPI.logger.should be_a(Logger)
-      end
-    end
-
-    describe ".log_level" do
-      it "defaults to :warn" do
-        HTTPI.log_level.should == :warn
-      end
-    end
-
-    describe ".log" do
-      it "logs the given messages" do
-        HTTPI.log_level = :debug
-        HTTPI.logger.expects(:debug).with("Log this")
-        HTTPI.log "Log", "this"
-      end
-    end
+  def expect_to_be_set(attribute, value)
+    HTTPI::Request.any_instance.expects("#{attribute}=").with(value)
   end
 
 end

@@ -1,10 +1,12 @@
 require "spec_helper"
-require "httpi/response"
 
 describe HTTPI::Response do
 
-  context "normal" do
-    let(:response) { HTTPI::Response.new 200, {}, Fixture.xml }
+  context "normally" do
+
+    let(:response) do
+      HTTPI::Response.new 200, some(:headers), fixture(:xml)
+    end
 
     describe "#error?" do
       it "returns false" do
@@ -13,8 +15,8 @@ describe HTTPI::Response do
     end
 
     describe "#headers" do
-      it "returns the HTTP response headers" do
-        response.headers.should == {}
+      it "returns the response headers" do
+        response.headers.should == some(:headers)
       end
     end
 
@@ -36,8 +38,10 @@ describe HTTPI::Response do
     end
   end
 
-  context "empty" do
-    let(:response) { HTTPI::Response.new 204, {}, nil }
+  context "when empty" do
+    let(:response) do
+      HTTPI::Response.new 204, {}, nil
+    end
 
     describe "#body" do
       it "returns an empty String" do
@@ -46,8 +50,10 @@ describe HTTPI::Response do
     end
   end
 
-  context "multipart" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Type" => "multipart/related" }, "multipart" }
+  context "when multipart" do
+    let(:response) do
+      HTTPI::Response.new 200, { "Content-Type" => "multipart/related" }, "multipart"
+    end
 
     describe "#multipart" do
       it "returns true" do
@@ -56,8 +62,10 @@ describe HTTPI::Response do
     end
   end
 
-  context "error" do
-    let(:response) { HTTPI::Response.new 404, {}, "" }
+  context "when erroneous" do
+    let(:response) do
+      HTTPI::Response.new 404, {}, ""
+    end
 
     describe "#error?" do
       it "returns true" do
@@ -66,8 +74,10 @@ describe HTTPI::Response do
     end
   end
 
-  context "gzipped" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Encoding" => "gzip" }, Fixture.gzip }
+  context "when gzipped" do
+    let(:response) do
+      HTTPI::Response.new 200, { "Content-Encoding" => "gzip" }, fixture(:gzip)
+    end
 
     describe "#headers" do
       it "returns the HTTP response headers" do
@@ -77,7 +87,7 @@ describe HTTPI::Response do
 
     describe "#body" do
       it "returns the (gzip decoded) HTTP response body" do
-        response.body.should == Fixture.xml
+        response.body.should == fixture(:xml)
       end
 
       it "bubbles Zlib errors" do
@@ -89,13 +99,15 @@ describe HTTPI::Response do
 
     describe "#raw_body" do
       it "returns the raw HTML response body" do
-        response.raw_body.should == Fixture.gzip
+        response.raw_body.should == fixture(:gzip)
       end
     end
   end
 
-  context "DIME" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Type" => "application/dime" }, Fixture.dime }
+  context "when DIME" do
+    let(:response) do
+      HTTPI::Response.new 200, { "Content-Type" => "application/dime" }, fixture(:dime)
+    end
 
     describe "#headers" do
       it "returns the HTTP response headers" do
@@ -105,13 +117,13 @@ describe HTTPI::Response do
 
     describe "#body" do
       it "returns the (dime decoded) HTTP response body" do
-        response.body.should == Fixture.xml_dime
+        response.body.should == fixture(:xml_dime)
       end
     end
 
     describe "#raw_body" do
       it "returns the raw HTML response body" do
-        response.raw_body.should == Fixture.dime
+        response.raw_body.should == fixture(:dime)
       end
     end
 

@@ -13,12 +13,10 @@ module HTTPI
     ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
-    def initialize(args = {})
-      if args.kind_of? String
-        self.url = args
-      elsif args.kind_of?(Hash) && !args.empty?
-        mass_assign args
-      end
+    def initialize(url = nil, headers = nil, body = nil)
+      self.url = url if url
+      self.headers = headers if headers
+      self.body = body if body
     end
 
     # Sets the +url+ to access. Raises an +ArgumentError+ unless the +url+ is valid.
@@ -71,11 +69,6 @@ module HTTPI
     # Returns whether any authentication credentials were specified.
     def auth?
       !!auth.type
-    end
-
-    # Expects a Hash of +args+ to assign.
-    def mass_assign(args)
-      ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
 
   private
