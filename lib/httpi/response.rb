@@ -34,7 +34,6 @@ module HTTPI
 
     # Returns the multi-part boundary marker
     def multipart_boundary
-	#md = headers["Content-Type"].match(/.*boundary=\\"([^\\]*)\\".*/)
         md = headers["Content-Type"].match(/.*boundary=\"([^\"]*)\"/)
 	md.nil? ? nil : md[1]
     end
