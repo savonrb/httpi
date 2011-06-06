@@ -16,10 +16,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rack"
 
-  s.add_development_dependency "rspec",       "~> 2.2"
+  s.add_development_dependency "rspec",   "~> 2.5"
+  s.add_development_dependency "webmock", "~> 1.4.0"
   s.add_development_dependency "autotest"
-  s.add_development_dependency "mocha",       "~> 0.9.9"
-  s.add_development_dependency "webmock",     "~> 1.4.0"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
