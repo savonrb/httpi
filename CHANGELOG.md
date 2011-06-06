@@ -1,4 +1,4 @@
-## 1.0.0 (2011-05-23)
+## 1.0.0.beta (2011-06-06)
 
 * Refactoring: Split up adapters into their own gems. This is a significant change
   to the original concept of the library which now allows anyone to write custom
@@ -8,8 +8,8 @@
   list of adapters to use. For example, if you used to use HTTPI with the `Net::HTTP`
   adapter (and you're using Bundler), you need to switch to use the adapter gem:
 
-      # gem "httpi"              # old
-      gem "httpi-net-http"       # v1.0.0
+      # gem "httpi"              # remove this line
+      gem "httpi-net-http"       # and replace it with an adapter
 
 ## 0.9.4 (2011-05-15)
 
