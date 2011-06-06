@@ -7,7 +7,7 @@ HTTPI provides a common interface for Ruby HTTP clients.
 Adapters
 --------
 
-HTTPI provides a standard request and response object, as well as unified request methods.
+HTTPI provides a standard request and response object, as well as unified request methods.  
 Adapters can use and build upon these basics to establish a common interface.
 
 ```
@@ -20,7 +20,7 @@ Adapter for [Net/HTTP](http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index
 Interface
 ---------
 
-The `HTTPI` module contains the HTTP request methods `get`, `post`, `head`, `put` and `delete`.
+The `HTTPI` module contains the HTTP request methods `get`, `post`, `head`, `put` and `delete`.  
 Every request method accepts the same combination of arguments and returns an `HTTPI::Response`.
 
 ``` ruby
@@ -155,6 +155,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "httpi", "~> 1.0"
 end
+```
 
 `~> 1.0` could be changed to a higher version like `1.5`, but both adapter and interface should
 have the same major version number.
