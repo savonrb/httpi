@@ -9,7 +9,10 @@ module HTTPI
     }
 
     def fixture(fixture)
-      File.read File.expand_path("../../fixtures/#{FIXTURES[fixture]}", __FILE__)
+      file = FIXTURES[fixture]
+      raise "No such fixture: #{file}" unless file
+
+      File.read File.expand_path("../../fixtures/#{file}", __FILE__)
     end
 
   end
