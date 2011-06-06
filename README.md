@@ -142,6 +142,21 @@ The `HTTPI::Response#body` method handles gzipped and
 Conventions
 -----------
 
+Adapters should follow certain conventions.
+
+#### Naming
+
+Adapter libraries should follow the Rubygems naming convention for gems based on other gems.  
+They should start with `httpi` followed by the name of the client library, separated by dashes.
+
+Some examples are:
+
+* httpi-net-http
+* httpi-httpclient
+* httpi-curb
+
+#### Versioning
+
 HTTPI uses [Semantic Versioning](http://semver.org) to provide a stable API.
 
 Adapters should follow the major version of the HTTPI interface. For example, every 1.x.x version
