@@ -61,7 +61,17 @@ module HTTPI
       headers["Accept-Encoding"] = "gzip,deflate"
     end
 
-    attr_accessor :body, :open_timeout, :read_timeout
+    attr_accessor :open_timeout, :read_timeout
+    attr_reader :body
+
+    # Set body to request
+    def body=(new_value)
+    	if new_value.instance_of?(Hash)
+    		@body = new_value.map {|k,v| "#{k}=#{v}" }.join "&"
+    	else
+    		@body = new_value
+    	end
+    end
 
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth
@@ -77,7 +87,7 @@ module HTTPI
     def mass_assign(args)
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
-
+    
   private
 
     # Expects a +url+, validates its validity and returns a +URI+ object.

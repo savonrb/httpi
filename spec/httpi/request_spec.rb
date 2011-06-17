@@ -95,6 +95,11 @@ describe HTTPI::Request do
       request.body = "<some>xml</some>"
       request.body.should == "<some>xml</some>"
     end
+    
+    it "lets you specify the HTTP request body as hash" do
+      request.body = {:some => "content", :another => "content"}
+      request.body.should == "some=content&another=content"
+    end
   end
 
   describe "#open_timeout" do
