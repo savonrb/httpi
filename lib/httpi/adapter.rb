@@ -1,6 +1,7 @@
 require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
 require "httpi/adapter/net_http"
+require "httpi/adapter/em_http"
 
 module HTTPI
 
@@ -14,12 +15,13 @@ module HTTPI
   module Adapter
 
     ADAPTERS = {
-      :httpclient => { :class => HTTPClient, :dependencies => ["httpclient"] },
-      :curb       => { :class => Curb,       :dependencies => ["curb"] },
-      :net_http   => { :class => NetHTTP,    :dependencies => ["net/https", "net/ntlm_http"] }
+      :httpclient => { :class => HTTPClient,    :dependencies => ["httpclient"] },
+      :curb       => { :class => Curb,          :dependencies => ["curb"] },
+      :net_http   => { :class => NetHTTP,       :dependencies => ["net/https", "net/ntlm_http"] },
+      :em_http    => { :class => EmHttpRequest, :dependencies => ["fiber", "em-synchrony/em-http", "em-http"] }
     }
 
-    LOAD_ORDER = [:httpclient, :curb, :net_http]
+    LOAD_ORDER = [:httpclient, :curb, :em_http, :net_http]
 
     class << self
 
