@@ -172,9 +172,14 @@ HTTPI::Auth
 ``` ruby
 request.auth.basic("username", "password")   # HTTP basic auth credentials
 request.auth.digest("username", "password")  # HTTP digest auth credentials
-request.auth.ntlm("username", "password")    # NTLM auth credentials
 ```
 
+For experimental NTLM authentication, please use the [httpi-ntlm](rubygems.org/gems/httpi-ntml)
+gem and provide feedback.
+
+``` ruby
+request.auth.ntlm("username", "password")    # NTLM auth credentials
+```
 
 HTTPI::Auth::SSL
 ----------------

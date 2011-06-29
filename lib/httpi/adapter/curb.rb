@@ -59,7 +59,6 @@ module HTTPI
         basic_setup request
         setup_http_auth request if request.auth.http?
         setup_ssl_auth request.auth.ssl if request.auth.ssl?
-        setup_ntlm_auth request if request.auth.ntlm?
       end
 
       def basic_setup(request)
@@ -82,11 +81,6 @@ module HTTPI
         client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
         client.certtype = ssl.cert_type.to_s.upcase
         client.ssl_verify_peer = ssl.verify_mode == :peer
-      end
-
-      def setup_ntlm_auth(request)
-        client.username, client.password = *request.auth.credentials
-        client.http_auth_types = request.auth.type
       end
 
       def respond_with(client)

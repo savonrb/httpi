@@ -99,9 +99,7 @@ module HTTPI
         end
 
         request_client = request_class.new request.url.request_uri, request.headers
-
         request_client.basic_auth *request.auth.credentials if request.auth.basic?
-        request_client.ntlm_auth *request.auth.credentials if request.auth.ntlm?
 
         request_client
       end

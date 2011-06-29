@@ -1,3 +1,9 @@
+## 0.9.5 (2011-06-30)
+
+* Improvement: Moved support for NTLM authentication into a separate gem.
+  Since NTLM support caused quite some problems for people who didn't even
+  need it, I decided to move it into httpi-ntlm until it's stable.
+
 ## 0.9.4 (2011-05-15)
 
 * Fix: issues [34](https://github.com/rubiii/httpi/issues/34) and
