@@ -4,11 +4,11 @@ $:.unshift lib unless $:.include?(lib)
 require "httpi/version"
 
 Gem::Specification.new do |s|
-  s.name        = "httpi"
+  s.name        = "httpi-ntlm"
   s.version     = HTTPI::VERSION
   s.authors     = ["Daniel Harrington", "Martin Tepper"]
   s.email       = "me@rubiii.com"
-  s.homepage    = "http://github.com/rubiii/#{s.name}"
+  s.homepage    = "http://github.com/rubiii/httpi"
   s.summary     = "Interface for Ruby HTTP libraries"
   s.description = "HTTPI provides a common interface for Ruby HTTP libraries."
 

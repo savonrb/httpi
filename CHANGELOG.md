@@ -1,3 +1,8 @@
+## 0.9.5 (2011-06-30)
+
+* Rebirth: httpi-ntlm provides experimental support for NTLM authentication.
+  Please test it and provide feedback to build a stable feature.
+
 ## 0.9.4 (2011-05-15)
 
 * Fix: issues [34](https://github.com/rubiii/httpi/issues/34) and
