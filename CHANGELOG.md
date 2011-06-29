@@ -1,3 +1,7 @@
+## 0.9.6 (2011-06-30)
+
+* Added a `httpi-ntlm` file for convenience requires.
+
 ## 0.9.5 (2011-06-30)
 
 * Rebirth: httpi-ntlm provides experimental support for NTLM authentication.
