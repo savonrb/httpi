@@ -1,4 +1,4 @@
-HTTPI [![Build Status](http://travis-ci.org/rubiii/httpi.png)](http://travis-ci.org/rubiii/httpi)
+HTTPI [![Build Status](https://secure.travis-ci.org/rubiii/httpi.png)](http://travis-ci.org/rubiii/httpi)
 =====
 
 HTTPI provides a common interface for Ruby HTTP libraries.
