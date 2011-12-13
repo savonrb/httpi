@@ -24,6 +24,7 @@ module HTTPI
     # Sets the +url+ to access. Raises an +ArgumentError+ unless the +url+ is valid.
     def url=(url)
       @url = normalize_url! url
+      auth.basic @url.user, @url.password || '' if @url.user
     end
 
     # Returns the +url+ to access.
