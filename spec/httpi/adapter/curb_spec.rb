@@ -3,9 +3,6 @@ require "httpi/adapter/curb"
 require "httpi/request"
 
 # curb does not run on jruby
-p "RUBY_PLATFORM:"
-p RUBY_PLATFORM
-
 unless RUBY_PLATFORM =~ /java/
   require "curb"
 
