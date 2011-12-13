@@ -31,6 +31,16 @@ describe HTTPI::Request do
     it "raises an ArgumentError in case of an invalid url" do
       expect { request.url = "invalid" }.to raise_error(ArgumentError)
     end
+
+    it "uses username and password as basic authentication if present in the URL" do
+      request.url = "http://username:password@example.com"
+      request.auth.basic.should == ['username', 'password']
+    end
+
+    it "uses a blank password if only username is specified in the URL" do
+      request.url = "http://username@example.com"
+      request.auth.basic.should == ['username', '']
+    end
   end
 
   describe "#proxy" do
