@@ -3,6 +3,9 @@
 * Feature: Merged [pull request 43](https://github.com/rubiii/httpi/pull/43) to allow
   proxy authentication with net/http.
 
+* Feature: Merged [pull request 42](https://github.com/rubiii/httpi/pull/42) which sets up
+  HTTP basic authentication if user information is present in the URL.
+
 ## 0.9.5 (2011-06-30)
 
 * Improvement: Moved support for NTLM authentication into a separate gem.
