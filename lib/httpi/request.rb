@@ -62,7 +62,13 @@ module HTTPI
       headers["Accept-Encoding"] = "gzip,deflate"
     end
 
-    attr_accessor :body, :open_timeout, :read_timeout
+    attr_accessor :open_timeout, :read_timeout
+    attr_reader :body
+
+    # Sets a body request given a String or a Hash.
+    def body=(params)
+      @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
+    end
 
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth

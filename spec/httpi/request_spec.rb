@@ -101,9 +101,14 @@ describe HTTPI::Request do
   end
 
   describe "#body" do
-    it "lets you specify the HTTP request body" do
+    it "lets you specify the HTTP request body using a String" do
       request.body = "<some>xml</some>"
       request.body.should == "<some>xml</some>"
+    end
+
+    it "lets you specify the HTTP request body using a Hash" do
+      request.body = {:foo => :bar, :baz => :foo}
+      request.body.should == "foo=bar&baz=foo"
     end
   end
 
