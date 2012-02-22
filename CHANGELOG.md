@@ -14,7 +14,8 @@
   HTTP basic authentication if user information is present in the URL.
 
 * Fix: Merged [pull request 44](https://github.com/rubiii/httpi/pull/44) to fix
-  [issue 26](https://github.com/rubiii/httpi/issues/26) - SSL client authentication.
+  [issue 26](https://github.com/rubiii/httpi/issues/26) and probably also
+  [issue 32](https://github.com/rubiii/httpi/issues/32) - SSL client authentication.
 
 ## 0.9.5 (2011-06-30)
 
