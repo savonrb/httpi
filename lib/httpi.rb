@@ -152,7 +152,7 @@ module HTTPI
     # Sets the log level.
     attr_writer :log_level
 
-    # Returns the log level. Defaults to :debug.
+    # Returns the log level. Defaults to :warn.
     def log_level
       @log_level ||= DEFAULT_LOG_LEVEL
     end
