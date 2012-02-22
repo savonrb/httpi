@@ -108,7 +108,7 @@ describe HTTPI::Request do
 
     it "lets you specify the HTTP request body using a Hash" do
       request.body = {:foo => :bar, :baz => :foo}
-      request.body.should == "foo=bar&baz=foo"
+      request.body.split("&").should =~ ["foo=bar", "baz=foo"]
     end
   end
 
