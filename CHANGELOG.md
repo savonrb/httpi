@@ -1,4 +1,4 @@
-## 1.0.0 (UPCOMING)
+## 0.9.6 (2012-02-23)
 
 * Feature: Merged [pull request 46](https://github.com/rubiii/httpi/pull/46) to support
   request body Hashes. Fixes [issue 45](https://github.com/rubiii/httpi/issues/45).
