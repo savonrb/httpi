@@ -13,6 +13,9 @@
 * Feature: Merged [pull request 42](https://github.com/rubiii/httpi/pull/42) which sets up
   HTTP basic authentication if user information is present in the URL.
 
+* Fix: Merged [pull request 44](https://github.com/rubiii/httpi/pull/44) to fix
+  [issue 26](https://github.com/rubiii/httpi/issues/26) - SSL client authentication.
+
 ## 0.9.5 (2011-06-30)
 
 * Improvement: Moved support for NTLM authentication into a separate gem.
