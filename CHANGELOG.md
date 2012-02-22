@@ -1,5 +1,12 @@
 ## 1.0.0 (UPCOMING)
 
+* Feature: Merged [pull request 46](https://github.com/rubiii/httpi/pull/46) to support
+  request body Hashes. Fixes [issue 45](https://github.com/rubiii/httpi/issues/45).
+
+    ``` ruby
+    request.body = { :foo => :bar, :baz => :foo }  # => "foo=bar&baz=foo"
+    ```
+
 * Feature: Merged [pull request 43](https://github.com/rubiii/httpi/pull/43) to allow
   proxy authentication with net/http.
 
