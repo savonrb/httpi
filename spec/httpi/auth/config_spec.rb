@@ -72,7 +72,7 @@ describe HTTPI::Auth::Config do
       auth.should_not be_gssnegotiate
     end
 
-    it "returns true for HTTP digest auth" do
+    it "returns true for HTTP Negotiate auth" do
       auth.gssnegotiate
       auth.should be_gssnegotiate
     end
