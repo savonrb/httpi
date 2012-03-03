@@ -5,12 +5,12 @@ module HTTPI
 
     # = HTTPI::Auth::Config
     #
-    # Manages HTTP and SSL auth configuration. Currently supports HTTP basic/digest
-    # and SSL client authentication.
+    # Manages HTTP and SSL auth configuration. Currently supports HTTP basic/digest,
+    # Negotiate/SPNEGO, and SSL client authentication.
     class Config
 
       # Supported authentication types.
-      TYPES = [:basic, :digest, :ssl]
+      TYPES = [:basic, :digest, :gssnegotiate, :ssl]
 
       # Accessor for the HTTP basic auth credentials.
       def basic(*args)
@@ -36,6 +36,16 @@ module HTTPI
       # Returns whether to use HTTP digest auth.
       def digest?
         type == :digest
+      end
+
+      # Enable HTTP Negotiate/SPNEGO authentication.
+      def gssnegotiate
+        self.type = :gssnegotiate
+      end
+
+      # Returns whether to use HTTP Negotiate/SPNEGO auth.
+      def gssnegotiate?
+        type == :gssnegotiate
       end
 
       # Returns whether to use HTTP basic or dihest auth.
