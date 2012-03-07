@@ -5,8 +5,16 @@ require "httpi/request"
 require "em-synchrony/em-http"
 
 describe HTTPI::Adapter::HTTPClient do
+
+  around(:each) do |example|
+    EM.synchrony do
+      example.run
+      EM.stop
+    end
+  end
+
   let(:adapter) { HTTPI::Adapter::EmHttpRequest.new }
-  let(:em_http) { EventMachine::HttpRequest.any_instance }
+  let(:em_http) { EventMachine::HttpConnection.any_instance }
 
   describe "#get" do
     it "returns a valid HTTPI::Response" do
@@ -124,7 +132,7 @@ describe HTTPI::Adapter::HTTPClient do
   end
 
   def http_message(body = Fixture.xml)
-    message = EventMachine::HttpClient.new("http://example.com")
+    message = EventMachine::HttpClient.new("http://example.com", {})
     message.instance_variable_set :@response, body
     message.instance_variable_set :@response_header, EventMachine::HttpResponseHeader.new
     message.response_header['Accept-encoding'] = 'utf-8'

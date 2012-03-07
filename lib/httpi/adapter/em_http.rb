@@ -133,7 +133,7 @@ module HTTPI
         contents << File.read(ssl.cert_key_file) if ssl.cert_key_file
         contents << File.read(ssl.cert_file) if ssl.cert_file
         contents = contents.compact.map(&:to_s).map(&:chomp).join("\n")
-        return nil if contents.blank?
+        return nil if contents.nil? || contents == ""
 
         FileUtils.mkdir_p(cert_directory)
         filename = "#{cert_directory}/em_http.#{Digest::SHA1.hexdigest contents}.tmp"
