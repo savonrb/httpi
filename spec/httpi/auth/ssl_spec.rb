@@ -66,6 +66,13 @@ describe HTTPI::Auth::SSL do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert.should be_nil
     end
+
+    it "returns the explicitly given certificate if set" do
+      ssl = HTTPI::Auth::SSL.new
+      cert = OpenSSL::X509::Certificate.new 
+      ssl.cert = cert
+      ssl.cert.should == cert
+    end
   end
 
   describe "#cert_key" do
@@ -76,6 +83,13 @@ describe HTTPI::Auth::SSL do
     it "returns nil if no cert_key_file was given" do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert_key.should be_nil
+    end
+
+    it "returns the explicitly given key if set" do
+      ssl = HTTPI::Auth::SSL.new
+      key = OpenSSL::PKey::RSA.new 
+      ssl.cert_key = key
+      ssl.cert_key.should == key
     end
   end
 
