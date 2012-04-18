@@ -32,6 +32,12 @@ module HTTPI
       !!(headers["Content-Type"] =~ /^multipart/i)
     end
 
+    # Returns the multi-part boundary marker
+    def multipart_boundary
+        md = headers["Content-Type"].match(/.*boundary=\"([^\"]*)\"/)
+	md.nil? ? nil : md[1]
+    end
+
     # Returns any DIME attachments.
     def attachments
       decode_body unless @body
