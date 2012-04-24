@@ -66,6 +66,13 @@ describe HTTPI::Auth::SSL do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert.should be_nil
     end
+
+    it "returns the value set by #cert=" do
+      ssl = HTTPI::Auth::SSL.new
+
+      ssl.cert = 'abc123'
+      ssl.cert.should == 'abc123'
+    end
   end
 
   describe "#cert_key" do
@@ -77,6 +84,13 @@ describe HTTPI::Auth::SSL do
       ssl = HTTPI::Auth::SSL.new
       ssl.cert_key.should be_nil
     end
+
+    it "returns the value set by #cert_key=" do
+      ssl = HTTPI::Auth::SSL.new
+
+      ssl.cert_key = 'abc123'
+      ssl.cert_key.should == 'abc123'
+    end
   end
 
   describe "#ca_cert" do
@@ -85,6 +99,13 @@ describe HTTPI::Auth::SSL do
 
       ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
       ssl.ca_cert.should be_a(OpenSSL::X509::Certificate)
+    end
+
+    it "returns the value set by #ca_cert=" do
+      ssl = HTTPI::Auth::SSL.new
+
+      ssl.ca_cert = 'abc123'
+      ssl.ca_cert.should == 'abc123'
     end
   end
 
