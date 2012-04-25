@@ -50,7 +50,7 @@ module HTTPI
 
     def decode_body
       return @body = "" if !raw_body || raw_body.empty?
-      
+
       body = gzipped_response? ? decoded_gzip_body : raw_body
       @body = dime_response? ? decoded_dime_body(body) : body
     end
