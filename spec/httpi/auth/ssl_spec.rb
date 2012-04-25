@@ -69,7 +69,7 @@ describe HTTPI::Auth::SSL do
 
     it "returns the explicitly given certificate if set" do
       ssl = HTTPI::Auth::SSL.new
-      cert = OpenSSL::X509::Certificate.new 
+      cert = OpenSSL::X509::Certificate.new
       ssl.cert = cert
       ssl.cert.should == cert
     end
@@ -87,7 +87,7 @@ describe HTTPI::Auth::SSL do
 
     it "returns the explicitly given key if set" do
       ssl = HTTPI::Auth::SSL.new
-      key = OpenSSL::PKey::RSA.new 
+      key = OpenSSL::PKey::RSA.new
       ssl.cert_key = key
       ssl.cert_key.should == key
     end
