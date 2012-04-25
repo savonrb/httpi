@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Fix: Merged [pull request 49](https://github.com/rubiii/httpi/pull/49) so that cert
+  and cert_key can be manually set.
+
 ## 0.9.6 (2012-02-23)
 
 * Feature: Merged [pull request 46](https://github.com/rubiii/httpi/pull/46) to support
