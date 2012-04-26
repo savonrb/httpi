@@ -1,7 +1,10 @@
-## UPCOMING
+## 0.9.7 (2012-04-26)
 
 * Fix: Merged [pull request 49](https://github.com/rubiii/httpi/pull/49) so that cert
   and cert_key can be manually set.
+
+* Fix: Stop auto-detecting gzipped responses by inspecting the response body to allow
+  response compression only.
 
 ## 0.9.6 (2012-02-23)
 
