@@ -57,7 +57,7 @@ module HTTPI
 
     # Returns whether the response is gzipped.
     def gzipped_response?
-      headers["Content-Encoding"] == "gzip" || raw_body[0..1] == "\x1f\x8b"
+      headers["Content-Encoding"] == "gzip"
     end
 
     # Returns whether this is a DIME response.
