@@ -60,6 +60,24 @@ describe HTTPI::Auth::Config do
     end
   end
 
+  describe "#gssnegotiate" do
+    it "sets the authentication type to :gssnegotiate" do
+      auth.gssnegotiate
+      auth.type.should == :gssnegotiate
+    end
+  end
+
+  describe "#gssnegotiate?" do
+    it "defaults to return false" do
+      auth.should_not be_gssnegotiate
+    end
+
+    it "returns true for HTTP Negotiate auth" do
+      auth.gssnegotiate
+      auth.should be_gssnegotiate
+    end
+  end
+
   describe "#http?" do
     it "defaults to return false" do
       auth.should_not be_http
