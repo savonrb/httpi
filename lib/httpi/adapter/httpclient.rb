@@ -85,34 +85,33 @@ module HTTPI
           client.ssl_config.client_cert = ssl.cert
           client.ssl_config.client_key = ssl.cert_key
           # client.ssl_config.client_ca = ssl.ca_cert if ssl.ca_cert_file
-					client.ssl_config.set_trust_ca(ssl.ca_cert_file) if ssl.ca_cert_file
+                                        client.ssl_config.set_trust_ca(ssl.ca_cert_file) if ssl.ca_cert_file
         end
         client.ssl_config.verify_mode = ssl.openssl_verify_mode
       end
 
-			#
-			# Steffen Roller <steffen@rollers.de>
-			#
-			# response.header.all is an array of 2-element arrays
-			# some headers eg. "Set-Cookie" can occur more than one
-			# To convert the array of arrays into a hash
-			# we iterate over the array. If the first element already
-			# exists in the hash we convert the entry into an array.
-			#
+      #
+      # Steffen Roller <steffen@rollers.de>
+      #
+      # response.header.all is an array of 2-element arrays
+      # some headers eg. "Set-Cookie" can occur more than one
+      # To convert the array of arrays into a hash
+      # we iterate over the array. If the first element already
+      # exists in the hash we convert the entry into an array.
+      #
       def respond_with(response)
-				header_hash = {}
-				response.header.all.each do |item|
-					if header_hash.has_key?(item[0])
-						if header_hash[item[0]].is_a? Array
-						  header_hash[item[0]] << item[1]
-						else
-							header_hash[item[0]] = [header_hash[item[0]], item[1]]
-						end
-					else
-						header_hash[item[0]] = item[1]
-					end
-				end
-        # Response.new response.code, Hash[*response.header.all.flatten], response.content
+        header_hash = {}
+        response.header.all.each do |item|
+          if header_hash.has_key?(item[0])
+            if header_hash[item[0]].is_a? Array
+              header_hash[item[0]] << item[1]
+            else
+              header_hash[item[0]] = [header_hash[item[0]], item[1]]
+            end
+          else
+            header_hash[item[0]] = item[1]
+          end
+        end
         Response.new response.code, header_hash, response.content
       end
     end
