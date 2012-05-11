@@ -88,7 +88,7 @@ describe HTTPI do
   end
 
   (HTTPI::Adapter::ADAPTERS.keys - [:net_http]).each do |adapter|
-    unless adapter == :curb && RUBY_PLATFORM =~ /java/
+    unless (adapter == :curb && RUBY_PLATFORM =~ /java/) || adapter == :em_http
       context "using :#{adapter}" do
         let(:adapter) { adapter }
         it_should_behave_like "it works with HTTP digest auth"
