@@ -24,15 +24,15 @@ module HTTPI
     # * multi-request
     #
     # are supported by em-httprequest but not HTTPI.
-
     class EmHttpRequest
+
       # The default directory where certificates are saved to temporary files.
       DEFAULT_CERT_DIRECTORY = "/tmp"
-      
+
       attr_accessor :cert_directory
 
       # @private
-      def initialize(request=nil)
+      def initialize(request = nil)
         @cert_directory = DEFAULT_CERT_DIRECTORY
       end
 
@@ -40,7 +40,6 @@ module HTTPI
       #
       # @param [HTTPI::Request] The request data.
       # @return [HTTPI::Response] The response data.
-
       def get(request)
         _request(request) { |client, options| client.get options }
       end
@@ -49,7 +48,6 @@ module HTTPI
       #
       # @param [HTTPI::Request] The request data.
       # @return [HTTPI::Response] The response data.
-
       def post(request)
         _request(request) { |client, options| client.post options }
       end
@@ -58,7 +56,6 @@ module HTTPI
       #
       # @param [HTTPI::Request] The request data.
       # @return [HTTPI::Response] The response data.
-
       def put(request)
         _request(request) { |client, options| client.put options }
       end
@@ -67,7 +64,6 @@ module HTTPI
       #
       # @param [HTTPI::Request] The request data.
       # @return [HTTPI::Response] The response data.
-
       def delete(request)
         _request(request) { |client, options| client.delete options }
       end
@@ -76,7 +72,6 @@ module HTTPI
       #
       # @param [HTTPI::Request] The request data.
       # @return [HTTPI::Response] The response data.
-
       def head(request)
         _request(request) { |client, options| client.head options }
       end
@@ -89,7 +84,6 @@ module HTTPI
         setup_proxy(request, options) if request.proxy
         setup_http_auth(request, options) if request.auth.http?
         setup_ssl_auth(request.auth.ssl, options) if request.auth.ssl?
-        raise "NTLM auth unsupported" if request.auth.ntlm?
 
         start_time = Time.now
         respond_with yield(client, options), start_time
@@ -97,20 +91,20 @@ module HTTPI
 
       def client_options(request)
         {
-          query: request.url.query,
-          connect_timeout: request.open_timeout,
-          inactivity_timeout: request.read_timeout,
-          head: request.headers.to_hash,
-          body: request.body,
+          :query              => request.url.query,
+          :connect_timeout    => request.open_timeout,
+          :inactivity_timeout => request.read_timeout,
+          :head               => request.headers.to_hash,
+          :body               => request.body
         }
       end
 
       def setup_proxy(request, options)
         options[:proxy] = {
-            host: request.proxy.host,
-            port: request.proxy.port,
-            authorization: [ request.proxy.user, request.proxy.password ]
-          }
+          :host          => request.proxy.host,
+          :port          => request.proxy.port,
+          :authorization => [request.proxy.user, request.proxy.password]
+        }
       end
 
       def setup_http_auth(request, options)
@@ -122,9 +116,9 @@ module HTTPI
 
       def setup_ssl_auth(ssl, options)
         options[:ssl] = {
-          private_key_file: cert_and_key_file(ssl),
-          cert_chain_file: cert_and_key_file(ssl),
-          verify_peer: false #TODO should be ssl.verify_mode == :peer
+          :private_key_file => cert_and_key_file(ssl),
+          :cert_chain_file  => cert_and_key_file(ssl),
+          :verify_peer      => false  # TODO should be ssl.verify_mode == :peer
         }
       end
 
@@ -133,7 +127,7 @@ module HTTPI
         contents << File.read(ssl.cert_key_file) if ssl.cert_key_file
         contents << File.read(ssl.cert_file) if ssl.cert_file
         contents = contents.compact.map(&:to_s).map(&:chomp).join("\n")
-        return nil if contents.nil? || contents == ""
+        return if !contents || contents.empty?
 
         FileUtils.mkdir_p(cert_directory)
         filename = "#{cert_directory}/em_http.#{Digest::SHA1.hexdigest contents}.tmp"
@@ -142,7 +136,7 @@ module HTTPI
             f.print contents.to_s
           end
         end
-        return filename
+        filename
       end
 
       def respond_with(http, start_time)
