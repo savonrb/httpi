@@ -223,23 +223,26 @@ describe HTTPI do
       end
 
       HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
-        client_class = {
-          :httpclient => lambda { HTTPClient },
-          :curb       => lambda { Curl::Easy },
-          :net_http   => lambda { Net::HTTP }
-        }
+        unless adapter == :em_http && RUBY_VERSION =~ /1\.8/
+          client_class = {
+            :httpclient => lambda { HTTPClient },
+            :curb       => lambda { Curl::Easy },
+            :net_http   => lambda { Net::HTTP },
+            :em_http    => Object  # TODO: FIX ME
+          }
 
-        context "using #{adapter}" do
-          before { opts[:class].any_instance.expects(method) }
+          context "using #{adapter}" do
+            before { opts[:class].any_instance.expects(method) }
 
-          it "logs that we're executing a request" do
-            HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
-            client.request method, request, adapter
-          end
+            it "logs that we're executing a request" do
+              HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
+              client.request method, request, adapter
+            end
 
-          it "yields the HTTP client instance used for the request" do
-            block = lambda { |http| http.be_a(client_class[adapter].call) }
-            client.request(method, request, adapter, &block)
+            it "yields the HTTP client instance used for the request" do
+              block = lambda { |http| http.be_a(client_class[adapter].call) }
+              client.request(method, request, adapter, &block)
+            end
           end
         end
       end
