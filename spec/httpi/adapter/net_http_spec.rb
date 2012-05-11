@@ -2,6 +2,8 @@ require "spec_helper"
 require "httpi/adapter/net_http"
 require "httpi/request"
 
+HTTPI::Adapter.load_adapter(:net_http)
+
 describe HTTPI::Adapter::NetHTTP do
   let(:net_http) { Net::HTTP.any_instance }
   let(:basic_response) { { :body => Fixture.xml, :headers => { "Accept-encoding" => "utf-8" } } }

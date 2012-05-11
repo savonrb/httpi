@@ -2,7 +2,7 @@ require "spec_helper"
 require "httpi/adapter/httpclient"
 require "httpi/request"
 
-require "httpclient"
+HTTPI::Adapter.load_adapter(:httpclient)
 
 describe HTTPI::Adapter::HTTPClient do
   let(:adapter) { HTTPI::Adapter::HTTPClient.new }

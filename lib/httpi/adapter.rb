@@ -18,7 +18,7 @@ module HTTPI
       :httpclient => { :class => HTTPClient,    :dependencies => ["httpclient"] },
       :curb       => { :class => Curb,          :dependencies => ["curb"] },
       :net_http   => { :class => NetHTTP,       :dependencies => ["net/https"] },
-      :em_http    => { :class => EmHttpRequest, :dependencies => ["fiber", "em-synchrony/em-http", "em-http"] }
+      :em_http    => { :class => EmHttpRequest, :dependencies => ["em-synchrony", "em-synchrony/em-http", "em-http"] }
     }
 
     LOAD_ORDER = [:httpclient, :curb, :em_http, :net_http]
@@ -42,6 +42,12 @@ module HTTPI
         [adapter, ADAPTERS[adapter][:class]]
       end
 
+      def load_adapter(adapter)
+        ADAPTERS[adapter][:dependencies].each do |dependency|
+          require dependency
+        end
+      end
+
     private
 
       def validate_adapter!(adapter)
@@ -57,12 +63,6 @@ module HTTPI
           rescue LoadError
             next
           end
-        end
-      end
-
-      def load_adapter(adapter)
-        ADAPTERS[adapter][:dependencies].each do |dependency|
-          require dependency
         end
       end
 
