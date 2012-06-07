@@ -233,7 +233,7 @@ describe HTTPI do
           before { opts[:class].any_instance.expects(method) }
 
           it "logs that we're executing a request" do
-            HTTPI.expects(:log).with(:debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
+            HTTPI.expects(:log).with("HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter")
             client.request method, request, adapter
           end
 
@@ -274,9 +274,9 @@ describe HTTPI do
 
     describe ".log" do
       it "logs the given messages" do
-        HTTPI.log_level = :debug
-        HTTPI.logger.expects(:debug).with("Log this")
-        HTTPI.log "Log", "this"
+        HTTPI.log_level = :info
+        HTTPI.logger.expects(:info).with("Log this")
+        HTTPI.log "Log this"
       end
     end
   end

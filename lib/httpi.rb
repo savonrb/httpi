@@ -162,10 +162,9 @@ module HTTPI
       @log_level ||= DEFAULT_LOG_LEVEL
     end
 
-    # Logs given +messages+.
-    def log(*messages)
-      level = Symbol === messages.first ? messages.shift : log_level
-      logger.send level, messages.join(" ") if log?
+    # Logs a given +message+.
+    def log(message)
+      logger.send(log_level, message) if log?
     end
 
     # Reset the default config.
@@ -190,7 +189,7 @@ module HTTPI
     def with_adapter(method, request, adapter)
       adapter, adapter_class = Adapter.load adapter
 
-      log :debug, "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
+      log "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
       yield adapter_class.new(request)
     end
 
