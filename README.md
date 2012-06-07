@@ -167,12 +167,15 @@ request.read_timeout = 30 # sec
 HTTPI::Auth
 -----------
 
-`HTTPI::Auth` supports HTTP basic and digest authentication.
+`HTTPI::Auth` supports HTTP basic, digest and Negotiate/SPNEGO authentication.
 
 ``` ruby
 request.auth.basic("username", "password")   # HTTP basic auth credentials
 request.auth.digest("username", "password")  # HTTP digest auth credentials
+request.auth.gssnegotiate                    # HTTP Negotiate/SPNEGO (aka Kerberos)
 ```
+
+HTTP Negotiate only works when using Curb.
 
 For experimental NTLM authentication, please use the [httpi-ntlm](rubygems.org/gems/httpi-ntml)
 gem and provide feedback.
