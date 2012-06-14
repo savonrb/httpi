@@ -110,7 +110,7 @@ You can manually specify the adapter to use via:
 HTTPI.adapter = :curb  # or one of [:httpclient, :net_http]
 ```
 
-If you don't specify which adapter to use, HTTPI try to load HTTPClient, then Curb and finally NetHTTP.
+If you don't specify which adapter to use, HTTPI will try to load HTTPClient, then Curb and finally NetHTTP.
 
 #### Notice
 
