@@ -1,4 +1,4 @@
-## UPCOMING
+## 1.1.0
 
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request from Savon to `HTTPI::Request#set_cookies`.
