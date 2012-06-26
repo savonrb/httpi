@@ -1,4 +1,5 @@
 require "uri"
+require "httpi/cookie_store"
 require "httpi/auth/config"
 require "rack/utils"
 
@@ -62,6 +63,12 @@ module HTTPI
       headers["Accept-Encoding"] = "gzip,deflate"
     end
 
+    # Sets the cookies from a given +http_response+.
+    def set_cookies(http_response)
+      cookie_store.add *http_response.cookies
+      headers["Cookie"] = cookie_store.fetch
+    end
+
     attr_accessor :open_timeout, :read_timeout
     attr_reader :body
 
@@ -86,6 +93,11 @@ module HTTPI
     end
 
   private
+
+    # Stores the cookies from past requests.
+    def cookie_store
+      @cookie_store ||= CookieStore.new
+    end
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
     def normalize_url!(url)

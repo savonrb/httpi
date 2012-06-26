@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Refactoring: Moved code that sets the cookies from the last response for the
+  next request from Savon to `HTTPI::Request#set_cookies`.
+
 ## 1.0.0 (2012-06-07)
 
 * Feature: [#48](https://github.com/rubiii/httpi/pull/48) @jheiss added support

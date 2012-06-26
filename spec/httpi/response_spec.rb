@@ -34,6 +34,23 @@ describe HTTPI::Response do
         response.should_not be_multipart
       end
     end
+
+    describe "#cookies" do
+      it "returns an empty list" do
+        response.cookies.should == []
+      end
+    end
+  end
+
+  context "with cookies" do
+    let(:response) { HTTPI::Response.new 200, { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }, "" }
+
+    describe "#cookies" do
+      it "returns a list of cookies" do
+        cookie = response.cookies.first
+        cookie.should be_a(HTTPI::Cookie)
+      end
+    end
   end
 
   context "empty" do

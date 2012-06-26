@@ -100,6 +100,29 @@ describe HTTPI::Request do
     end
   end
 
+  describe "#set_cookies" do
+    it "sets the cookie header for the next request" do
+      request.set_cookies response_with_cookie("some-cookie=choc-chip")
+      request.headers["Cookie"].should == "some-cookie=choc-chip"
+    end
+
+    it "sets additional cookies from subsequent requests" do
+      request.set_cookies response_with_cookie("some-cookie=choc-chip")
+      request.set_cookies response_with_cookie("second-cookie=oatmeal")
+
+      request.headers["Cookie"].should include("some-cookie=choc-chip", "second-cookie=oatmeal")
+    end
+
+    it "doesn't do anything if the response contains no cookies" do
+      request.set_cookies HTTPI::Response.new(200, {}, "")
+      request.headers["Cookie"].should be_nil
+    end
+
+    def response_with_cookie(cookie)
+      HTTPI::Response.new(200, { "Set-Cookie" => "#{cookie}; Path=/; HttpOnly" }, "")
+    end
+  end
+
   describe "#body" do
     it "lets you specify the HTTP request body using a String" do
       request.body = "<some>xml</some>"
