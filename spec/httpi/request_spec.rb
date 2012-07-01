@@ -115,7 +115,7 @@ describe HTTPI::Request do
 
     it "doesn't do anything if the response contains no cookies" do
       request.set_cookies HTTPI::Response.new(200, {}, "")
-      request.headers["Cookie"].should be_nil
+      request.headers.key?("Cookie").should == false
     end
 
     def response_with_cookie(cookie)
