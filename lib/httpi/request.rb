@@ -66,7 +66,8 @@ module HTTPI
     # Sets the cookies from a given +http_response+.
     def set_cookies(http_response)
       cookie_store.add *http_response.cookies
-      headers["Cookie"] = cookie_store.fetch
+	  cookies = cookie_store.fetch
+      headers["Cookie"] = cookies if cookies
     end
 
     attr_accessor :open_timeout, :read_timeout
