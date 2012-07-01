@@ -1,4 +1,9 @@
-## 1.1.0
+## 1.1.1 (2012-07-01)
+
+* Fix: [#56](https://github.com/rubiii/httpi/pull/56) ensures that the "Cookie"
+  header is not set to nil.
+
+## 1.1.0 (2012-06-26)
 
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request from Savon to `HTTPI::Request#set_cookies`.
