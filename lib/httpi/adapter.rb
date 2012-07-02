@@ -38,7 +38,9 @@ module HTTPI
       end
 
       def load(adapter)
-        adapter = adapter ? validate_adapter!(adapter) : use
+        adapter ||= use
+        validate_adapter!(adapter)
+        load_adapter(adapter)
         [adapter, ADAPTERS[adapter][:class]]
       end
 
@@ -52,7 +54,6 @@ module HTTPI
 
       def validate_adapter!(adapter)
         raise ArgumentError, "Invalid HTTPI adapter: #{adapter}" unless ADAPTERS[adapter]
-        adapter
       end
 
       def default_adapter
