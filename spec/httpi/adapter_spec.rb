@@ -35,7 +35,7 @@ describe HTTPI::Adapter do
   describe ".load" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:curb).should == [:curb, HTTPI::Adapter::Curb]
+        adapter.load(:net_http).should == [:net_http, HTTPI::Adapter::NetHTTP]
       end
     end
 
