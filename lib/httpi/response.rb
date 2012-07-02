@@ -1,6 +1,7 @@
 require "zlib"
 require "stringio"
 require "httpi/dime"
+require "httpi/cookie"
 require "rack/utils"
 
 module HTTPI
@@ -30,6 +31,11 @@ module HTTPI
     # Returns whether the HTTP response is a multipart response.
     def multipart?
       !!(headers["Content-Type"] =~ /^multipart/i)
+    end
+
+    # Returns a list of cookies from the response.
+    def cookies
+      @cookies ||= Cookie.list_from_headers(headers)
     end
 
     # Returns any DIME attachments.

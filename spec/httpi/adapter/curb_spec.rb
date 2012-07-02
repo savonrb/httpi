@@ -169,6 +169,13 @@ unless RUBY_PLATFORM =~ /java/
           curb.expects(:http_auth_types=).with(:digest)
           adapter.get(request)
         end
+
+        it "is set to :gssnegotiate for HTTP Negotiate auth" do
+          request = basic_request { |request| request.auth.gssnegotiate }
+
+          curb.expects(:http_auth_types=).with(:gssnegotiate)
+          adapter.get(request)
+        end
       end
 
       describe "username and password" do

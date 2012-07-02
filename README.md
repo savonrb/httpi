@@ -110,7 +110,7 @@ You can manually specify the adapter to use via:
 HTTPI.adapter = :curb  # or one of [:httpclient, :net_http]
 ```
 
-If you don't specify which adapter to use, HTTPI try to load HTTPClient, then Curb and finally NetHTTP.
+If you don't specify which adapter to use, HTTPI will try to load HTTPClient, then Curb and finally NetHTTP.
 
 #### Notice
 
@@ -167,12 +167,15 @@ request.read_timeout = 30 # sec
 HTTPI::Auth
 -----------
 
-`HTTPI::Auth` supports HTTP basic and digest authentication.
+`HTTPI::Auth` supports HTTP basic, digest and Negotiate/SPNEGO authentication.
 
 ``` ruby
 request.auth.basic("username", "password")   # HTTP basic auth credentials
 request.auth.digest("username", "password")  # HTTP digest auth credentials
+request.auth.gssnegotiate                    # HTTP Negotiate/SPNEGO (aka Kerberos)
 ```
+
+HTTP Negotiate only works when using Curb.
 
 For experimental NTLM authentication, please use the [httpi-ntlm](rubygems.org/gems/httpi-ntml)
 gem and provide feedback.

@@ -1,3 +1,21 @@
+## 1.1.1 (2012-07-01)
+
+* Fix: [#56](https://github.com/rubiii/httpi/pull/56) ensures that the "Cookie"
+  header is not set to nil.
+
+## 1.1.0 (2012-06-26)
+
+* Refactoring: Moved code that sets the cookies from the last response for the
+  next request from Savon to `HTTPI::Request#set_cookies`.
+
+## 1.0.0 (2012-06-07)
+
+* Feature: [#48](https://github.com/rubiii/httpi/pull/48) @jheiss added support
+  for HTTP Negotiate/SPNEGO authentication (curb-specific).
+
+* Fix: [#53](https://github.com/rubiii/httpi/issues/53) fixed an issue where
+  `HTTPI.log_level` did not do anything at all.
+
 ## 0.9.7 (2012-04-26)
 
 * Fix: Merged [pull request 49](https://github.com/rubiii/httpi/pull/49) so that cert
