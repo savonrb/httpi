@@ -1,4 +1,5 @@
 require "uri"
+require "httpi/cookie_store"
 require "httpi/auth/config"
 require "rack/utils"
 
@@ -24,6 +25,7 @@ module HTTPI
     # Sets the +url+ to access. Raises an +ArgumentError+ unless the +url+ is valid.
     def url=(url)
       @url = normalize_url! url
+      auth.basic @url.user, @url.password || '' if @url.user
     end
 
     # Returns the +url+ to access.
@@ -61,7 +63,20 @@ module HTTPI
       headers["Accept-Encoding"] = "gzip,deflate"
     end
 
-    attr_accessor :body, :open_timeout, :read_timeout
+    # Sets the cookies from a given +http_response+.
+    def set_cookies(http_response)
+      cookie_store.add *http_response.cookies
+      cookies = cookie_store.fetch
+      headers["Cookie"] = cookies if cookies
+    end
+
+    attr_accessor :open_timeout, :read_timeout
+    attr_reader :body
+
+    # Sets a body request given a String or a Hash.
+    def body=(params)
+      @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
+    end
 
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth
@@ -77,8 +92,13 @@ module HTTPI
     def mass_assign(args)
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
- 
+
   private
+
+    # Stores the cookies from past requests.
+    def cookie_store
+      @cookie_store ||= CookieStore.new
+    end
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
     def normalize_url!(url)

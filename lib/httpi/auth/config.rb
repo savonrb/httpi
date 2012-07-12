@@ -5,12 +5,12 @@ module HTTPI
 
     # = HTTPI::Auth::Config
     #
-    # Manages HTTP and SSL auth configuration. Currently supports HTTP basic/digest
-    # and SSL client authentication.
+    # Manages HTTP and SSL auth configuration. Currently supports HTTP basic/digest,
+    # Negotiate/SPNEGO, and SSL client authentication.
     class Config
 
       # Supported authentication types.
-      TYPES = [:basic, :digest, :ssl, :ntlm]
+      TYPES = [:basic, :digest, :gssnegotiate, :ssl]
 
       # Accessor for the HTTP basic auth credentials.
       def basic(*args)
@@ -38,22 +38,29 @@ module HTTPI
         type == :digest
       end
 
+      # Enable HTTP Negotiate/SPNEGO authentication.
+      def gssnegotiate
+        self.type = :gssnegotiate
+      end
+
+      # Returns whether to use HTTP Negotiate/SPNEGO auth.
+      def gssnegotiate?
+        type == :gssnegotiate
+      end
+
       # Returns whether to use HTTP basic or dihest auth.
       def http?
         type == :basic || type == :digest
       end
 
-      # Accessor for the NTLM auth credentials.
+      # Only available with the httpi-ntlm gem.
       def ntlm(*args)
-        return @ntlm if args.empty?
-
-        self.type = :ntlm
-        @ntlm = args.flatten.compact
+        raise "Install the httpi-ntlm gem for experimental NTLM support"
       end
 
-      # Returns whether to use NTLM auth.
+      # Only available with the httpi-ntlm gem.
       def ntlm?
-        type == :ntlm
+        raise "Install the httpi-ntlm gem for experimental NTLM support"
       end
 
       # Returns the <tt>HTTPI::Auth::SSL</tt> object.

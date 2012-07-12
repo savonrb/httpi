@@ -1,6 +1,9 @@
 source :rubygems
 gemspec
 
-group :test do
-  gem "mock-server", :git => "git://github.com/ichverstehe/mock-server.git", :branch => "custom-class"
-end
+gem "jruby-openssl", :platforms => :jruby
+
+# http clients
+gem "httpclient", "~> 2.1.7"
+gem "curb", "~> 0.7.8", :platforms => :ruby
+gem "mock-server", :git => "https://github.com/djanowski/mock-server.git"

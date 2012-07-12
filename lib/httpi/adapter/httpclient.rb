@@ -66,7 +66,7 @@ module HTTPI
 
       def setup_client(request)
         basic_setup request
-        setup_auth request if request.auth.http? || request.auth.ntlm?
+        setup_auth request if request.auth.http?
         setup_ssl_auth request.auth.ssl if request.auth.ssl?
       end
 
@@ -90,7 +90,7 @@ module HTTPI
       end
 
       def respond_with(response)
-        Response.new response.code, Hash[response.header.all], response.content
+        Response.new response.code, Hash[*response.header.all.flatten], response.content
       end
 
     end

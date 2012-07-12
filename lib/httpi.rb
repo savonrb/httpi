@@ -24,7 +24,7 @@ require "httpi/adapter"
 #   request = HTTPI::Request.new
 #   request.url = "http://example.com"
 #   request.body = "<some>xml</some>"
-#   
+#
 #   HTTPI.post request, :httpclient
 #
 # === Shortcuts
@@ -45,7 +45,7 @@ require "httpi/adapter"
 #   request = HTTPI::Request.new
 #   request.url = "http://example.com"
 #   request.body = "<some>xml</some>"
-#   
+#
 #   HTTPI.put request, :httpclient
 #
 # === Shortcuts
@@ -80,7 +80,7 @@ module HTTPI
     # Executes an HTTP GET request.
     def get(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
-      
+
       with_adapter :get, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.get request
@@ -90,7 +90,7 @@ module HTTPI
     # Executes an HTTP POST request.
     def post(*args)
       request, adapter = request_and_adapter_from(args)
-      
+
       with_adapter :post, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.post request
@@ -100,7 +100,7 @@ module HTTPI
     # Executes an HTTP HEAD request.
     def head(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
-      
+
       with_adapter :head, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.head request
@@ -110,7 +110,7 @@ module HTTPI
     # Executes an HTTP PUT request.
     def put(*args)
       request, adapter = request_and_adapter_from(args)
-      
+
       with_adapter :put, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.put request
@@ -120,7 +120,7 @@ module HTTPI
     # Executes an HTTP DELETE request.
     def delete(request, adapter = nil)
       request = Request.new :url => request if request.kind_of? String
-      
+
       with_adapter :delete, request, adapter do |adapter|
         yield adapter.client if block_given?
         adapter.delete request
@@ -131,6 +131,11 @@ module HTTPI
     def request(method, request, adapter = nil)
       raise ArgumentError, "Invalid request method: #{method}" unless REQUEST_METHODS.include? method
       send method, request, adapter
+    end
+
+    # Shortcut for setting the default adapter to use.
+    def adapter=(adapter)
+      Adapter.use = adapter
     end
 
     # Sets whether to log HTTP requests.
@@ -157,9 +162,9 @@ module HTTPI
       @log_level ||= DEFAULT_LOG_LEVEL
     end
 
-    # Logs given +messages+.
-    def log(*messages)
-      logger.send log_level, messages.join(" ") if log?
+    # Logs a given +message+.
+    def log(message)
+      logger.send(log_level, message) if log?
     end
 
     # Reset the default config.
@@ -182,10 +187,9 @@ module HTTPI
     # Expects a request +method+, a +request+ and an +adapter+ (defaults to
     # <tt>Adapter.use</tt>) and yields an instance of the adapter to a given block.
     def with_adapter(method, request, adapter)
-      adapter ||= Adapter.use
-      adapter, adapter_class = Adapter.find adapter
-      
-      HTTPI.logger.debug "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
+      adapter, adapter_class = Adapter.load adapter
+
+      log "HTTPI executes HTTP #{method.to_s.upcase} using the #{adapter} adapter"
       yield adapter_class.new(request)
     end
 

@@ -1,5 +1,5 @@
 module HTTPI
 
-  VERSION = "0.8.0"
+  VERSION = "1.1.1"
 
 end

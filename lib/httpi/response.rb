@@ -1,6 +1,7 @@
 require "zlib"
 require "stringio"
 require "httpi/dime"
+require "httpi/cookie"
 require "rack/utils"
 
 module HTTPI
@@ -32,6 +33,11 @@ module HTTPI
       !!(headers["Content-Type"] =~ /^multipart/i)
     end
 
+    # Returns a list of cookies from the response.
+    def cookies
+      @cookies ||= Cookie.list_from_headers(headers)
+    end
+
     # Returns any DIME attachments.
     def attachments
       decode_body unless @body
@@ -50,14 +56,14 @@ module HTTPI
 
     def decode_body
       return @body = "" if !raw_body || raw_body.empty?
-      
+
       body = gzipped_response? ? decoded_gzip_body : raw_body
       @body = dime_response? ? decoded_dime_body(body) : body
     end
 
     # Returns whether the response is gzipped.
     def gzipped_response?
-      headers["Content-Encoding"] == "gzip" || raw_body[0..1] == "\x1f\x8b"
+      headers["Content-Encoding"] == "gzip"
     end
 
     # Returns whether this is a DIME response.
