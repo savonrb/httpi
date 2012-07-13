@@ -4,15 +4,33 @@ require "httpi/auth/config"
 describe HTTPI::Auth::Config do
   let(:auth) { HTTPI::Auth::Config.new }
 
+  describe "configuration" do
+    class Crazy
+      def initialize(foo); @foo = foo; end
+      attr_accessor :foo
+      HTTPI::Auth.register self, :crazy
+    end
+
+    it 'registers new auth classes' do
+      auth.should_not be_crazy
+    end
+
+    it 'configures auth' do
+      auth.crazy('bar')
+      auth.should be_crazy
+      auth.crazy.foo.should eql 'bar'
+    end
+  end
+
   describe "#basic" do
     it "lets you specify the basic auth credentials" do
       auth.basic "username", "password"
-      auth.basic.should == ["username", "password"]
+      [auth.basic.username, auth.basic.password].should == ["username", "password"]
     end
 
     it "also accepts an Array of credentials" do
       auth.basic ["username", "password"]
-      auth.basic.should == ["username", "password"]
+      [auth.basic.username, auth.basic.password].should == ["username", "password"]
     end
 
     it "sets the authentication type to :basic" do
@@ -35,12 +53,12 @@ describe HTTPI::Auth::Config do
   describe "#digest" do
     it "lets you specify the digest auth credentials" do
       auth.digest "username", "password"
-      auth.digest.should == ["username", "password"]
+      [auth.digest.username, auth.digest.password].should == ["username", "password"]
     end
 
     it "also accepts an Array of credentials" do
       auth.digest ["username", "password"]
-      auth.digest.should == ["username", "password"]
+      [auth.digest.username, auth.digest.password].should == ["username", "password"]
     end
 
     it "sets the authentication type to :digest" do
@@ -75,22 +93,6 @@ describe HTTPI::Auth::Config do
     it "returns true for HTTP Negotiate auth" do
       auth.gssnegotiate
       auth.should be_gssnegotiate
-    end
-  end
-
-  describe "#http?" do
-    it "defaults to return false" do
-      auth.should_not be_http
-    end
-
-    it "returns true for HTTP basic auth" do
-      auth.basic "username", "password"
-      auth.should be_http
-    end
-
-    it "returns true for HTTP digest auth" do
-      auth.digest "username", "password"
-      auth.should be_http
     end
   end
 

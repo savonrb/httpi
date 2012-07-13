@@ -34,12 +34,16 @@ describe HTTPI::Request do
 
     it "uses username and password as basic authentication if present in the URL" do
       request.url = "http://username:password@example.com"
-      request.auth.basic.should == ['username', 'password']
+      request.auth.should be_basic
+      request.auth.username.should be == 'username'
+      request.auth.password.should be == 'password'
     end
 
     it "uses a blank password if only username is specified in the URL" do
       request.url = "http://username@example.com"
-      request.auth.basic.should == ['username', '']
+      request.auth.should be_basic
+      request.auth.username.should be == 'username'
+      request.auth.password.should be == ''
     end
   end
 
@@ -151,6 +155,7 @@ describe HTTPI::Request do
 
   describe "#auth" do
     it "returns the authentication object" do
+      pending 'how do I handle the proxy?'
       request.auth.should be_an(HTTPI::Auth::Config)
     end
 

@@ -1,6 +1,9 @@
 require "uri"
 require "httpi/cookie_store"
-require "httpi/auth/config"
+require "httpi/auth"
+require "httpi/auth/http"
+require "httpi/auth/gssnegotiate"
+require "httpi/auth/ssl"
 require "rack/utils"
 
 module HTTPI

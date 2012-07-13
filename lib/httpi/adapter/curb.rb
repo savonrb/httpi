@@ -57,9 +57,7 @@ module HTTPI
 
       def setup_client(request)
         basic_setup request
-        setup_http_auth request if request.auth.http?
-        setup_gssnegotiate_auth request if request.auth.gssnegotiate?
-        setup_ssl_auth request.auth.ssl if request.auth.ssl?
+        setup_auth request.auth
       end
 
       def basic_setup(request)
@@ -71,13 +69,26 @@ module HTTPI
         client.verbose = false
       end
 
-      def setup_http_auth(request)
-        client.http_auth_types = request.auth.type
-        client.username, client.password = *request.auth.credentials
+      def setup_auth(auth)
+        case auth.type
+        when :basic
+          setup_http_auth(auth)
+        when :digest
+          setup_http_auth(auth)
+        when :gssnegotiate
+          setup_gssnegotiate_auth(auth)
+        when :ssl
+          setup_ssl_auth(auth)
+        end
       end
 
-      def setup_gssnegotiate_auth(request)
-        client.http_auth_types = request.auth.type
+      def setup_http_auth(auth)
+        client.http_auth_types = auth.type
+        client.username, client.password = auth.username, auth.password
+      end
+
+      def setup_gssnegotiate_auth(auth)
+        client.http_auth_types = auth.type
         # The curl man page (http://curl.haxx.se/docs/manpage.html) says that
         # you have to specify a fake username when using Negotiate auth, and
         # they use ':' in their example.
