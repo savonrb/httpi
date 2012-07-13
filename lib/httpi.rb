@@ -1,7 +1,9 @@
 require "logger"
 require "httpi/version"
 require "httpi/request"
-require "httpi/adapter"
+require "httpi/adapter/net_http"
+require "httpi/adapter/httpclient"
+require "httpi/adapter/curb"
 
 # = HTTPI
 #

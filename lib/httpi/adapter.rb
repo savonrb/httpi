@@ -1,7 +1,3 @@
-require "httpi/adapter/httpclient"
-require "httpi/adapter/curb"
-require "httpi/adapter/net_http"
-
 module HTTPI
 
   # = HTTPI::Adapter
@@ -13,15 +9,14 @@ module HTTPI
   # * net/http
   module Adapter
 
-    ADAPTERS = {
-      :httpclient => { :class => HTTPClient, :require => "httpclient" },
-      :curb       => { :class => Curb,       :require => "curb" },
-      :net_http   => { :class => NetHTTP,    :require => "net/https" }
-    }
-
+    ADAPTERS = {}
     LOAD_ORDER = [:httpclient, :curb, :net_http]
 
     class << self
+
+      def register(adapter_class)
+        ADAPTERS.update adapter_class.to_sym => adapter_class
+      end
 
       def use=(adapter)
         return @adapter = nil if adapter.nil?
@@ -37,7 +32,7 @@ module HTTPI
 
       def load(adapter)
         adapter = adapter ? validate_adapter!(adapter) : use
-        [adapter, ADAPTERS[adapter][:class]]
+        [adapter, ADAPTERS[adapter]]
       end
 
     private
@@ -58,10 +53,25 @@ module HTTPI
         end
       end
 
-      def load_adapter(adapter)
-        require ADAPTERS[adapter][:require]
+      def load_adapter adapter
+        ADAPTERS[adapter].require
       end
 
+    end
+
+    # Adapter class interface
+    class Base
+      # Should return a symbol by which the adapter is referred to
+      def self.to_sym
+        raise 'Abstract! Please implement!'
+      end
+
+      # require all needed dependencies for this adapter to work
+      def self.require
+        raise 'Abstract! Please implement!'
+      end
+
+      # TODO spec out the interface
     end
   end
 end
