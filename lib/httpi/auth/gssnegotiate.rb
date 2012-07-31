@@ -1,7 +1,7 @@
 module HTTPI
   module Auth
-    class GSSNegotiate
-      HTTPI::Auth.register self, :gssnegotiate
+    class GSSNegotiate < Base
+      register :gssnegotiate
     end
   end
 end

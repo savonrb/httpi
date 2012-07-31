@@ -6,9 +6,9 @@ module HTTPI
     # = HTTPI::Auth::SSL
     #
     # Provides SSL client authentication.
-    class SSL
+    class SSL < Base
 
-      HTTPI::Auth.register self, :ssl
+      register :ssl
 
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]

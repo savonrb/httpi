@@ -11,15 +11,8 @@ module HTTPI
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP < Base
 
-      def self.require
-        Kernel.require 'net/https'
-      end
-
-      def self.to_sym
-        :net_http
-      end
-
-      HTTPI::Adapter.register self
+      require 'net/https'
+      register :net_http
 
       def initialize(request)
         self.client = new_client request

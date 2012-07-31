@@ -10,15 +10,8 @@ module HTTPI
     # http://rubygems.org/gems/curb
     class Curb < Base
 
-      def self.require
-        Kernel.require 'curb'
-      end
-
-      def self.to_sym
-        :curb
-      end
-
-      HTTPI::Adapter.register self
+      require 'curb'
+      register :curb
 
       def initialize(request = nil)
       end

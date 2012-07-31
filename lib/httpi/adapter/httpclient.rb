@@ -10,15 +10,8 @@ module HTTPI
     # http://rubygems.org/gems/httpclient
     class HTTPClient < Base
 
-      def self.require
-        Kernel.require 'httpclient'
-      end
-
-      def self.to_sym
-        :httpclient
-      end
-
-      HTTPI::Adapter.register self
+      require 'httpclient'
+      register :httpclient
 
       def initialize(request = nil)
       end

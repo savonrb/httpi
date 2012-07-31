@@ -1,6 +1,6 @@
 module HTTPI
   module Auth
-    class Credentials
+    class Credentials < Base
       attr_accessor :username, :password
       def initialize *credentials
         @username, @password = *credentials.flatten
@@ -12,11 +12,11 @@ module HTTPI
     end
 
     class Basic < Credentials
-      HTTPI::Auth.register self, :basic
+      register :basic
     end
 
     class Digest < Credentials
-      HTTPI::Auth.register self, :digest
+      register :digest
     end
   end
 end
