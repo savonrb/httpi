@@ -23,7 +23,7 @@ describe HTTPI::Adapter do
     end
 
     it "loads the adapter's client library" do
-      adapter.expects(:require).with("httpclient")
+      HTTPI::Adapter::HTTPClient.expects(:require)
       adapter.use = :httpclient
     end
 

@@ -1,4 +1,5 @@
 require "uri"
+require "httpi/adapter"
 require "httpi/response"
 
 module HTTPI
@@ -8,7 +9,10 @@ module HTTPI
     #
     # Adapter for the Net::HTTP client.
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
-    class NetHTTP
+    class NetHTTP < Base
+
+      require 'net/https'
+      register :net_http
 
       def initialize(request)
         self.client = new_client request
@@ -100,7 +104,7 @@ module HTTPI
         end
 
         request_client = request_class.new request.url.request_uri, request.headers
-        request_client.basic_auth *request.auth.credentials if request.auth.basic?
+        request_client.basic_auth request.auth.username, request.auth.password if request.auth.basic?
 
         request_client
       end
