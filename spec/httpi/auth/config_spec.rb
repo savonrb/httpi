@@ -5,10 +5,10 @@ describe HTTPI::Auth::Config do
   let(:auth) { HTTPI::Auth::Config.new }
 
   describe "configuration" do
-    class Crazy
+    class Crazy < HTTPI::Auth::Base
       def initialize(foo); @foo = foo; end
       attr_accessor :foo
-      HTTPI::Auth.register self, :crazy
+      register :crazy
     end
 
     it 'registers new auth classes' do
