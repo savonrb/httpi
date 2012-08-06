@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
 
   s.add_dependency "rack"
+  s.add_dependency "rubyntlm"
 
   s.add_development_dependency "rake",    "~> 0.8.7"
   s.add_development_dependency "rspec",   "~> 2.7"

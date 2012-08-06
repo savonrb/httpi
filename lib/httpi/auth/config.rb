@@ -1,4 +1,5 @@
 require "httpi/auth/ssl"
+require "httpi/auth/ntlm"
 
 module HTTPI
   module Auth
@@ -10,7 +11,7 @@ module HTTPI
     class Config
 
       # Supported authentication types.
-      TYPES = [:basic, :digest, :gssnegotiate, :ssl]
+      TYPES = [:basic, :digest, :gssnegotiate, :ssl, :ntlm]
 
       # Accessor for the HTTP basic auth credentials.
       def basic(*args)
@@ -55,12 +56,12 @@ module HTTPI
 
       # Only available with the httpi-ntlm gem.
       def ntlm(*args)
-        raise "Install the httpi-ntlm gem for experimental NTLM support"
+        @ntlm ||= NTLM.new(*args)
       end
 
       # Only available with the httpi-ntlm gem.
       def ntlm?
-        raise "Install the httpi-ntlm gem for experimental NTLM support"
+        ntlm.present?
       end
 
       # Returns the <tt>HTTPI::Auth::SSL</tt> object.

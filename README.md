@@ -198,6 +198,17 @@ request.auth.ssl.verify_mode       = :none              # or one of [:peer, :fai
 ```
 
 
+HTTPI::Auth::NTLM
+-----------------
+
+`HTTPI::Auth::NTLM` manages NTLM client authentication (ntlm v2 using rubyntlm).
+
+``` ruby
+request.auth.ntlm(username,password)
+response = HTTPI.get request
+```
+
+
 HTTPI::Response
 ---------------
 

@@ -1,5 +1,6 @@
 require "uri"
 require "httpi/response"
+require 'kconv'
 
 module HTTPI
   module Adapter
@@ -71,8 +72,25 @@ module HTTPI
       def do_request(type, request)
         setup_client request
         setup_ssl_auth request.auth.ssl if request.auth.ssl?
-
+                
         respond_with(client.start do |http|
+          if request.auth.ntlm?
+            # first request... (exchange secret and auth)
+            t1 = Net::NTLM::Message::Type1.new()
+            request.headers["Authorization"] = "NTLM #{t1.encode64}" 
+            request.headers["Keep-Alive"] = "300"
+            request.headers["Connnection"] = "keep-alive"
+            resp = respond_with(yield http, request_client(type, request))
+
+            if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
+              msg = $2
+              t2 = Net::NTLM::Message.decode64(msg)
+              t3 = t2.response({:user => request.auth.ntlm.username, :password => request.auth.ntlm.password}, {:ntlmv2 => true})
+              request.headers["Authorization"] = "NTLM #{t3.encode64}"
+            end
+          end
+
+          # second request (submit auth and get response)
           yield http, request_client(type, request)
         end)
       end
