@@ -80,7 +80,7 @@ module HTTPI
             request.headers["Authorization"] = "NTLM #{t1.encode64}" 
             request.headers["Keep-Alive"] = "300"
             request.headers["Connnection"] = "keep-alive"
-            resp = respond_with(yield http, request_client(type, request))
+            resp = respond_with(yield http, request_client(:head, request))
 
             if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
               msg = $2
