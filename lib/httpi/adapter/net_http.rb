@@ -78,8 +78,8 @@ module HTTPI
             # first request... (exchange secret and auth)
             t1 = Net::NTLM::Message::Type1.new()
             request.headers["Authorization"] = "NTLM #{t1.encode64}" 
-            request.headers["Keep-Alive"] = "300"
-            request.headers["Connnection"] = "keep-alive"
+            #request.headers["Keep-Alive"] = "300"
+            #request.headers["Connnection"] = "keep-alive"
             resp = respond_with(yield http, request_client(:head, request))
 
             if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
