@@ -141,7 +141,11 @@ module HTTPI
 
       def respond_with(http, start_time)
         raise TimeoutError, "Connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
-        Response.new http.response_header.status, http.response_header.raw, http.response
+
+        # I'm confused here... if I return http.response_header.raw, the
+        # integration tests pass and the unit tests fail; if I drop the #raw
+        # call, the integration tests fail, but the unit tests pass.
+        Response.new http.response_header.status, http.response_header, http.response
       end
 
       class TimeoutError < StandardError; end
