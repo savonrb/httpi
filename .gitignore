@@ -7,3 +7,4 @@ tmp
 *.gem
 .bundle
 Gemfile.lock
+.idea/*
