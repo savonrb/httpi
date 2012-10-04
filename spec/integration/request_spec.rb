@@ -78,6 +78,17 @@ describe HTTPI do
   end
 
   HTTPI::Adapter::ADAPTERS.keys.each do |adapter|
+    if adapter == :em_http && RUBY_VERSION >= "1.9.0"
+      require 'em-synchrony'
+
+      around(:each) do |example|
+        EM.synchrony do
+          example.run
+          EM.stop
+        end
+      end
+    end
+
     unless (adapter == :curb && RUBY_PLATFORM =~ /java/) || (adapter == :em_http && RUBY_VERSION =~ /1\.8/)
       context "using :#{adapter}" do
         let(:adapter) { adapter }
