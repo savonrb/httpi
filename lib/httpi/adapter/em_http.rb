@@ -141,7 +141,27 @@ module HTTPI
 
       def respond_with(http, start_time)
         raise TimeoutError, "Connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
-        Response.new http.response_header.status, http.response_header, http.response
+
+        Response.new http.response_header.status,
+          convert_headers(http.response_header), http.response
+      end
+
+      # Takes any header names with an underscore as a word separator and
+      # converts the name to camel case, where words are separated by a dash.
+      #
+      # E.g. CONTENT_TYPE becomes Content-Type.
+      def convert_headers(headers)
+        return headers unless headers.keys.any? { |k| k =~ /_/ }
+
+        result = {}
+
+        headers.each do |k, v|
+          words = k.split("_")
+          key = words.map { |w| w.downcase.capitalize }.join("-")
+          result[key] = v
+        end
+
+        result
       end
 
       class TimeoutError < StandardError; end
