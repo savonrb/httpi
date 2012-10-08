@@ -1,9 +1,9 @@
-HTTPI [![Build Status](https://secure.travis-ci.org/rubiii/httpi.png)](http://travis-ci.org/rubiii/httpi)
+HTTPI [![Build Status](https://secure.travis-ci.org/savonrb/httpi.png)](http://travis-ci.org/savonrb/httpi)
 =====
 
 HTTPI provides a common interface for Ruby HTTP libraries.
 
-[Bugs](http://github.com/rubiii/httpi/issues) | [RDoc](http://rubydoc.info/gems/httpi/frames)
+[Bugs](http://github.com/savonrb/httpi/issues) | [RDoc](http://rubydoc.info/gems/httpi/frames)
 
 Installation
 ------------
