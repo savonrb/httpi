@@ -3,6 +3,9 @@
 * Feature: [#63](https://github.com/savonrb/httpi/pull/63) adds support for
   EventMachine::HttpRequest. Additional information at [#40](https://github.com/savonrb/httpi/pull/40).
 
+* Improvement: [#64](https://github.com/savonrb/httpi/pull/64) adds support for
+  specifying the SSL version to use.
+
 ## 1.1.1 (2012-07-01)
 
 * Fix: [#56](https://github.com/savonrb/httpi/pull/56) ensures that the "Cookie"
