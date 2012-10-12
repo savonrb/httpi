@@ -85,11 +85,14 @@ module HTTPI
       end
 
       def setup_ssl_auth(ssl)
-        client.cert_key = ssl.cert_key_file
-        client.cert = ssl.cert_file
-        client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
-        client.certtype = ssl.cert_type.to_s.upcase
+        unless ssl.verify_mode == :none
+          client.cert_key = ssl.cert_key_file
+          client.cert = ssl.cert_file
+          client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
+          client.certtype = ssl.cert_type.to_s.upcase
+        end
         client.ssl_verify_peer = ssl.verify_mode == :peer
+        client.ssl_version = (ssl.ssl_version == :TLSv1 ? 1 : (ssl.ssl_version == :SSLv2 ? 2 : 3)) if ssl.ssl_version
       end
 
       def respond_with(client)

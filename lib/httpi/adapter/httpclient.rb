@@ -87,6 +87,7 @@ module HTTPI
           client.ssl_config.client_ca = ssl.ca_cert if ssl.ca_cert_file
         end
         client.ssl_config.verify_mode = ssl.openssl_verify_mode
+        client.ssl_config.ssl_version = ssl.ssl_version if ssl.ssl_version
       end
 
       def respond_with(response)
