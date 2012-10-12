@@ -228,6 +228,11 @@ unless RUBY_PLATFORM =~ /java/
         end
 
         context 'sets ssl_version' do
+          it 'defaults to nil when no ssl_version is specified' do
+            curb.expects(:ssl_version=).with(nil)
+            adapter.get(ssl_auth_request)
+          end
+
           it 'to 1 when ssl_version is specified as TLSv1' do
             ssl_auth_request.auth.ssl.ssl_version = :TLSv1
             curb.expects(:ssl_version=).with(1)

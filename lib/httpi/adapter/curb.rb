@@ -92,7 +92,14 @@ module HTTPI
           client.certtype = ssl.cert_type.to_s.upcase
         end
         client.ssl_verify_peer = ssl.verify_mode == :peer
-        client.ssl_version = (ssl.ssl_version == :TLSv1 ? 1 : (ssl.ssl_version == :SSLv2 ? 2 : 3)) if ssl.ssl_version
+        client.ssl_version = case ssl.ssl_version
+                             when :TLSv1
+                               1
+                             when :SSLv2
+                               2
+                             when :SSLv3
+                               3
+                             end
       end
 
       def respond_with(client)
