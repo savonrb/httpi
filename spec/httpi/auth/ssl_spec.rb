@@ -132,6 +132,35 @@ describe HTTPI::Auth::SSL do
     end
   end
 
+  describe "SSL_VERSIONS" do
+    it "contains the supported SSL versions" do
+      HTTPI::Auth::SSL::SSL_VERSIONS.should == [:TLSv1, :SSLv2, :SSLv3]
+    end
+  end
+
+  describe "#ssl_version" do
+    subject { HTTPI::Auth::SSL.new }
+
+    it 'returns the SSL version for :TLSv1' do
+      subject.ssl_version = :TLSv1
+      subject.ssl_version.should eq(:TLSv1)
+    end
+
+    it 'returns the SSL version for :SSLv2' do
+      subject.ssl_version = :SSLv2
+      subject.ssl_version.should eq(:SSLv2)
+    end
+
+    it 'returns the SSL version for :SSLv3' do
+      subject.ssl_version = :SSLv3
+      subject.ssl_version.should eq(:SSLv3)
+    end
+
+    it 'raises ArgumentError if the version is unsupported' do
+      expect { ssl.ssl_version = :ssl_fail }.to raise_error(ArgumentError)
+    end
+  end
+
   def ssl
     ssl = HTTPI::Auth::SSL.new
     ssl.cert_key_file = "spec/fixtures/client_key.pem"
