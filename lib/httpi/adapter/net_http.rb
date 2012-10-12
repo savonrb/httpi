@@ -84,10 +84,13 @@ module HTTPI
       end
 
       def setup_ssl_auth(ssl)
-        client.key = ssl.cert_key
-        client.cert = ssl.cert
-        client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+        unless ssl.verify_mode == :none
+          client.key = ssl.cert_key
+          client.cert = ssl.cert
+          client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+        end
         client.verify_mode = ssl.openssl_verify_mode
+        client.ssl_version = ssl.ssl_version if ssl.ssl_version
       end
 
       def request_client(type, request)
