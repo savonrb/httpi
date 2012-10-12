@@ -10,6 +10,7 @@ module HTTPI
 
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]
+      SSL_VERSIONS = [:TLSv1, :SSLv2, :SSLv3]
 
       # Returns whether SSL configuration is present.
       def present?
@@ -50,6 +51,17 @@ module HTTPI
       def verify_mode=(mode)
         raise ArgumentError, "Invalid SSL verify mode: #{mode}" unless VERIFY_MODES.include? mode
         @verify_mode = mode
+      end
+
+      # Returns the SSL version number. Defaults to <tt>nil</tt> (auto-negotiate).
+      def ssl_version
+        @ssl_version
+      end
+
+      # Sets the SSL version number. Expects one of <tt>HTTPI::Auth::SSL::SSL_VERSIONS</tt>.
+      def ssl_version=(version)
+        raise ArgumentError, "Invalid SSL version: #{version}" unless SSL_VERSIONS.include? version
+        @ssl_version = version
       end
 
       # Returns an <tt>OpenSSL::X509::Certificate</tt> for the +cert_file+.
