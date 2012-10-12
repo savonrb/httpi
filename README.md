@@ -100,14 +100,15 @@ HTTPI::Adapter
 HTTPI uses adapters to support multiple HTTP libraries.
 It currently contains adapters for:
 
-* [httpclient](http://rubygems.org/gems/httpclient) ~> 2.1.5
-* [curb](http://rubygems.org/gems/curb) ~> 0.7.8
+* [httpclient](http://rubygems.org/gems/httpclient)
+* [curb](http://rubygems.org/gems/curb)
 * [net/http](http://ruby-doc.org/stdlib/libdoc/net/http/rdoc)
+* [em_http](http://rubygems.org/gems/em-http-request) (since v1.2.0)
 
 You can manually specify the adapter to use via:
 
 ``` ruby
-HTTPI.adapter = :curb  # or one of [:httpclient, :net_http]
+HTTPI.adapter = :curb  # or one of [:httpclient, :net_http, :em_http]
 ```
 
 If you don't specify which adapter to use, HTTPI will try to load HTTPClient, then Curb and finally NetHTTP.
@@ -195,6 +196,7 @@ request.auth.ssl.cert_key_password = "C3rtP@ssw0rd"     # the key file's passwor
 request.auth.ssl.cert_file         = "client_cert.pem"  # the certificate file to use
 request.auth.ssl.ca_cert_file      = "ca_cert.pem"      # the ca certificate file to use
 request.auth.ssl.verify_mode       = :none              # or one of [:peer, :fail_if_no_peer_cert, :client_once]
+request.auth.ssl.ssl_version       = :TLSv1             # or one of [:SSLv2, :SSLv3]
 ```
 
 
