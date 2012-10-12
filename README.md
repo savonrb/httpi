@@ -178,7 +178,7 @@ request.auth.gssnegotiate                    # HTTP Negotiate/SPNEGO (aka Kerber
 
 HTTP Negotiate only works when using Curb.
 
-For experimental NTLM authentication, please use the [httpi-ntlm](rubygems.org/gems/httpi-ntml)
+For experimental NTLM authentication, please use the [httpi-ntlm](http://rubygems.org/gems/httpi-ntml)
 gem and provide feedback.
 
 ``` ruby
