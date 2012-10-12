@@ -4,7 +4,7 @@ require "httpi/request"
 
 # curb does not run on jruby
 unless RUBY_PLATFORM =~ /java/
-  require "curb"
+  HTTPI::Adapter.load_adapter(:curb)
 
   describe HTTPI::Adapter::Curb do
     let(:adapter) { HTTPI::Adapter::Curb.new }
