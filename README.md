@@ -103,7 +103,7 @@ It currently contains adapters for:
 * [httpclient](http://rubygems.org/gems/httpclient)
 * [curb](http://rubygems.org/gems/curb)
 * [net/http](http://ruby-doc.org/stdlib/libdoc/net/http/rdoc)
-* [em_http](http://rubygems.org/gems/em-http-request) (since v1.2.0)
+* [em_http](http://rubygems.org/gems/em-http-request) (since v1.2.0) also requires [em-synchrony](http://rubygems.org/gems/em-synchrony)
 
 You can manually specify the adapter to use via:
 
