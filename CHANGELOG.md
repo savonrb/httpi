@@ -6,6 +6,9 @@
 * Improvement: [#64](https://github.com/savonrb/httpi/pull/64) adds support for
   specifying the SSL version to use.
 
+* Improvement: Log to $stdout (instead of STDOUT) using a default log level of
+  debug (instead of warn).
+
 ## 1.1.1 (2012-07-01)
 
 * Fix: [#56](https://github.com/savonrb/httpi/pull/56) ensures that the "Cookie"
