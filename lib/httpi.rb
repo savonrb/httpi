@@ -151,7 +151,7 @@ module HTTPI
 
     # Returns the logger. Defaults to an instance of +Logger+ writing to STDOUT.
     def logger
-      @logger ||= ::Logger.new STDOUT
+      @logger ||= ::Logger.new($stdout)
     end
 
     # Sets the log level.
