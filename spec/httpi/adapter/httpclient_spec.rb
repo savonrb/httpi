@@ -117,7 +117,7 @@ describe HTTPI::Adapter::HTTPClient do
 
       it "sets the client_ca if specified" do
         ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
-        ssl_config.expects(:client_ca=).with(ssl_auth_request.auth.ssl.ca_cert)
+        ssl_config.expects(:add_trust_ca).with(ssl_auth_request.auth.ssl.ca_cert_file)
 
         adapter.get(ssl_auth_request)
       end
