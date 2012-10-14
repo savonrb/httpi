@@ -73,7 +73,7 @@ module HTTPI
 
   REQUEST_METHODS = [:get, :post, :head, :put, :delete]
 
-  DEFAULT_LOG_LEVEL = :warn
+  DEFAULT_LOG_LEVEL = :debug
 
   class << self
 
