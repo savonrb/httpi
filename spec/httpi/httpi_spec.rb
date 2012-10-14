@@ -290,8 +290,8 @@ describe HTTPI do
     end
 
     describe ".log_level" do
-      it "defaults to :warn" do
-        HTTPI.log_level.should == :warn
+      it "defaults to :debug" do
+        HTTPI.log_level.should == :debug
       end
     end
 
