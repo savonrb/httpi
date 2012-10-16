@@ -75,7 +75,9 @@ module HTTPI
       end
 
       def setup_http_auth(request, options)
-        raise "Only HTTP Basic auth supported" unless request.auth.type == :basic
+        unless request.auth.type == :basic
+          raise NotSupportedError, "#{name} does only support HTTP basic auth"
+        end
 
         options[:head] ||= {}
         options[:head][:authorization] = request.auth.credentials
