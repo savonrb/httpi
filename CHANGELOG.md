@@ -1,13 +1,23 @@
-## 1.2.0 (UPCOMING)
+## UPCOMING
 
 * Feature: [#63](https://github.com/savonrb/httpi/pull/63) adds support for
   EventMachine::HttpRequest. Additional information at [#40](https://github.com/savonrb/httpi/pull/40).
 
+* Feature: Added support for custom HTTP methods to clients supporting this feature.
+  It's limited to the `:httpclient` and `:em_http` adapter.
+
+    ``` ruby
+    HTTPI.request(:custom, request)
+    ```
+
 * Improvement: [#64](https://github.com/savonrb/httpi/pull/64) adds support for
   specifying the SSL version to use.
 
-* Improvement: Log to $stdout (instead of STDOUT) using a default log level of
-  debug (instead of warn).
+* Improvement: Log to `$stdout` (instead of `STDOUT`) using a default log level of
+  `:debug` (instead of `:warn`).
+
+* Improvement: In case an adapter doesn't support a general feature, we now raise
+  an `HTTPI::NotSupportedError`.
 
 ## 1.1.1 (2012-07-01)
 
