@@ -11,61 +11,30 @@ module HTTPI
     class NetHTTP
 
       def initialize(request)
-        self.client = new_client request
+        @client = create_client(request)
       end
 
-      attr_reader :client
+      attr_accessor :client
 
-      # Executes an HTTP GET request.
-      # @see HTTPI.get
-      def get(request)
-        do_request :get, request do |http, get|
-          http.request get
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method, request)
+        unless REQUEST_METHODS.include? method
+          raise NotSupportedError, "Net::HTTP does not support custom HTTP methods"
         end
-      end
 
-      # Executes an HTTP POST request.
-      # @see HTTPI.post
-      def post(request)
-        do_request :post, request do |http, post|
-          post.body = request.body
-          http.request post
-        end
-      end
-
-      # Executes an HTTP HEAD request.
-      # @see HTTPI.head
-      def head(request)
-        do_request :head, request do |http, head|
-          http.request head
-        end
-      end
-
-      # Executes an HTTP PUT request.
-      # @see HTTPI.put
-      def put(request)
-        do_request :put, request do |http, put|
-          put.body = request.body
-          http.request put
-        end
-      end
-
-      # Executes an HTTP DELETE request.
-      # @see HTTPI.delete
-      def delete(request)
-        do_request :delete, request do |http, delete|
-          http.request delete
+        do_request method, request do |http, http_request|
+          http_request.body = request.body
+          http.request http_request
         end
       end
 
     private
 
-      attr_writer :client
-
-      def new_client(request)
+      def create_client(request)
         proxy_url = request.proxy || URI("")
         proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
-        proxy.new request.url.host, request.url.port
+        proxy.new(request.url.host, request.url.port)
       end
 
       def do_request(type, request)

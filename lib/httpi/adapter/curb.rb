@@ -17,34 +17,14 @@ module HTTPI
         @client ||= Curl::Easy.new
       end
 
-      # Executes an HTTP GET request.
-      # @see HTTPI.get
-      def get(request)
-        do_request(request) { |client| client.http_get }
-      end
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method, request)
+        unless REQUEST_METHODS.include? method
+          raise NotSupportedError, "Curb does not support custom HTTP methods"
+        end
 
-      # Executes an HTTP POST request.
-      # @see HTTPI.post
-      def post(request)
-        do_request(request) { |client| client.http_post request.body }
-      end
-
-      # Executes an HTTP HEAD request.
-      # @see HTTPI.head
-      def head(request)
-        do_request(request) { |client| client.http_head }
-      end
-
-      # Executes an HTTP PUT request.
-      # @see HTTPI.put
-      def put(request)
-        do_request(request) { |client| client.http_put request.body }
-      end
-
-      # Executes an HTTP DELETE request.
-      # @see HTTPI.delete
-      def delete(request)
-        do_request(request) { |client| client.http_delete }
+        do_request(request) { |client| client.send("http_#{method}", request.body) }
       end
 
     private

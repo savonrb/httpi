@@ -14,45 +14,52 @@ begin
       end
     end
 
-    let(:adapter) { HTTPI::Adapter::EmHttpRequest.new }
+    let(:adapter) { HTTPI::Adapter::EmHttpRequest.new(basic_request) }
     let(:em_http) { EventMachine::HttpConnection.any_instance }
 
-    describe "#get" do
+    describe "#request(:get)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:get).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).returns(http_message)
-        adapter.get(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:get, basic_request).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#post" do
+    describe "#request(:post)" do
       it "returns a valid HTTPI::Response" do
         request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
         em_http.expects(:post).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => Fixture.xml).returns(http_message)
 
-        adapter.post(request).should match_response(:body => Fixture.xml)
+        adapter.request(:post, request).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#head" do
+    describe "#request(:head)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:head).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).returns(http_message)
-        adapter.head(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:head, basic_request).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#put" do
+    describe "#request(:put)" do
       it "returns a valid HTTPI::Response" do
         request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
         em_http.expects(:put).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => Fixture.xml).returns(http_message)
 
-        adapter.put(request).should match_response(:body => Fixture.xml)
+        adapter.request(:put, request).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#delete" do
+    describe "#request(:delete)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:delete).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).returns(http_message(""))
-        adapter.delete(basic_request).should match_response(:body => "")
+        adapter.request(:delete, basic_request).should match_response(:body => "")
+      end
+    end
+
+    describe "#request(:custom)" do
+      it "returns a valid HTTPI::Response" do
+        em_http.expects(:custom).with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).returns(http_message(""))
+        adapter.request(:custom, basic_request).should match_response(:body => "")
       end
     end
 
@@ -68,7 +75,7 @@ begin
 
         it "sets host, port, and authorization" do
           em_http.expects(:get).once.with(has_entries(:proxy => { :host => "proxy-host.com", :port => 443, :authorization => %w( username password ) })).returns(http_message)
-          adapter.get(proxy_request)
+          adapter.request(:get, proxy_request)
         end
       end
 
@@ -76,13 +83,13 @@ begin
         it "is not set unless specified" do
           request = basic_request
           em_http.expects(:get).once.with(has_entries(:connect_timeout => nil)).returns(http_message)
-          adapter.get(request)
+          adapter.request(:get, request)
         end
 
         it "is set if specified" do
           request = basic_request { |request| request.open_timeout = 30 }
           em_http.expects(:get).once.with(has_entries(:connect_timeout => 30)).returns(http_message)
-          adapter.get(request)
+          adapter.request(:get, request)
         end
       end
 
@@ -90,13 +97,13 @@ begin
         it "is not set unless specified" do
           request = basic_request
           em_http.expects(:get).once.with(has_entries(:inactivity_timeout => nil)).returns(http_message)
-          adapter.get(request)
+          adapter.request(:get, request)
         end
 
         it "is set if specified" do
           request = basic_request { |request| request.read_timeout = 30 }
           em_http.expects(:get).once.with(has_entries(:inactivity_timeout => 30)).returns(http_message)
-          adapter.get(request)
+          adapter.request(:get, request)
         end
       end
 
@@ -104,12 +111,12 @@ begin
         it "is set for HTTP basic auth" do
           request = basic_request { |request| request.auth.basic "username", "password" }
           em_http.expects(:get).once.with(has_entries(:head => { :authorization => %w( username password) })).returns(http_message)
-          adapter.get(request)
+          adapter.request(:get, request)
         end
 
         it "raises an error for HTTP digest auth" do
           request = basic_request { |request| request.auth.digest "username", "password" }
-          expect { adapter.get(request) }.to raise_error
+          expect { adapter.request(:get, request) }.to raise_error
         end
       end
 
@@ -127,7 +134,7 @@ begin
             chain = File.read(options[:ssl][:cert_chain_file])
             key == chain && chain == %w( spec/fixtures/client_key.pem spec/fixtures/client_cert.pem ).map { |file| File.read file }.map(&:chomp).join("\n")
           end.returns(http_message)
-          adapter.get(ssl_auth_request)
+          adapter.request(:get, ssl_auth_request)
         end
       end
     end

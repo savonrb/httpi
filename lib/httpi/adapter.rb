@@ -41,7 +41,7 @@ module HTTPI
         adapter ||= use
         validate_adapter!(adapter)
         load_adapter(adapter)
-        [adapter, ADAPTERS[adapter][:class]]
+        ADAPTERS[adapter][:class]
       end
 
       def load_adapter(adapter)

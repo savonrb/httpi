@@ -35,13 +35,13 @@ describe HTTPI::Adapter do
   describe ".load" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:net_http).should == [:net_http, HTTPI::Adapter::NetHTTP]
+        adapter.load(:net_http).should == HTTPI::Adapter::NetHTTP
       end
     end
 
     context "called with nil" do
       it "returns the default adapter's name and class" do
-        adapter.load(nil).should == [:httpclient, HTTPI::Adapter::HTTPClient]
+        adapter.load(nil).should == HTTPI::Adapter::HTTPClient
       end
     end
 

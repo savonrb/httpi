@@ -26,61 +26,28 @@ module HTTPI
     # are supported by em-httprequest but not HTTPI.
     class EmHttpRequest
 
-      # The default directory where certificates are saved to temporary files.
-      DEFAULT_CERT_DIRECTORY = "/tmp"
-
-      attr_accessor :cert_directory
-
-      # @private
-      def initialize(request = nil)
-        @cert_directory = DEFAULT_CERT_DIRECTORY
+      def initialize(request)
+        @client = EventMachine::HttpRequest.new build_request_url(request.url)
       end
 
-      # Performs an HTTP `GET` request.
-      #
-      # @param [HTTPI::Request] The request data.
-      # @return [HTTPI::Response] The response data.
-      def get(request)
-        _request(request) { |client, options| client.get options }
+      attr_accessor :client
+
+      def cert_directory
+        @cert_directory ||= "/tmp"
       end
 
-      # Performs an HTTP `POST` request.
-      #
-      # @param [HTTPI::Request] The request data.
-      # @return [HTTPI::Response] The response data.
-      def post(request)
-        _request(request) { |client, options| client.post options }
-      end
+      attr_writer :cert_directory
 
-      # Performs an HTTP `PUT` request.
-      #
-      # @param [HTTPI::Request] The request data.
-      # @return [HTTPI::Response] The response data.
-      def put(request)
-        _request(request) { |client, options| client.put options }
-      end
-
-      # Performs an HTTP `DELETE` request.
-      #
-      # @param [HTTPI::Request] The request data.
-      # @return [HTTPI::Response] The response data.
-      def delete(request)
-        _request(request) { |client, options| client.delete options }
-      end
-
-      # Performs an HTTP `HEAD` request.
-      #
-      # @param [HTTPI::Request] The request data.
-      # @return [HTTPI::Response] The response data.
-      def head(request)
-        _request(request) { |client, options| client.head options }
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method, request)
+        _request(request) { |client, options| client.send method, options }
       end
 
       private
 
       def _request(request)
         options = client_options(request)
-        client = EventMachine::HttpRequest.new("#{request.url.scheme}://#{request.url.host}:#{request.url.port}#{request.url.path}")
         setup_proxy(request, options) if request.proxy
         setup_http_auth(request, options) if request.auth.http?
         setup_ssl_auth(request.auth.ssl, options) if request.auth.ssl?
@@ -146,6 +113,10 @@ module HTTPI
           convert_headers(http.response_header), http.response
       end
 
+      def build_request_url(url)
+        "%s://%s:%s%s" % [url.scheme, url.host, url.port, url.path]
+      end
+
       # Takes any header names with an underscore as a word separator and
       # converts the name to camel case, where words are separated by a dash.
       #
@@ -166,5 +137,6 @@ module HTTPI
 
       class TimeoutError < StandardError; end
     end
+
   end
 end

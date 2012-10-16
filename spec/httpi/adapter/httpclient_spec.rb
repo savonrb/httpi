@@ -9,47 +9,60 @@ describe HTTPI::Adapter::HTTPClient do
   let(:httpclient) { HTTPClient.any_instance }
   let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
 
-  describe "#get" do
+  def httpclient_expects(method, request)
+    httpclient.expects(:request).
+      with(method, request.url, { :body => request.body, :header => request.headers }).
+      returns(http_message)
+  end
+
+  describe "#request(:get)" do
     it "returns a valid HTTPI::Response" do
-      httpclient.expects(:get).with(basic_request.url, nil, basic_request.headers).returns(http_message)
-      adapter.get(basic_request).should match_response(:body => Fixture.xml)
+      httpclient_expects(:get, basic_request)
+      adapter.request(:get, basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
-  describe "#post" do
+  describe "#request(:post)" do
     it "returns a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
-      httpclient.expects(:post).with(request.url, request.body, request.headers).returns(http_message)
+      request = HTTPI::Request.new(:url => "http://example.com", :body => Fixture.xml)
+      httpclient_expects(:post, request)
 
-      adapter.post(request).should match_response(:body => Fixture.xml)
+      adapter.request(:post, request).should match_response(:body => Fixture.xml)
     end
   end
 
-  describe "#head" do
+  describe "#request(:head)" do
     it "returns a valid HTTPI::Response" do
-      httpclient.expects(:head).with(basic_request.url, nil, basic_request.headers).returns(http_message)
-      adapter.head(basic_request).should match_response(:body => Fixture.xml)
+      httpclient_expects(:head, basic_request)
+      adapter.request(:head, basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
-  describe "#put" do
+  describe "#request(:put)" do
     it "returns a valid HTTPI::Response" do
-      request = HTTPI::Request.new :url => "http://example.com", :body => Fixture.xml
-      httpclient.expects(:put).with(request.url, request.body, request.headers).returns(http_message)
+      request = HTTPI::Request.new(:url => "http://example.com", :body => Fixture.xml)
+      httpclient_expects(:put, request)
 
-      adapter.put(request).should match_response(:body => Fixture.xml)
+      adapter.request(:put, request).should match_response(:body => Fixture.xml)
     end
   end
 
-  describe "#delete" do
+  describe "#request(:delete)" do
     it "returns a valid HTTPI::Response" do
-      httpclient.expects(:delete).with(basic_request.url, basic_request.headers).returns(http_message(""))
-      adapter.delete(basic_request).should match_response(:body => "")
+      httpclient_expects(:delete, basic_request)
+      adapter.request(:delete, basic_request).should match_response(:body => Fixture.xml)
+    end
+  end
+
+  describe "#request(:custom)" do
+    it "returns a valid HTTPI::Response" do
+      httpclient_expects(:custom, basic_request)
+      adapter.request(:custom, basic_request).should match_response(:body => Fixture.xml)
     end
   end
 
   describe "settings:" do
-    before { httpclient.stubs(:get).returns(http_message) }
+    before { httpclient.stubs(:request).returns(http_message) }
 
     describe "proxy" do
       it "have should specs"
@@ -58,28 +71,28 @@ describe HTTPI::Adapter::HTTPClient do
     describe "connect_timeout" do
       it "is not set unless specified" do
         httpclient.expects(:connect_timeout=).never
-        adapter.get(basic_request)
+        adapter.request(:get, basic_request)
       end
 
       it "is set if specified" do
         request = basic_request { |request| request.open_timeout = 30 }
 
         httpclient.expects(:connect_timeout=).with(30)
-        adapter.get(request)
+        adapter.request(:get, request)
       end
     end
 
     describe "receive_timeout" do
       it "is not set unless specified" do
         httpclient.expects(:receive_timeout=).never
-        adapter.get(basic_request)
+        adapter.request(:get, basic_request)
       end
 
       it "is set if specified" do
         request = basic_request { |request| request.read_timeout = 30 }
 
         httpclient.expects(:receive_timeout=).with(30)
-        adapter.get(request)
+        adapter.request(:get, request)
       end
     end
 
@@ -88,14 +101,14 @@ describe HTTPI::Adapter::HTTPClient do
         request = basic_request { |request| request.auth.basic "username", "password" }
 
         httpclient.expects(:set_auth).with(request.url, *request.auth.credentials)
-        adapter.get(request)
+        adapter.request(:get, request)
       end
 
       it "is set for HTTP digest auth" do
         request = basic_request { |request| request.auth.digest "username", "password" }
 
         httpclient.expects(:set_auth).with(request.url, *request.auth.credentials)
-        adapter.get(request)
+        adapter.request(:get, request)
       end
     end
 
@@ -112,21 +125,21 @@ describe HTTPI::Adapter::HTTPClient do
         ssl_config.expects(:client_key=).with(ssl_auth_request.auth.ssl.cert_key)
         ssl_config.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
 
-        adapter.get(ssl_auth_request)
+        adapter.request(:get, ssl_auth_request)
       end
 
       it "sets the client_ca if specified" do
         ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
         ssl_config.expects(:client_ca=).with(ssl_auth_request.auth.ssl.ca_cert)
 
-        adapter.get(ssl_auth_request)
+        adapter.request(:get, ssl_auth_request)
       end
 
       it 'should set the ssl_version if specified' do
         ssl_auth_request.auth.ssl.ssl_version = :SSLv3
         ssl_config.expects(:ssl_version=).with(ssl_auth_request.auth.ssl.ssl_version)
 
-        adapter.get(ssl_auth_request)
+        adapter.request(:get, ssl_auth_request)
       end
     end
 
@@ -140,18 +153,18 @@ describe HTTPI::Adapter::HTTPClient do
       it "verify_mode should be set" do
         ssl_config.expects(:verify_mode=).with(ssl_auth_request.auth.ssl.openssl_verify_mode)
 
-        adapter.get(ssl_auth_request)
+        adapter.request(:get, ssl_auth_request)
       end
 
       it "does not set client_cert and client_key "do
         ssl_config.expects(:client_cert=).never
         ssl_config.expects(:client_key=).never
 
-        adapter.get(ssl_auth_request)
+        adapter.request(:get, ssl_auth_request)
       end
 
       it "does not raise an exception" do
-        expect { adapter.get(ssl_auth_request) }.to_not raise_error
+        expect { adapter.request(:get, ssl_auth_request) }.to_not raise_error
       end
     end
   end
