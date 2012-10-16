@@ -21,9 +21,7 @@ module HTTPI
       # @see HTTPI.request
       def request(method, request)
         setup_client(request)
-
-        options = { :header => request.headers, :body => request.body }
-        respond_with client.request(method, request.url, options)
+        respond_with client.request(method, request.url, nil, request.body, request.headers)
       end
 
     private

@@ -24,7 +24,12 @@ module HTTPI
           raise NotSupportedError, "Curb does not support custom HTTP methods"
         end
 
-        do_request(request) { |client| client.send("http_#{method}", request.body) }
+        arguments = ["http_#{method}"]
+        if [:put, :post].include? method
+          arguments << request.body || ""
+        end
+
+        do_request(request) { |client| client.send(*arguments) }
       end
 
     private

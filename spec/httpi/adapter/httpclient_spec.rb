@@ -9,12 +9,6 @@ describe HTTPI::Adapter::HTTPClient do
   let(:httpclient) { HTTPClient.any_instance }
   let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
 
-  def httpclient_expects(method, request)
-    httpclient.expects(:request).
-      with(method, request.url, { :body => request.body, :header => request.headers }).
-      returns(http_message)
-  end
-
   describe "#request(:get)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:get, basic_request)
@@ -167,6 +161,12 @@ describe HTTPI::Adapter::HTTPClient do
         expect { adapter.request(:get, ssl_auth_request) }.to_not raise_error
       end
     end
+  end
+
+  def httpclient_expects(method, request)
+    httpclient.expects(:request).
+      with(method, request.url, nil, request.body, request.headers).
+      returns(http_message)
   end
 
   def http_message(body = Fixture.xml)

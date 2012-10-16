@@ -79,7 +79,6 @@ describe HTTPI do
 
   HTTPI::Adapter::ADAPTERS.keys.each do |adapter|
     if adapter == :em_http && RUBY_VERSION >= "1.9.0"
-      require 'em-synchrony'
 
       around(:each) do |example|
         EM.synchrony do
