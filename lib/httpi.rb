@@ -115,7 +115,7 @@ module HTTPI
       adapter_class = load_adapter(adapter, request)
 
       yield adapter_class.client if block_given?
-      log_request(method, request, adapter)
+      log_request(method, request, Adapter.symbol_for(adapter_class.class))
 
       adapter_class.request(method, request)
     end

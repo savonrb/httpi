@@ -21,6 +21,12 @@ module HTTPI
       :em_http    => { :class => EmHttpRequest, :dependencies => ["em-synchrony", "em-synchrony/em-http", "em-http"] }
     }
 
+    adapter_map = {}
+    ADAPTERS.each do |adapter, opts|
+      adapter_map[opts[:class]] = adapter
+    end
+    ADAPTER_MAP = adapter_map
+
     LOAD_ORDER = [:httpclient, :curb, :em_http, :net_http]
 
     class << self
@@ -35,6 +41,10 @@ module HTTPI
 
       def use
         @adapter ||= default_adapter
+      end
+
+      def symbol_for(adapter_class)
+        ADAPTER_MAP[adapter_class]
       end
 
       def load(adapter)
