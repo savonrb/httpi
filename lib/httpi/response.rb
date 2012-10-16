@@ -73,8 +73,9 @@ module HTTPI
 
     # Returns the gzip decoded response body.
     def decoded_gzip_body
-      gzip = Zlib::GzipReader.new StringIO.new(raw_body)
-      raise ArgumentError.new "couldn't create gzip reader" unless gzip
+      unless gzip = Zlib::GzipReader.new(StringIO.new(raw_body))
+        raise ArgumentError, "Unable to create Zlib::GzipReader"
+      end
       gzip.read
     ensure
       gzip.close if gzip
