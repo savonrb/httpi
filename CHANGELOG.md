@@ -19,6 +19,10 @@
 * Improvement: In case an adapter doesn't support a general feature, we now raise
   an `HTTPI::NotSupportedError`.
 
+* Improvement: Added support for adding custom adapters.
+
+* Refactoring: Simplified the adapter interface.
+
 ## 1.1.1 (2012-07-01)
 
 * Fix: [#56](https://github.com/savonrb/httpi/pull/56) ensures that the "Cookie"
