@@ -81,9 +81,12 @@ describe HTTPI do
     if adapter == :em_http && RUBY_VERSION >= "1.9.0"
 
       around(:each) do |example|
-        EM.synchrony do
-          example.run
-          EM.stop
+        # Only wrap the example for the :em_http adapter
+        if EM.respond_to?(:synchrony)
+          EM.synchrony do
+            example.run
+            EM.stop
+          end
         end
       end
     end
