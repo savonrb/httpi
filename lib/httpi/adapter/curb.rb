@@ -32,7 +32,7 @@ module HTTPI
         do_request { |client| client.send(*arguments) }
       end
 
-    private
+      private
 
       def do_request
         setup_client

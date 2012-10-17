@@ -26,7 +26,7 @@ module HTTPI
         respond_with @client.request(method, @request.url, nil, @request.body, @request.headers)
       end
 
-    private
+      private
 
       def setup_client
         basic_setup

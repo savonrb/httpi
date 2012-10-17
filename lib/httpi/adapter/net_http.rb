@@ -34,7 +34,7 @@ module HTTPI
         end
       end
 
-    private
+      private
 
       def create_client
         proxy_url = @request.proxy || URI("")

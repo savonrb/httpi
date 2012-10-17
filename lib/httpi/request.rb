@@ -93,7 +93,7 @@ module HTTPI
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
 
-  private
+    private
 
     # Stores the cookies from past requests.
     def cookie_store

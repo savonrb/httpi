@@ -16,12 +16,12 @@ require "httpi/adapter/em_http"
 #
 # == GET
 #
-#   request = HTTPI::Request.new :url => "http://example.com"
-#   HTTPI.get request, :httpclient
+#   request = HTTPI::Request.new("http://example.com")
+#   HTTPI.get(request, :httpclient)
 #
 # === Shortcuts
 #
-#   HTTPI.get "http://example.com", :curb
+#   HTTPI.get("http://example.com", :curb)
 #
 # == POST
 #
@@ -29,20 +29,20 @@ require "httpi/adapter/em_http"
 #   request.url = "http://example.com"
 #   request.body = "<some>xml</some>"
 #
-#   HTTPI.post request, :httpclient
+#   HTTPI.post(request, :httpclient)
 #
 # === Shortcuts
 #
-#   HTTPI.post "http://example.com", "<some>xml</some>", :curb
+#   HTTPI.post("http://example.com", "<some>xml</some>", :curb)
 #
 # == HEAD
 #
-#   request = HTTPI::Request.new :url => "http://example.com"
-#   HTTPI.head request, :httpclient
+#   request = HTTPI::Request.new("http://example.com")
+#   HTTPI.head(request, :httpclient)
 #
 # === Shortcuts
 #
-#   HTTPI.head "http://example.com", :curb
+#   HTTPI.head("http://example.com", :curb)
 #
 # == PUT
 #
@@ -50,20 +50,20 @@ require "httpi/adapter/em_http"
 #   request.url = "http://example.com"
 #   request.body = "<some>xml</some>"
 #
-#   HTTPI.put request, :httpclient
+#   HTTPI.put(request, :httpclient)
 #
 # === Shortcuts
 #
-#   HTTPI.put "http://example.com", "<some>xml</some>", :curb
+#   HTTPI.put("http://example.com", "<some>xml</some>", :curb)
 #
 # == DELETE
 #
-#   request = HTTPI::Request.new :url => "http://example.com"
-#   HTTPI.delete request, :httpclient
+#   request = HTTPI::Request.new("http://example.com")
+#   HTTPI.delete(request, :httpclient)
 #
 # === Shortcuts
 #
-#   HTTPI.delete "http://example.com", :curb
+#   HTTPI.delete("http://example.com", :curb)
 #
 # == More control
 #
@@ -88,7 +88,7 @@ module HTTPI
 
     # Executes an HTTP GET request.
     def get(request, adapter = nil)
-      request = Request.new(:url => request) if request.kind_of? String
+      request = Request.new(request) if request.kind_of? String
       request(:get, request, adapter)
     end
 
@@ -100,7 +100,7 @@ module HTTPI
 
     # Executes an HTTP HEAD request.
     def head(request, adapter = nil)
-      request = Request.new(:url => request) if request.kind_of? String
+      request = Request.new(request) if request.kind_of? String
       request(:head, request, adapter)
     end
 
@@ -112,7 +112,7 @@ module HTTPI
 
     # Executes an HTTP DELETE request.
     def delete(request, adapter = nil)
-      request = Request.new(:url => request) if request.kind_of? String
+      request = Request.new(request) if request.kind_of? String
       request(:delete, request, adapter)
     end
 
@@ -167,7 +167,7 @@ module HTTPI
       @log_level = nil
     end
 
-  private
+    private
 
     def request_and_adapter_from(args)
       return args if args[0].kind_of? Request

@@ -17,7 +17,7 @@ class Fixture
       @dime ||= load :xml_dime, :dime
     end
 
-  private
+    private
 
     def load(fixture, type = :xml)
       File.read File.expand_path("../../fixtures/#{fixture}.#{type}", __FILE__)

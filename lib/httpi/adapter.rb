@@ -6,6 +6,7 @@ module HTTPI
   #
   # * httpclient
   # * curb
+  # * em_http
   # * net/http
   module Adapter
 
@@ -51,7 +52,7 @@ module HTTPI
         end
       end
 
-    private
+      private
 
       def validate_adapter!(adapter)
         raise ArgumentError, "Invalid HTTPI adapter: #{adapter}" unless ADAPTERS[adapter]
