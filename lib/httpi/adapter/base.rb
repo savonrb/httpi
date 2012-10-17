@@ -16,8 +16,7 @@ module HTTPI
         Adapter.register(name, self, deps)
       end
 
-      def initialize(request = nil)
-        raise NotImplementedError, "Adapters need to implement an #initialize method"
+      def initialize(request)
       end
 
       # Returns a client instance.
@@ -27,7 +26,7 @@ module HTTPI
 
       # Executes arbitrary HTTP requests.
       # @see HTTPI.request
-      def request(request, adapter)
+      def request(method)
         raise NotImplementedError, "Adapters need to implement a #request method"
       end
 

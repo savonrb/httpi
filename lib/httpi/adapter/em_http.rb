@@ -32,10 +32,11 @@ module HTTPI
       register :em_http, :deps => %w(em-synchrony em-synchrony/em-http em-http)
 
       def initialize(request)
+        @request = request
         @client = EventMachine::HttpRequest.new build_request_url(request.url)
       end
 
-      attr_accessor :client
+      attr_reader :client
 
       def cert_directory
         @cert_directory ||= "/tmp"
@@ -45,50 +46,52 @@ module HTTPI
 
       # Executes arbitrary HTTP requests.
       # @see HTTPI.request
-      def request(method, request)
-        _request(request) { |client, options| client.send method, options }
+      def request(method)
+        _request { |options| @client.send method, options }
       end
 
       private
 
-      def _request(request)
-        options = client_options(request)
-        setup_proxy(request, options) if request.proxy
-        setup_http_auth(request, options) if request.auth.http?
-        setup_ssl_auth(request.auth.ssl, options) if request.auth.ssl?
+      def _request
+        options = client_options
+        setup_proxy(options) if @request.proxy
+        setup_http_auth(options) if @request.auth.http?
+        setup_ssl_auth(options) if @request.auth.ssl?
 
         start_time = Time.now
-        respond_with yield(client, options), start_time
+        respond_with yield(options), start_time
       end
 
-      def client_options(request)
+      def client_options
         {
-          :query              => request.url.query,
-          :connect_timeout    => request.open_timeout,
-          :inactivity_timeout => request.read_timeout,
-          :head               => request.headers.to_hash,
-          :body               => request.body
+          :query              => @request.url.query,
+          :connect_timeout    => @request.open_timeout,
+          :inactivity_timeout => @request.read_timeout,
+          :head               => @request.headers.to_hash,
+          :body               => @request.body
         }
       end
 
-      def setup_proxy(request, options)
+      def setup_proxy(options)
         options[:proxy] = {
-          :host          => request.proxy.host,
-          :port          => request.proxy.port,
-          :authorization => [request.proxy.user, request.proxy.password]
+          :host          => @request.proxy.host,
+          :port          => @request.proxy.port,
+          :authorization => [@request.proxy.user, @request.proxy.password]
         }
       end
 
-      def setup_http_auth(request, options)
-        unless request.auth.type == :basic
-          raise NotSupportedError, "#{name} does only support HTTP basic auth"
+      def setup_http_auth(options)
+        unless @request.auth.type == :basic
+          raise NotSupportedError, "EM-HTTP-Request does only support HTTP basic auth"
         end
 
         options[:head] ||= {}
-        options[:head][:authorization] = request.auth.credentials
+        options[:head][:authorization] = @request.auth.credentials
       end
 
-      def setup_ssl_auth(ssl, options)
+      def setup_ssl_auth(options)
+        ssl = @request.auth.ssl
+
         options[:ssl] = {
           :private_key_file => cert_and_key_file(ssl),
           :cert_chain_file  => cert_and_key_file(ssl),

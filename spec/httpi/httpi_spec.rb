@@ -16,7 +16,7 @@ describe HTTPI do
   describe ".get(request)" do
     it "executes a GET request using the default adapter" do
       request = HTTPI::Request.new("http://example.com")
-      httpclient.any_instance.expects(:request).with(:get, request)
+      httpclient.any_instance.expects(:request).with(:get)
 
       client.get(request)
     end
@@ -25,7 +25,7 @@ describe HTTPI do
   describe ".get(request, adapter)" do
     it "executes a GET request using the given adapter" do
       request = HTTPI::Request.new("http://example.com")
-      net_http.any_instance.expects(:request).with(:get, request)
+      net_http.any_instance.expects(:request).with(:get)
 
       client.get(request, :net_http)
     end
@@ -33,24 +33,14 @@ describe HTTPI do
 
   describe ".get(url)" do
     it "executes a GET request using the default adapter" do
-      httpclient.any_instance.expects(:request).with do |method, request|
-        method.should == :get
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      httpclient.any_instance.expects(:request).with(:get)
       client.get("http://example.com")
     end
   end
 
   describe ".get(url, adapter)" do
     it "executes a GET request using the given adapter" do
-      net_http.any_instance.expects(:request).with do |method, request|
-        method.should == :get
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      net_http.any_instance.expects(:request).with(:get)
       client.get("http://example.com", :net_http)
     end
   end
@@ -58,7 +48,7 @@ describe HTTPI do
   describe ".post(request)" do
     it "executes a POST request using the default adapter" do
       request = HTTPI::Request.new("http://example.com")
-      httpclient.any_instance.expects(:request).with(:post, request)
+      httpclient.any_instance.expects(:request).with(:post)
 
       client.post(request)
     end
@@ -75,26 +65,14 @@ describe HTTPI do
 
   describe ".post(url, body)" do
     it "executes a POST request using the default adapter" do
-      httpclient.any_instance.expects(:request).with do |method, request|
-        method.should == :post
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-        request.body.should == "<some>xml</some>"
-      end
-
+      httpclient.any_instance.expects(:request).with(:post)
       client.post("http://example.com", "<some>xml</some>")
     end
   end
 
   describe ".post(url, body, adapter)" do
     it "executes a POST request using the given adapter" do
-      net_http.any_instance.expects(:request).with do |method, request|
-        method.should == :post
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-        request.body.should == "<some>xml</some>"
-      end
-
+      net_http.any_instance.expects(:request).with(:post)
       client.post("http://example.com", "<some>xml</some>", :net_http)
     end
   end
@@ -119,24 +97,14 @@ describe HTTPI do
 
   describe ".head(url)" do
     it "executes a HEAD request using the default adapter" do
-      httpclient.any_instance.expects(:request).with do |method, request|
-        method.should == :head
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      httpclient.any_instance.expects(:request).with(:head)
       client.head("http://example.com")
     end
   end
 
   describe ".head(url, adapter)" do
     it "executes a HEAD request using the given adapter" do
-      net_http.any_instance.expects(:request).with do |method, request|
-        method.should == :head
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      net_http.any_instance.expects(:request).with(:head)
       client.head("http://example.com", :net_http)
     end
   end
@@ -161,26 +129,14 @@ describe HTTPI do
 
   describe ".put(url, body)" do
     it "executes a PUT request using the default adapter" do
-      httpclient.any_instance.expects(:request).with do |method, request|
-        method.should == :put
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-        request.body.should == "<some>xml</some>"
-      end
-
+      httpclient.any_instance.expects(:request).with(:put)
       client.put("http://example.com", "<some>xml</some>")
     end
   end
 
   describe ".put(url, body, adapter)" do
     it "executes a PUT request using the given adapter" do
-      net_http.any_instance.expects(:request).with do |method, request|
-        method.should == :put
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-        request.body.should == "<some>xml</some>"
-      end
-
+      net_http.any_instance.expects(:request).with(:put)
       client.put("http://example.com", "<some>xml</some>", :net_http)
     end
   end
@@ -205,24 +161,14 @@ describe HTTPI do
 
   describe ".delete(url)" do
     it "executes a DELETE request using the default adapter" do
-      httpclient.any_instance.expects(:request).with do |method, request|
-        method.should == :delete
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      httpclient.any_instance.expects(:request).with(:delete)
       client.delete("http://example.com")
     end
   end
 
   describe ".delete(url, adapter)" do
     it "executes a DELETE request using the given adapter" do
-      net_http.any_instance.expects(:request).with do |method, request|
-        method.should == :delete
-        request.should be_a(HTTPI::Request)
-        request.url.should == URI("http://example.com")
-      end
-
+      net_http.any_instance.expects(:request).with(:delete)
       client.delete("http://example.com", :net_http)
     end
   end
@@ -230,7 +176,7 @@ describe HTTPI do
   describe ".request" do
     it "allows custom HTTP methods" do
       request = HTTPI::Request.new("http://example.com")
-      httpclient.any_instance.expects(:request).with(:custom, request)
+      httpclient.any_instance.expects(:request).with(:custom)
 
       client.request(:custom, request, :httpclient)
     end
@@ -254,7 +200,7 @@ describe HTTPI do
           }
 
           context "using #{adapter}" do
-            before { opts[:class].any_instance.expects(:request).with(method, request) }
+            before { opts[:class].any_instance.expects(:request).with(method) }
 
             it "yields the HTTP client instance used for the request" do
               expect { |b| client.request(method, request, adapter, &b) }.to yield_with_args(client_class[adapter].call)

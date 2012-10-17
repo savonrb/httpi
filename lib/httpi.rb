@@ -122,7 +122,7 @@ module HTTPI
       yield adapter_class.client if block_given?
       log_request(method, request, Adapter.identify(adapter_class.class))
 
-      adapter_class.request(method, request)
+      adapter_class.request(method)
     end
 
     # Shortcut for setting the default adapter to use.
