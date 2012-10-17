@@ -117,7 +117,8 @@ module HTTPI
       end
 
       def respond_with(http, start_time)
-        raise TimeoutError, "Connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
+        raise TimeoutError, "EM-HTTP-Request connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
+
 
         Response.new http.response_header.status,
           convert_headers(http.response_header), http.response
@@ -144,8 +145,6 @@ module HTTPI
 
         result
       end
-
-      class TimeoutError < StandardError; end
     end
 
   end
