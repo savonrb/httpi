@@ -1,4 +1,6 @@
 require "uri"
+
+require "httpi/adapter/base"
 require "httpi/response"
 
 module HTTPI
@@ -8,7 +10,9 @@ module HTTPI
     #
     # Adapter for the Net::HTTP client.
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
-    class NetHTTP
+    class NetHTTP < Base
+
+      register :net_http, :deps => %w(net/https)
 
       def initialize(request)
         @client = create_client(request)

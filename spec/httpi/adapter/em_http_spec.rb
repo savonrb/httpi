@@ -5,7 +5,7 @@ require "httpi/request"
 begin
   HTTPI::Adapter.load_adapter(:em_http)
 
-  describe HTTPI::Adapter::HTTPClient do
+  describe HTTPI::Adapter::EmHttpRequest do
 
     around(:each) do |example|
       EM.synchrony do

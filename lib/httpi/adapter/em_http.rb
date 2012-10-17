@@ -1,3 +1,6 @@
+require "httpi/adapter/base"
+require "httpi/response"
+
 module HTTPI
   module Adapter
 
@@ -24,7 +27,9 @@ module HTTPI
     # * multi-request
     #
     # are supported by em-httprequest but not HTTPI.
-    class EmHttpRequest
+    class EmHttpRequest < Base
+
+      register :em_http, :deps => %w(em-synchrony em-synchrony/em-http em-http)
 
       def initialize(request)
         @client = EventMachine::HttpRequest.new build_request_url(request.url)

@@ -1,8 +1,3 @@
-require "httpi/adapter/httpclient"
-require "httpi/adapter/curb"
-require "httpi/adapter/net_http"
-require "httpi/adapter/em_http"
-
 module HTTPI
 
   # = HTTPI::Adapter
@@ -14,22 +9,17 @@ module HTTPI
   # * net/http
   module Adapter
 
-    ADAPTERS = {
-      :httpclient => { :class => HTTPClient,    :dependencies => ["httpclient"] },
-      :curb       => { :class => Curb,          :dependencies => ["curb"] },
-      :net_http   => { :class => NetHTTP,       :dependencies => ["net/https"] },
-      :em_http    => { :class => EmHttpRequest, :dependencies => ["em-synchrony", "em-synchrony/em-http", "em-http"] }
-    }
-
-    adapter_map = {}
-    ADAPTERS.each do |adapter, opts|
-      adapter_map[opts[:class]] = adapter
-    end
-    ADAPTER_MAP = adapter_map
+    ADAPTERS = {}
+    ADAPTER_CLASS_MAP = {}
 
     LOAD_ORDER = [:httpclient, :curb, :em_http, :net_http]
 
     class << self
+
+      def register(name, adapter_class, deps)
+        ADAPTERS[name] = { :class => adapter_class, :deps => deps }
+        ADAPTER_CLASS_MAP[adapter_class] = name
+      end
 
       def use=(adapter)
         return @adapter = nil if adapter.nil?
@@ -43,20 +33,21 @@ module HTTPI
         @adapter ||= default_adapter
       end
 
-      def symbol_for(adapter_class)
-        ADAPTER_MAP[adapter_class]
+      def identify(adapter_class)
+        ADAPTER_CLASS_MAP[adapter_class]
       end
 
       def load(adapter)
         adapter ||= use
+
         validate_adapter!(adapter)
         load_adapter(adapter)
         ADAPTERS[adapter][:class]
       end
 
       def load_adapter(adapter)
-        ADAPTERS[adapter][:dependencies].each do |dependency|
-          require dependency
+        ADAPTERS[adapter][:deps].each do |dep|
+          require dep
         end
       end
 

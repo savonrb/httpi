@@ -1,3 +1,4 @@
+require "httpi/adapter/base"
 require "httpi/response"
 
 module HTTPI
@@ -7,7 +8,9 @@ module HTTPI
     #
     # Adapter for the Curb client.
     # http://rubygems.org/gems/curb
-    class Curb
+    class Curb < Base
+
+      register :curb, :deps => %w(curb)
 
       def initialize(request = nil)
       end

@@ -1,7 +1,11 @@
 require "logger"
+
 require "httpi/version"
 require "httpi/request"
-require "httpi/adapter"
+
+require "httpi/adapter/curb"
+require "httpi/adapter/net_http"
+require "httpi/adapter/em_http"
 
 # = HTTPI
 #
@@ -77,6 +81,7 @@ module HTTPI
 
   class Error < StandardError; end
   class NotSupportedError < Error; end
+  class NotImplementedError < Error; end
 
   class << self
 
@@ -115,7 +120,7 @@ module HTTPI
       adapter_class = load_adapter(adapter, request)
 
       yield adapter_class.client if block_given?
-      log_request(method, request, Adapter.symbol_for(adapter_class.class))
+      log_request(method, request, Adapter.identify(adapter_class.class))
 
       adapter_class.request(method, request)
     end

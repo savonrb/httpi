@@ -1,3 +1,4 @@
+require "httpi/adapter/base"
 require "httpi/response"
 
 module HTTPI
@@ -7,7 +8,9 @@ module HTTPI
     #
     # Adapter for the HTTPClient client.
     # http://rubygems.org/gems/httpclient
-    class HTTPClient
+    class HTTPClient < Base
+
+      register :httpclient, :deps => %w(httpclient)
 
       def initialize(request = nil)
       end
