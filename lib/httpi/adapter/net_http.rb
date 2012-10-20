@@ -32,6 +32,8 @@ module HTTPI
           http_request.body = @request.body
           http.request http_request
         end
+      rescue OpenSSL::SSL::SSLError
+        raise SSLError
       end
 
       private

@@ -24,6 +24,8 @@ module HTTPI
       def request(method)
         setup_client
         respond_with @client.request(method, @request.url, nil, @request.body, @request.headers)
+      rescue OpenSSL::SSL::SSLError
+        raise SSLError
       end
 
       private

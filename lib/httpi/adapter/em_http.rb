@@ -95,7 +95,7 @@ module HTTPI
         options[:ssl] = {
           :private_key_file => cert_and_key_file(ssl),
           :cert_chain_file  => cert_and_key_file(ssl),
-          :verify_peer      => false  # TODO should be ssl.verify_mode == :peer
+          :verify_peer      => true  # TODO should be ssl.verify_mode == :peer
         }
       end
 

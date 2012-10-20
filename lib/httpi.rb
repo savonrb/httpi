@@ -85,6 +85,14 @@ module HTTPI
   class NotSupportedError < Error; end
   class NotImplementedError < Error; end
 
+  class SSLError < Error
+    def initialize(message = nil, original = $!)
+      super(message)
+      @original = original
+    end
+    attr_reader :original
+  end
+
   class << self
 
     # Executes an HTTP GET request.
