@@ -3,6 +3,7 @@ require "logger"
 require "httpi/version"
 require "httpi/request"
 
+require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
 require "httpi/adapter/net_http"
 require "httpi/adapter/em_http"
