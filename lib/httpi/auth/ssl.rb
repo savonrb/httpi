@@ -38,7 +38,11 @@ module HTTPI
 
       # Sets the cert type to validate SSL certificates PEM|DER.
       def cert_type=(type)
-        raise ArgumentError, "Invalid SSL cert type: #{type}" unless CERT_TYPES.include? type
+        unless CERT_TYPES.include? type
+          raise ArgumentError, "Invalid SSL cert type #{type.inspect}\n" +
+                               "Please specify one of #{CERT_TYPES.inspect}"
+        end
+
         @cert_type = type
       end
 

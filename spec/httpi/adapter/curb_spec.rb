@@ -233,6 +233,11 @@ unless RUBY_PLATFORM =~ /java/
           adapter.request(:get)
         end
 
+        it "raise if an invalid cert type was set" do
+          expect { request.auth.ssl.cert_type = :invalid }.
+            to raise_error(ArgumentError, "Invalid SSL cert type :invalid\nPlease specify one of [:pem, :der]")
+        end
+
         it "sets the cacert if specified" do
           request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
           curb.expects(:cacert=).with(request.auth.ssl.ca_cert_file)
