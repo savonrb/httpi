@@ -68,7 +68,11 @@ module HTTPI
 
       # Sets the SSL version number. Expects one of <tt>HTTPI::Auth::SSL::SSL_VERSIONS</tt>.
       def ssl_version=(version)
-        raise ArgumentError, "Invalid SSL version: #{version}" unless SSL_VERSIONS.include? version
+        unless SSL_VERSIONS.include? version
+          raise ArgumentError, "Invalid SSL version #{version.inspect}\n" +
+                               "Please specify one of #{SSL_VERSIONS.inspect}"
+        end
+
         @ssl_version = version
       end
 

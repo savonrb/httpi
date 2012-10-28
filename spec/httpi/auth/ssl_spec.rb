@@ -159,7 +159,9 @@ describe HTTPI::Auth::SSL do
     end
 
     it 'raises ArgumentError if the version is unsupported' do
-      expect { ssl.ssl_version = :ssl_fail }.to raise_error(ArgumentError)
+      expect { ssl.ssl_version = :ssl_fail }.
+        to raise_error(ArgumentError, "Invalid SSL version :ssl_fail\n" +
+                                      "Please specify one of [:TLSv1, :SSLv2, :SSLv3]")
     end
   end
 
