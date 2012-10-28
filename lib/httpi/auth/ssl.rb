@@ -53,7 +53,11 @@ module HTTPI
 
       # Sets the SSL verify mode. Expects one of <tt>HTTPI::Auth::SSL::VERIFY_MODES</tt>.
       def verify_mode=(mode)
-        raise ArgumentError, "Invalid SSL verify mode: #{mode}" unless VERIFY_MODES.include? mode
+        unless VERIFY_MODES.include? mode
+          raise ArgumentError, "Invalid SSL verify mode #{mode.inspect}\n" +
+                               "Please specify one of #{VERIFY_MODES.inspect}"
+        end
+
         @verify_mode = mode
       end
 
