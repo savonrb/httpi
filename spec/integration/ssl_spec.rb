@@ -39,48 +39,53 @@ describe "SSL authentication" do
         end
       end
 
-      # 105 ssl
-      it "raises when no certificate was set up" do
-        if adapter != :em_http
-          expect { HTTPI.post(@ssl_url + "hello", "", adapter) }.
-            to raise_error(HTTPI::SSLError)
-        else
-          pending "Investigate why em_http does not raise an error"
-        end
-      end
-
-      # 106 ssl ca
-      it "works when set up properly" do
-        unless adapter == :em_http
-          ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
-          request = HTTPI::Request.new(@ssl_url + "hello")
-          request.auth.ssl.ca_cert_file = ca_file
-
-          response = HTTPI.get(request, adapter)
-          expect(response.body).to eq("hello ssl")
-        end
-      end
-
-      # 107 ssl hostname
-      if adapter == :em_http
-        it "raises when configured for ssl client auth" do
-          ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
-          request = HTTPI::Request.new(@ssl_fake_url + "hello")
-          request.auth.ssl.ca_cert_file = ca_file
-
-          expect { HTTPI.get(request, adapter) }.
-            to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
-        end
+      if adapter == :curb && RUBY_PLATFORM =~ /java/
+        # adapter not supported
       else
-        it "raises when the server could not be verified" do
-          ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
-          request = HTTPI::Request.new(@ssl_fake_url + "hello")
-          request.auth.ssl.ca_cert_file = ca_file
 
-          expect { HTTPI.get(request, adapter) }.to raise_error(HTTPI::SSLError)
+        # 105 ssl
+        it "raises when no certificate was set up" do
+          if adapter != :em_http
+            expect { HTTPI.post(@ssl_url + "hello", "", adapter) }.
+              to raise_error(HTTPI::SSLError)
+          else
+            pending "Investigate why em_http does not raise an error"
+          end
         end
-      end
 
+        # 106 ssl ca
+        it "works when set up properly" do
+          unless adapter == :em_http
+            ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
+            request = HTTPI::Request.new(@ssl_url + "hello")
+            request.auth.ssl.ca_cert_file = ca_file
+
+            response = HTTPI.get(request, adapter)
+            expect(response.body).to eq("hello ssl")
+          end
+        end
+
+        # 107 ssl hostname
+        if adapter == :em_http
+          it "raises when configured for ssl client auth" do
+            ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
+            request = HTTPI::Request.new(@ssl_fake_url + "hello")
+            request.auth.ssl.ca_cert_file = ca_file
+
+            expect { HTTPI.get(request, adapter) }.
+              to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
+          end
+        else
+          it "raises when the server could not be verified" do
+            ca_file = File.expand_path("../fixtures/ca_all.pem", __FILE__)
+            request = HTTPI::Request.new(@ssl_fake_url + "hello")
+            request.auth.ssl.ca_cert_file = ca_file
+
+            expect { HTTPI.get(request, adapter) }.to raise_error(HTTPI::SSLError)
+          end
+        end
+
+      end
     end
   end
 end
