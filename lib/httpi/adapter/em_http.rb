@@ -56,7 +56,10 @@ module HTTPI
         options = client_options
         setup_proxy(options) if @request.proxy
         setup_http_auth(options) if @request.auth.http?
-        setup_ssl_auth(options) if @request.auth.ssl?
+
+        if @request.auth.ssl?
+          raise NotSupportedError, "EM-HTTP-Request does not support SSL client auth"
+        end
 
         start_time = Time.now
         respond_with yield(options), start_time
@@ -89,36 +92,8 @@ module HTTPI
         options[:head][:authorization] = @request.auth.credentials
       end
 
-      def setup_ssl_auth(options)
-        ssl = @request.auth.ssl
-
-        options[:ssl] = {
-          :private_key_file => cert_and_key_file(ssl),
-          :cert_chain_file  => cert_and_key_file(ssl),
-          :verify_peer      => true  # TODO should be ssl.verify_mode == :peer
-        }
-      end
-
-      def cert_and_key_file(ssl)
-        contents = []
-        contents << File.read(ssl.cert_key_file) if ssl.cert_key_file
-        contents << File.read(ssl.cert_file) if ssl.cert_file
-        contents = contents.compact.map(&:to_s).map(&:chomp).join("\n")
-        return if !contents || contents.empty?
-
-        FileUtils.mkdir_p(cert_directory)
-        filename = "#{cert_directory}/em_http.#{Digest::SHA1.hexdigest contents}.tmp"
-        unless File.exist?(filename)
-          File.open(filename, 'w') do |f|
-            f.print contents.to_s
-          end
-        end
-        filename
-      end
-
       def respond_with(http, start_time)
         raise TimeoutError, "EM-HTTP-Request connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
-
 
         Response.new http.response_header.status,
           convert_headers(http.response_header), http.response

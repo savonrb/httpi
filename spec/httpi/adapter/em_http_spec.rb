@@ -142,14 +142,9 @@ begin
           request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
         end
 
-        it "client_cert, client_key and verify_mode should be set" do
-          em_http.expects(:get).once.with { |options|
-            key = File.read(options[:ssl][:private_key_file])
-            chain = File.read(options[:ssl][:cert_chain_file])
-            key == chain && chain == %w(spec/fixtures/client_key.pem spec/fixtures/client_cert.pem).map { |file| File.read file }.map(&:chomp).join("\n")
-          }.returns(http_message)
-
-          adapter.request(:get)
+        it "is not supported" do
+          expect { adapter.request(:get) }.
+            to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
         end
       end
     end
