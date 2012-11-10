@@ -1,4 +1,4 @@
-## UPCOMING
+## 2.0.0.rc1
 
 * Feature: [#63](https://github.com/savonrb/httpi/pull/63) adds support for
   EventMachine::HttpRequest. Additional information at [#40](https://github.com/savonrb/httpi/pull/40).
