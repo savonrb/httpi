@@ -39,17 +39,21 @@ describe "SSL authentication" do
         end
       end
 
-      if adapter == :curb && RUBY_PLATFORM =~ /java/
-        # adapter not supported
-      else
-
+      unless (adapter == :curb && RUBY_PLATFORM =~ /java/) || (adapter == :em_http && RUBY_VERSION =~ /1\.8/)
         # 105 ssl
-        it "raises when no certificate was set up" do
-          if adapter != :em_http
+        if adapter == :httpclient || adapter == :curb
+          it "raises when no certificate was set up" do
             expect { HTTPI.post(@ssl_url + "hello", "", adapter) }.
               to raise_error(HTTPI::SSLError)
+          end
+        else
+          if adapter == :net_http && RUBY_VERSION >= "1.9"
+            it "raises in 1.9, but does not raise in 1.8"
           else
-            pending "Investigate why em_http does not raise an error"
+            it "does not raise when no certificate was set up" do
+              expect { HTTPI.post(@ssl_url + "hello", "", adapter) }.
+                to_not raise_error(HTTPI::SSLError)
+            end
           end
         end
 
