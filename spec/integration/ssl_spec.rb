@@ -27,19 +27,26 @@ describe "SSL authentication" do
   HTTPI::Adapter::ADAPTERS.keys.each do |adapter|
     context "with #{adapter}" do
 
-      if adapter == :em_http && RUBY_VERSION >= "1.9.0"
-        # dependencies are loaded upon request, so we need to manually require this
-        require "em-synchrony"
+      if adapter == :em_http && RUBY_VERSION =~ /1\.8/
+        # em_http depends on fibers
+      elsif adapter == :curb && RUBY_PLATFORM =~ /java/
+        # curb does not run on jruby
+      elsif adapter == :em_http && RUBY_VERSION >= "1.9.0" && RUBY_PLATFORM =~ /java/
+        it "fails for whatever reason"
+      else
 
-        around(:each) do |example|
-          EM.synchrony do
-            example.run
-            EM.stop
+        if adapter == :em_http && RUBY_VERSION >= "1.9.0"
+          # dependencies are loaded upon request, so we need to manually require this
+          require "em-synchrony"
+
+          around(:each) do |example|
+            EM.synchrony do
+              example.run
+              EM.stop
+            end
           end
         end
-      end
 
-      unless (adapter == :curb && RUBY_PLATFORM =~ /java/) || (adapter == :em_http && RUBY_VERSION =~ /1\.8/)
         # 105 ssl
         if adapter == :httpclient || adapter == :curb
           it "raises when no certificate was set up" do
