@@ -31,6 +31,21 @@ module HTTPI
     # Returns the +url+ to access.
     attr_reader :url
 
+    # Sets the +query+ from +url+. Raises an +ArgumentError+ unless the +url+ is valid.
+    def query=(query)
+      raise ArgumentError, "Invalid URL: #{self.url}" unless self.url.respond_to?(:query)
+      if query.kind_of?(Hash)
+        query = Rack::Utils.build_query(query)
+      end
+      query = query.to_s unless query.is_a?(String)
+      self.url.query = query
+    end
+
+    # Returns the +query+ from +url+.
+    def query
+      self.url.query if self.url.respond_to?(:query)
+    end
+
     # Sets the +proxy+ to use. Raises an +ArgumentError+ unless the +proxy+ is valid.
     def proxy=(proxy)
       @proxy = normalize_url! proxy
