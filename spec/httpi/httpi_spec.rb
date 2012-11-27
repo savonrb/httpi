@@ -202,8 +202,12 @@ describe HTTPI do
           context "using #{adapter}" do
             before { opts[:class].any_instance.expects(:request).with(method) }
 
-            it "yields the HTTP client instance used for the request" do
+            it "#request yields the HTTP client instance" do
               expect { |b| client.request(method, request, adapter, &b) }.to yield_with_args(client_class[adapter].call)
+            end
+
+            it "##{method} yields the HTTP client instance" do
+              expect { |b| client.send(method, request, adapter, &b) }.to yield_with_args(client_class[adapter].call)
             end
           end
         end
