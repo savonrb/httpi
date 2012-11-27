@@ -96,33 +96,33 @@ module HTTPI
   class << self
 
     # Executes an HTTP GET request.
-    def get(request, adapter = nil)
+    def get(request, adapter = nil, &block)
       request = Request.new(request) if request.kind_of? String
-      request(:get, request, adapter)
+      request(:get, request, adapter, &block)
     end
 
     # Executes an HTTP POST request.
-    def post(*args)
+    def post(*args, &block)
       request, adapter = request_and_adapter_from(args)
-      request(:post, request, adapter)
+      request(:post, request, adapter, &block)
     end
 
     # Executes an HTTP HEAD request.
-    def head(request, adapter = nil)
+    def head(request, adapter = nil, &block)
       request = Request.new(request) if request.kind_of? String
-      request(:head, request, adapter)
+      request(:head, request, adapter, &block)
     end
 
     # Executes an HTTP PUT request.
-    def put(*args)
+    def put(*args, &block)
       request, adapter = request_and_adapter_from(args)
-      request(:put, request, adapter)
+      request(:put, request, adapter, &block)
     end
 
     # Executes an HTTP DELETE request.
-    def delete(request, adapter = nil)
+    def delete(request, adapter = nil, &block)
       request = Request.new(request) if request.kind_of? String
-      request(:delete, request, adapter)
+      request(:delete, request, adapter, &block)
     end
 
     # Executes an HTTP request for the given +method+.
