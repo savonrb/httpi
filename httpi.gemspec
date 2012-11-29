@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec",   "~> 2.11"
   s.add_development_dependency "mocha",   "~> 0.12"
   s.add_development_dependency "webmock", "~> 1.8"
+  s.add_development_dependency "puma",    ">= 2.0.0.b3"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"

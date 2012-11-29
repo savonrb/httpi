@@ -1,39 +1,78 @@
-require "spec_helper"
-require "mock_server"
+require "puma"
+require "puma/minissl"
 
-IntegrationServer = Rack::Builder.new do
-  map "/" do
-    run lambda {|env|
-      case env["REQUEST_METHOD"]
-      when "HEAD" then
-        [200, {"Content-Type" => "text/plain", "Content-Length" => "5"}, []]
-      when "GET", "POST" then
-        [200, {"Content-Type" => "text/plain", "Content-Length" => "5"}, ["Hello"]]
-      when "PUT", "DELETE"
-        body = "#{env["REQUEST_METHOD"]} is not allowed"
-        [200, {"Content-Type" => "text/plain", "Content-Length" => body.size.to_s}, [body]]
-      end
-    }
+require "integration/application"
+
+class IntegrationServer
+
+  def self.run(options = {})
+    server = new(options)
+    server.run
+    server
   end
 
-  map "/x-header" do
-    run lambda {|env|
-      body = "X-Header is #{env["HTTP_X_HEADER"]}"
-      [200, {"Content-Type" => "text/plain", "Content-Length" => body.size.to_s}, [body]]
-    }
-  end
+  def self.ssl_ca_file;   File.expand_path("../fixtures/ca_all.pem", __FILE__)  end
+  def self.ssl_key_file;  File.expand_path("../fixtures/server.key", __FILE__)  end
+  def self.ssl_cert_file; File.expand_path("../fixtures/server.cert", __FILE__) end
 
-  map "/auth" do
-    map "/basic" do
-      run Rack::Auth::Basic do |user, password|
-        user == "admin" && password == "secret"
-      end
-    end
+  def initialize(options = {})
+    @app  = Application
+    @host = options.fetch(:host, "localhost")
+    @port = options.fetch(:port, 17172)
+    @ssl  = options.fetch(:ssl, false)
 
-    map "/digest" do
-      run Rack::Auth::Digest::MD5 do |username|
-        {"admin" => "pwd"}[username]
-      end
+    @server = Puma::Server.new(app, events)
+
+    if ssl?
+      add_ssl_listener
+    else
+      add_tcp_listener
     end
   end
+
+  attr_reader :app, :host, :port, :server
+
+  def url
+    protocol = ssl? ? "https" : "http"
+    "#{protocol}://#{host}:#{port}/"
+  end
+
+  def ssl?
+    @ssl
+  end
+
+  def run
+    server.run
+  end
+
+  def stop
+    server.stop(true)
+  end
+
+  private
+
+  def events
+    Puma::Events.new($stdout, $stderr)
+  end
+
+  def add_tcp_listener
+    server.add_tcp_listener(host, port)
+  rescue Errno::EADDRINUSE
+    raise "Panther is already running at #{url}"
+  end
+
+  def add_ssl_listener
+    server.add_ssl_listener(host, port, ssl_context)
+  end
+
+  def ssl_context
+    context = Puma::MiniSSL::Context.new
+
+    context.key         = IntegrationServer.ssl_key_file
+    context.cert        = IntegrationServer.ssl_cert_file
+    context.verify_mode = Puma::MiniSSL::VERIFY_PEER
+
+    context
+  end
+
 end

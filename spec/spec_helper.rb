@@ -1,12 +1,18 @@
 require "bundler"
-Bundler.require :default, :development
+Bundler.setup(:default, :development)
+
+require "httpi"
+
+require "rspec"
+require "mocha/api"
+require "webmock"
 
 RSpec.configure do |config|
   config.include WebMock::API
   config.mock_with :mocha
 end
 
-HTTPI.log = false  # disable for specs
+HTTPI.log = false
 
 require "support/fixture"
 require "support/matchers"
