@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = "me@rubiii.com"
   s.homepage    = "http://github.com/savonrb/#{s.name}"
   s.summary     = "Common interface for Ruby's HTTP libraries"
-  s.description = "HTTPI provides a common interface for Ruby's HTTP libraries"
+  s.description = s.summary
 
   s.rubyforge_project = s.name
 
