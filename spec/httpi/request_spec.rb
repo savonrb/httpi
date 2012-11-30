@@ -43,6 +43,35 @@ describe HTTPI::Request do
     end
   end
 
+  describe "#query" do
+    it "raises an ArgumentError if url not respond to query" do
+      expect { request.query = "q=query" }.to raise_error(ArgumentError)
+    end
+    it "lets you specify query parameter as String" do
+      request.url = "http://example.com"
+      request.query = "q=query"
+      request.url.to_s.should == "http://example.com?q=query"
+    end
+    it "lets you specify query parameter as Hash" do
+      request.url = "http://example.com"
+      request.query = {:q => "query"}
+      request.url.to_s.should == "http://example.com?q=query"
+    end
+    it "getter return nil for invalid url" do
+      request.query.should be_nil
+    end
+    it "getter return String for query parameter as String" do
+      request.url = "http://example.com"
+      request.query = "q=query"
+      request.query.should == "q=query"
+    end
+    it "getter return String for query parameter as Hash" do
+      request.url = "http://example.com"
+      request.query = {:q => "query"}
+      request.query.should == "q=query"
+    end
+  end
+
   describe "#proxy" do
     it "lets you specify the proxy URL to use as a String" do
       request.proxy = "http://proxy.example.com"
