@@ -14,13 +14,15 @@ describe HTTPI do
     end
   end
 
-  context "with :curb" do
-    it "tags Curl::Err::ConnectionFailedError with HTTPI::ConnectionError" do
-      expect_error(Curl::Err::ConnectionFailedError, "Curl::Err::ConnectionFailedError").to be_tagged_with(HTTPI::ConnectionError)
-    end
+  unless RUBY_PLATFORM =~ /java/
+    context "with :curb" do
+      it "tags Curl::Err::ConnectionFailedError with HTTPI::ConnectionError" do
+        expect_error(Curl::Err::ConnectionFailedError, "Curl::Err::ConnectionFailedError").to be_tagged_with(HTTPI::ConnectionError)
+      end
 
-    def fake_error(error, message)
-      request(:curb) { |client| client.expects(:send).raises(error, message) }
+      def fake_error(error, message)
+        request(:curb) { |client| client.expects(:send).raises(error, message) }
+      end
     end
   end
 
