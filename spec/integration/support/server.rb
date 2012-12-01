@@ -1,7 +1,7 @@
 require "puma"
 require "puma/minissl"
 
-require "integration/application"
+require "integration/support/application"
 
 class IntegrationServer
 
