@@ -26,6 +26,9 @@ module HTTPI
         respond_with @client.request(method, @request.url, nil, @request.body, @request.headers)
       rescue OpenSSL::SSL::SSLError
         raise SSLError
+      rescue Errno::ECONNREFUSED   # connection refused
+        $!.extend ConnectionError
+        raise
       end
 
       private

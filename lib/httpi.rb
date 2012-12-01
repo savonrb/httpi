@@ -85,6 +85,8 @@ module HTTPI
   class NotSupportedError < Error; end
   class NotImplementedError < Error; end
 
+  module ConnectionError; end
+
   class SSLError < Error
     def initialize(message = nil, original = $!)
       super(message)

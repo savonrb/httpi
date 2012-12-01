@@ -34,6 +34,9 @@ module HTTPI
         raise SSLError
       rescue Curl::Err::SSLPeerCertificateError
         raise SSLError
+      rescue Curl::Err::ConnectionFailedError  # connection refused
+        $!.extend ConnectionError
+        raise
       end
 
       private

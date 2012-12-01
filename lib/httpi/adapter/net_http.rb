@@ -34,6 +34,9 @@ module HTTPI
         end
       rescue OpenSSL::SSL::SSLError
         raise SSLError
+      rescue Errno::ECONNREFUSED   # connection refused
+        $!.extend ConnectionError
+        raise
       end
 
       private
