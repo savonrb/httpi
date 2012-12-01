@@ -1,19 +1,22 @@
 require "rack/builder"
 
 class IntegrationServer
+
+  def self.respond_with(body)
+    [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+  end
+
   Application = Rack::Builder.new do
 
     map "/" do
       run lambda { |env|
-        body = env["REQUEST_METHOD"].downcase
-        [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+        IntegrationServer.respond_with env["REQUEST_METHOD"].downcase
       }
     end
 
     map "/x-header" do
       run lambda { |env|
-        body = env["HTTP_X_HEADER"]
-        [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+        IntegrationServer.respond_with env["HTTP_X_HEADER"]
       }
     end
 
@@ -23,15 +26,13 @@ class IntegrationServer
       end
 
       run lambda { |env|
-        body = "basic-auth"
-        [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+        IntegrationServer.respond_with "basic-auth"
       }
     end
 
     map "/digest-auth" do
       unprotected_app = lambda { |env|
-        body = "digest-auth"
-        [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+        IntegrationServer.respond_with "digest-auth"
       }
 
       realm = 'digest-realm'
