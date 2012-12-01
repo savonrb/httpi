@@ -5,14 +5,7 @@ describe "SSL authentication" do
 
   before :all do
     WebMock.allow_net_connect!
-
-    @host = "localhost"
-    @port = 17172
-
-    @url = "https://#{@host}:#{@port}/"
-    @fake_url = "https://127.0.0.1:#{@port}/"
-
-    @server = IntegrationServer.run(:host => @host, :port => @port, :ssl => true)
+    @server = IntegrationServer.run(:ssl => true)
   end
 
   after :all do
@@ -44,47 +37,27 @@ describe "SSL authentication" do
           end
         end
 
-        # 105 ssl
         if adapter == :httpclient || adapter == :curb
           it "raises when no certificate was set up" do
-            expect { HTTPI.post(@url, "", adapter) }.to raise_error(HTTPI::SSLError)
+            expect { HTTPI.post(@server.url, "", adapter) }.to raise_error(HTTPI::SSLError)
           end
         else
           if adapter == :net_http && RUBY_VERSION >= "1.9"
             it "raises in 1.9, but does not raise in 1.8"
           else
             it "does not raise when no certificate was set up" do
-              expect { HTTPI.post(@url, "", adapter) }.to_not raise_error(HTTPI::SSLError)
+              expect { HTTPI.post(@server.url, "", adapter) }.to_not raise_error(HTTPI::SSLError)
             end
           end
         end
 
-        # 106 ssl ca
         it "works when set up properly" do
           unless adapter == :em_http
-            request = HTTPI::Request.new(@url + "hello")
+            request = HTTPI::Request.new(@server.url)
             request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
 
             response = HTTPI.get(request, adapter)
             expect(response.body).to eq("get")
-          end
-        end
-
-        # 107 ssl hostname
-        if adapter == :em_http
-          it "raises when configured for ssl client auth" do
-            request = HTTPI::Request.new(@fake_url)
-            request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-
-            expect { HTTPI.get(request, adapter) }.
-              to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
-          end
-        else
-          it "raises when the server could not be verified" do
-            request = HTTPI::Request.new(@fake_url)
-            request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-
-            expect { HTTPI.get(request, adapter) }.to raise_error(HTTPI::SSLError)
           end
         end
 
