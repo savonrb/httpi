@@ -1,11 +1,11 @@
 require "spec_helper"
 require "integration/support/server"
-require "em-synchrony"
 
 describe HTTPI::Adapter::EmHttpRequest do
 
   # em_http is not supported on ruby 1.8
   unless RUBY_VERSION =~ /1\.8/
+    require "em-synchrony"
 
     subject(:adapter) { :em_http }
 
