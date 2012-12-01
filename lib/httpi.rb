@@ -89,7 +89,7 @@ module HTTPI
 
   class SSLError < Error
     def initialize(message = nil, original = $!)
-      super(message)
+      super(message || original.message)
       @original = original
     end
     attr_reader :original
