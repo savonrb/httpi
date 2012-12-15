@@ -72,9 +72,7 @@ describe HTTPI::Adapter::NetHTTP do
       @server.stop
     end
 
-    it "raises when no certificate was set up" do
-      expect { HTTPI.post(@server.url, "", adapter) }.to raise_error(HTTPI::SSLError)
-    end
+    # it does not raise when no certificate was set up
 
     it "works when set up properly" do
       request = HTTPI::Request.new(@server.url)
