@@ -1,5 +1,9 @@
 require "spec_helper"
-require "httpi"
+
+# find out why httpi doesn't load these automatically. [dh, 2012-12-15]
+require "em-synchrony"
+require "em-http-request"
+require "curb"
 
 describe HTTPI do
   let(:client) { HTTPI }
@@ -196,7 +200,7 @@ describe HTTPI do
             :httpclient => lambda { HTTPClient },
             :curb       => lambda { Curl::Easy },
             :net_http   => lambda { Net::HTTP },
-            :em_http    => lambda { EventMachine::WebMockHttpConnection } # in real life: EventMachine::HttpRequest
+            :em_http    => lambda { EventMachine::HttpConnection }
           }
 
           context "using #{adapter}" do
