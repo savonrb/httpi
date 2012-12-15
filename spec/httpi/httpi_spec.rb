@@ -1,8 +1,10 @@
 require "spec_helper"
 
 # find out why httpi doesn't load these automatically. [dh, 2012-12-15]
-require "em-synchrony"
-require "em-http-request"
+unless RUBY_VERSION < "1.9"
+  require "em-synchrony"
+  require "em-http-request"
+end
 require "curb"
 
 describe HTTPI do
