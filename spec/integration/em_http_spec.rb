@@ -19,7 +19,8 @@ describe HTTPI::Adapter::EmHttpRequest do
     context "http requests" do
       before :all do
         WebMock.allow_net_connect!
-        @server = IntegrationServer.run
+        # for some reason, these specs don't work with "localhost". [dh, 2012-12-15]
+        @server = IntegrationServer.run(:host => "127.0.0.1")
       end
 
       after :all do
