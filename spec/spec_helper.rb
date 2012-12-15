@@ -5,10 +5,8 @@ require "httpi"
 
 require "rspec"
 require "mocha/api"
-require "webmock"
 
 RSpec.configure do |config|
-  config.include WebMock::API
   config.mock_with :mocha
 end
 

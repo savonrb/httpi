@@ -7,7 +7,6 @@ describe HTTPI::Adapter::HTTPClient do
 
   context "http requests" do
     before :all do
-      WebMock.allow_net_connect!
       @server = IntegrationServer.run
     end
 
@@ -72,7 +71,6 @@ describe HTTPI::Adapter::HTTPClient do
 
   context "https requests" do
     before :all do
-      WebMock.allow_net_connect!
       @server = IntegrationServer.run(:ssl => true)
     end
 

@@ -14,6 +14,12 @@ class IntegrationServer
       }
     end
 
+    map "/repeat" do
+      run lambda { |env|
+        IntegrationServer.respond_with :body => env["rack.input"].read
+      }
+    end
+
     map "/x-header" do
       run lambda { |env|
         IntegrationServer.respond_with env["HTTP_X_HEADER"]
