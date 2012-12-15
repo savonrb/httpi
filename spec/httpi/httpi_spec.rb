@@ -5,7 +5,9 @@ unless RUBY_VERSION < "1.9"
   require "em-synchrony"
   require "em-http-request"
 end
-require "curb"
+unless RUBY_PLATFORM =~ /java/
+  require "curb"
+end
 
 describe HTTPI do
   let(:client) { HTTPI }
