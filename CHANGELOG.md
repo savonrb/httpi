@@ -1,4 +1,12 @@
-## 2.0.0.rc1
+## 2.0.0 (2012-12-16)
+
+* Feature: [#66](https://github.com/savonrb/httpi/pull/66) adds a `query` method
+  to the request.
+
+* Fix: [#68](https://github.com/savonrb/httpi/issues/68) request does not yield
+  adapter client.
+
+## 2.0.0.rc1 (2012-11-10)
 
 * Feature: [#63](https://github.com/savonrb/httpi/pull/63) adds support for
   EventMachine::HttpRequest. Additional information at [#40](https://github.com/savonrb/httpi/pull/40).
