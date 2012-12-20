@@ -81,6 +81,8 @@ describe HTTPI::Adapter::EmHttpRequest do
       end
 
       # it does not support digest authentication
+
+      # it does not support chunked response
     end
 
     # it does not support ssl authentication
