@@ -34,6 +34,14 @@ describe HTTPI::Adapter::EmHttpRequest do
         response.body.should include("HTTPI")
       end
 
+      it "it supports headers with multiple values" do
+        request = HTTPI::Request.new(@server.url + "cookies")
+
+        response = HTTPI.get(request, adapter)
+        cookies = ["cookie1=chip1; path=/", "cookie2=chip2; path=/"]
+        response.headers["Set-Cookie"].should eq(cookies)
+      end
+
       it "executes GET requests" do
         response = HTTPI.get(@server.url, adapter)
         response.body.should eq("get")
