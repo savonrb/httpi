@@ -35,7 +35,6 @@ module HTTPI
               res.read_body do |seg|
                 @request.on_body.call(seg)
               end
-              res.body = nil # nil the body so HTTPI::Response.body works correctly
             end
           else
             http.request http_request
@@ -104,7 +103,8 @@ module HTTPI
         headers.each do |key, value|
           headers[key] = value[0] if value.size <= 1
         end
-        Response.new response.code, headers, response.body
+        body = (response.body.kind_of?(Net::ReadAdapter) ? "" : response.body)
+        Response.new response.code, headers, body
       end
 
     end
