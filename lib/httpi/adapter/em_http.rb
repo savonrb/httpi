@@ -61,6 +61,10 @@ module HTTPI
           raise NotSupportedError, "EM-HTTP-Request does not support SSL client auth"
         end
 
+        if @request.on_body
+          raise NotSupportedError, "EM-HTTP-Request does not support response streaming"
+        end
+
         start_time = Time.now
         respond_with yield(options), start_time
       end
