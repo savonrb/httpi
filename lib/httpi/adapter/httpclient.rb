@@ -63,7 +63,15 @@ module HTTPI
       end
 
       def respond_with(response)
-        Response.new response.code, Hash[*response.header.all.flatten], response.content
+        headers = {}
+        response.header.all.each do |(header, value)|
+          if headers.key?(header)
+            headers[header] = Array(headers[header]) << value
+          else
+            headers[header] = value
+          end
+        end
+        Response.new response.code, headers, response.content
       end
 
     end

@@ -26,6 +26,17 @@ class IntegrationServer
       }
     end
 
+    map "/cookies" do
+      run lambda { |env|
+        status, headers, body = IntegrationServer.respond_with("Many Cookies")
+        response = Rack::Response.new(body, status, headers)
+
+        response.set_cookie("cookie1", {:value => "chip1", :path => "/"})
+        response.set_cookie("cookie2", {:value => "chip2", :path => "/"})
+        response.finish
+      }
+    end
+
     map "/basic-auth" do
       use Rack::Auth::Basic, "basic-realm" do |username, password|
         username == "admin" && password == "secret"
