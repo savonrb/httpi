@@ -1,3 +1,9 @@
+## Edge
+
+* Feature: [#71](https://github.com/savonrb/httpi/pull/71) chunked responses.
+
+* Fix: [#69](https://github.com/savonrb/httpi/issues/69) truncating response headers.
+
 ## 2.0.0 (2012-12-16)
 
 * Feature: [#66](https://github.com/savonrb/httpi/pull/66) adds a `query` method
