@@ -92,7 +92,9 @@ module HTTPI
 
       def respond_with(response)
         headers = response.to_hash
-        headers.each { |key, value| headers[key] = value[0] }
+        headers.each do |key, value|
+          headers[key] = value[0] if value.size <= 1
+        end
         Response.new response.code, headers, response.body
       end
 
