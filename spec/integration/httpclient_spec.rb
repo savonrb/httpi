@@ -88,25 +88,28 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
-  context "https requests" do
-    before :all do
-      @server = IntegrationServer.run(:ssl => true)
-    end
+  if RUBY_PLATFORM =~ /java/
+    pending "Puma Server complains: SSL not supported on JRuby"
+  else
+    context "https requests" do
+      before :all do
+        @server = IntegrationServer.run(:ssl => true)
+      end
+      after :all do
+        @server.stop
+      end
 
-    after :all do
-      @server.stop
-    end
+      it "raises when no certificate was set up" do
+        expect { HTTPI.post(@server.url, "", adapter) }.to raise_error(HTTPI::SSLError)
+      end
 
-    it "raises when no certificate was set up" do
-      expect { HTTPI.post(@server.url, "", adapter) }.to raise_error(HTTPI::SSLError)
-    end
+      it "works when set up properly" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
 
-    it "works when set up properly" do
-      request = HTTPI::Request.new(@server.url)
-      request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-
-      response = HTTPI.get(request, adapter)
-      expect(response.body).to eq("get")
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
     end
   end
 

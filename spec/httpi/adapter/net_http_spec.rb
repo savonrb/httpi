@@ -63,23 +63,25 @@ describe HTTPI::Adapter::NetHTTP do
 
   # it does not support digest auth
 
-  context "https requests" do
-    before :all do
-      @server = IntegrationServer.run(:ssl => true)
-    end
+  if RUBY_PLATFORM =~ /java/
+    pending "Puma Server complains: SSL not supported on JRuby"
+  else
+    context "https requests" do
+      before :all do
+        @server = IntegrationServer.run(:ssl => true)
+      end
+      after :all do
+        @server.stop
+      end
 
-    after :all do
-      @server.stop
-    end
+      # it does not raise when no certificate was set up
+      it "works when set up properly" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
 
-    # it does not raise when no certificate was set up
-
-    it "works when set up properly" do
-      request = HTTPI::Request.new(@server.url)
-      request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-
-      response = HTTPI.get(request, adapter)
-      expect(response.body).to eq("get")
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
     end
   end
 
