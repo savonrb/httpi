@@ -78,6 +78,18 @@ describe HTTPI::Adapter::Curb do
         response = HTTPI.get(request, adapter)
         response.body.should eq("digest-auth")
       end
+
+      it "supports chunked response" do
+        request = HTTPI::Request.new(@server.url)
+        res = ""
+        request.on_body do |body|
+          res += body
+        end
+        response = HTTPI.post(request, adapter)
+        res.should eq("post")
+        response.body.should eq("")
+      end
+
     end
 
     context "https requests" do

@@ -30,7 +30,15 @@ module HTTPI
 
         do_request(method) do |http, http_request|
           http_request.body = @request.body
-          http.request http_request
+          if @request.on_body then
+            http.request(http_request) do |res|
+              res.read_body do |seg|
+                @request.on_body.call(seg)
+              end
+            end
+          else
+            http.request http_request
+          end
         end
       rescue OpenSSL::SSL::SSLError
         raise SSLError
@@ -95,7 +103,8 @@ module HTTPI
         headers.each do |key, value|
           headers[key] = value[0] if value.size <= 1
         end
-        Response.new response.code, headers, response.body
+        body = (response.body.kind_of?(Net::ReadAdapter) ? "" : response.body)
+        Response.new response.code, headers, body
       end
 
     end

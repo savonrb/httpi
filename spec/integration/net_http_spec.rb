@@ -69,6 +69,17 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     # it does not support digest authentication
+
+    it "supports chunked response" do
+      request = HTTPI::Request.new(@server.url)
+      res = ""
+      request.on_body do |body|
+        res += body
+      end
+      response = HTTPI.post(request, adapter)
+      res.should eq("post")
+      response.body.to_s.should eq("")
+    end
   end
 
   context "https requests" do

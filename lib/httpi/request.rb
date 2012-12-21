@@ -93,6 +93,15 @@ module HTTPI
       @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
     end
 
+    # Sets the block to be called while processing the response. The block
+    # accepts a single parameter - the chunked response body.
+    def on_body(&block)
+      if block_given? then
+        @on_body = block
+      end
+      @on_body
+    end
+
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth
       @auth ||= Auth::Config.new
