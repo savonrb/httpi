@@ -199,4 +199,35 @@ describe HTTPI::Request do
     end
   end
 
+  describe "#connection_id" do
+    it "use uri and allow to change attributes" do
+      request.url = "http://example.com"
+      example_conn_id = request.connection_id
+
+      request.query = {:q => "query"}
+      request.connection_id.should eql(example_conn_id)
+    end
+    it "use uri and proxy" do
+      request.url = "http://example.com"
+      example_conn_id = request.connection_id
+
+      request.proxy = "http://proxy.com"
+      request.connection_id.should_not equal(example_conn_id)
+    end
+    it "use uri scheme" do
+      request.url = "http://example.com"
+      example_conn_id = request.connection_id
+
+      request.url = "https://example.com"
+      request.connection_id.should_not equal(example_conn_id)
+    end
+    it "use uri credentials" do
+      request.url = "http://example.com"
+      example_conn_id = request.connection_id
+
+      request.url = "http://user:pass@example.com"
+      request.connection_id.should_not equal(example_conn_id)
+    end
+  end
+
 end

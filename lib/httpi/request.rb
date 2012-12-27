@@ -117,6 +117,19 @@ module HTTPI
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
 
+    def connection_id
+      connection_info = [url.scheme,
+                         url.host, url.port,
+                         url.user, url.password]
+      if self.proxy
+        connection_info.concat [proxy.host, proxy.port,
+                                proxy.user, proxy.password]
+      end
+      connection_info = connection_info.compact
+      connection_id = connection_info.join(":")
+      Digest::MD5.hexdigest(connection_id)
+    end
+
     private
 
     # Stores the cookies from past requests.
