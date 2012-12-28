@@ -14,6 +14,14 @@ describe HTTPI do
   let(:httpclient) { HTTPI::Adapter.load(:httpclient) }
   let(:net_http) { HTTPI::Adapter.load(:net_http) }
 
+  before(:all) do
+    HTTPI::Adapter::Rack.mount('example.com', IntegrationServer::Application)
+  end
+
+  after(:all) do
+    HTTPI::Adapter::Rack.unmount('example.com')
+  end
+
   describe ".adapter=" do
     it "sets the default adapter to use" do
       HTTPI::Adapter.expects(:use=).with(:net_http)
@@ -204,7 +212,8 @@ describe HTTPI do
             :httpclient => lambda { HTTPClient },
             :curb       => lambda { Curl::Easy },
             :net_http   => lambda { Net::HTTP },
-            :em_http    => lambda { EventMachine::HttpConnection }
+            :em_http    => lambda { EventMachine::HttpConnection },
+            :rack       => lambda { Rack::MockRequest }
           }
 
           context "using #{adapter}" do
