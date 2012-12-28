@@ -1,5 +1,7 @@
 ## Edge
 
+* Feature: [#75](https://github.com/savonrb/httpi/pull/75) Rack adapter.
+
 * Feature: [#71](https://github.com/savonrb/httpi/pull/71) chunked responses.
 
 * Fix: [#69](https://github.com/savonrb/httpi/issues/69) truncating response headers.
