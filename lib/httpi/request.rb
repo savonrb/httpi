@@ -31,6 +31,21 @@ module HTTPI
     # Returns the +url+ to access.
     attr_reader :url
 
+    # Sets the +query+ from +url+. Raises an +ArgumentError+ unless the +url+ is valid.
+    def query=(query)
+      raise ArgumentError, "Invalid URL: #{self.url}" unless self.url.respond_to?(:query)
+      if query.kind_of?(Hash)
+        query = Rack::Utils.build_query(query)
+      end
+      query = query.to_s unless query.is_a?(String)
+      self.url.query = query
+    end
+
+    # Returns the +query+ from +url+.
+    def query
+      self.url.query if self.url.respond_to?(:query)
+    end
+
     # Sets the +proxy+ to use. Raises an +ArgumentError+ unless the +proxy+ is valid.
     def proxy=(proxy)
       @proxy = normalize_url! proxy
@@ -78,6 +93,15 @@ module HTTPI
       @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
     end
 
+    # Sets the block to be called while processing the response. The block
+    # accepts a single parameter - the chunked response body.
+    def on_body(&block)
+      if block_given? then
+        @on_body = block
+      end
+      @on_body
+    end
+
     # Returns the <tt>HTTPI::Authentication</tt> object.
     def auth
       @auth ||= Auth::Config.new
@@ -93,7 +117,7 @@ module HTTPI
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
     end
 
-  private
+    private
 
     # Stores the cookies from past requests.
     def cookie_store

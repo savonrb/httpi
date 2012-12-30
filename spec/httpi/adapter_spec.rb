@@ -4,6 +4,19 @@ require "httpi/adapter"
 describe HTTPI::Adapter do
   let(:adapter) { HTTPI::Adapter }
 
+  describe ".register" do
+    it "registers a new adapter" do
+      name  = :custom
+      klass = Class.new
+      deps  = %w(some_dependency)
+
+      adapter.register(name, klass, deps)
+
+      HTTPI::Adapter::ADAPTERS[:custom].should include(:class => klass, :deps => deps)
+      HTTPI::Adapter::ADAPTER_CLASS_MAP[klass].should be(name)
+    end
+  end
+
   describe ".use" do
     around do |example|
       adapter.use = nil
@@ -35,13 +48,13 @@ describe HTTPI::Adapter do
   describe ".load" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:curb).should == [:curb, HTTPI::Adapter::Curb]
+        adapter.load(:net_http).should == HTTPI::Adapter::NetHTTP
       end
     end
 
     context "called with nil" do
       it "returns the default adapter's name and class" do
-        adapter.load(nil).should == [:httpclient, HTTPI::Adapter::HTTPClient]
+        adapter.load(nil).should == HTTPI::Adapter::HTTPClient
       end
     end
 

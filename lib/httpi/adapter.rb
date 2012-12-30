@@ -1,7 +1,3 @@
-require "httpi/adapter/httpclient"
-require "httpi/adapter/curb"
-require "httpi/adapter/net_http"
-
 module HTTPI
 
   # = HTTPI::Adapter
@@ -10,18 +6,21 @@ module HTTPI
   #
   # * httpclient
   # * curb
+  # * em_http
   # * net/http
   module Adapter
 
-    ADAPTERS = {
-      :httpclient => { :class => HTTPClient, :require => "httpclient" },
-      :curb       => { :class => Curb,       :require => "curb" },
-      :net_http   => { :class => NetHTTP,    :require => "net/https" }
-    }
+    ADAPTERS = {}
+    ADAPTER_CLASS_MAP = {}
 
-    LOAD_ORDER = [:httpclient, :curb, :net_http]
+    LOAD_ORDER = [:httpclient, :curb, :em_http, :net_http]
 
     class << self
+
+      def register(name, adapter_class, deps)
+        ADAPTERS[name] = { :class => adapter_class, :deps => deps }
+        ADAPTER_CLASS_MAP[adapter_class] = name
+      end
 
       def use=(adapter)
         return @adapter = nil if adapter.nil?
@@ -35,16 +34,28 @@ module HTTPI
         @adapter ||= default_adapter
       end
 
-      def load(adapter)
-        adapter = adapter ? validate_adapter!(adapter) : use
-        [adapter, ADAPTERS[adapter][:class]]
+      def identify(adapter_class)
+        ADAPTER_CLASS_MAP[adapter_class]
       end
 
-    private
+      def load(adapter)
+        adapter ||= use
+
+        validate_adapter!(adapter)
+        load_adapter(adapter)
+        ADAPTERS[adapter][:class]
+      end
+
+      def load_adapter(adapter)
+        ADAPTERS[adapter][:deps].each do |dep|
+          require dep
+        end
+      end
+
+      private
 
       def validate_adapter!(adapter)
         raise ArgumentError, "Invalid HTTPI adapter: #{adapter}" unless ADAPTERS[adapter]
-        adapter
       end
 
       def default_adapter
@@ -56,10 +67,6 @@ module HTTPI
             next
           end
         end
-      end
-
-      def load_adapter(adapter)
-        require ADAPTERS[adapter][:require]
       end
 
     end

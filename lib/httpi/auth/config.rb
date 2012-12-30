@@ -1,5 +1,4 @@
 require "httpi/auth/ssl"
-require "httpi/auth/ntlm"
 
 module HTTPI
   module Auth
@@ -54,14 +53,15 @@ module HTTPI
         type == :basic || type == :digest
       end
 
-      # Only available with the httpi-ntlm gem.
       def ntlm(*args)
-        @ntlm ||= NTLM.new(*args)
+        return @ntlm if args.empty?
+
+        self.type = :ntlm
+        @ntlm = args.flatten.compact
       end
 
-      # Only available with the httpi-ntlm gem.
       def ntlm?
-        ntlm.present?
+        type == :ntlm
       end
 
       # Returns the <tt>HTTPI::Auth::SSL</tt> object.

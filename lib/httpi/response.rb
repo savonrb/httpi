@@ -1,8 +1,9 @@
 require "zlib"
 require "stringio"
+require "rack/utils"
+
 require "httpi/dime"
 require "httpi/cookie"
-require "rack/utils"
 
 module HTTPI
 
@@ -52,7 +53,7 @@ module HTTPI
 
     attr_writer :body
 
-  private
+    private
 
     def decode_body
       return @body = "" if !raw_body || raw_body.empty?
@@ -73,8 +74,9 @@ module HTTPI
 
     # Returns the gzip decoded response body.
     def decoded_gzip_body
-      gzip = Zlib::GzipReader.new StringIO.new(raw_body)
-      raise ArgumentError.new "couldn't create gzip reader" unless gzip
+      unless gzip = Zlib::GzipReader.new(StringIO.new(raw_body))
+        raise ArgumentError, "Unable to create Zlib::GzipReader"
+      end
       gzip.read
     ensure
       gzip.close if gzip

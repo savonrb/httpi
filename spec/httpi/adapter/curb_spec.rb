@@ -4,13 +4,15 @@ require "httpi/request"
 
 # curb does not run on jruby
 unless RUBY_PLATFORM =~ /java/
-  require "curb"
+  HTTPI::Adapter.load_adapter(:curb)
 
   describe HTTPI::Adapter::Curb do
-    let(:adapter) { HTTPI::Adapter::Curb.new }
-    let(:curb) { Curl::Easy.any_instance }
 
-    describe "#get" do
+    let(:adapter) { HTTPI::Adapter::Curb.new(request) }
+    let(:curb)    { Curl::Easy.any_instance }
+    let(:request) { HTTPI::Request.new("http://example.com") }
+
+    describe "#request(:get)" do
       before do
         curb.expects(:http_get)
         curb.expects(:response_code).returns(200)
@@ -19,11 +21,11 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.get(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:get).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#post" do
+    describe "#request(:post)" do
       before do
         curb.expects(:http_post)
         curb.expects(:response_code).returns(200)
@@ -32,18 +34,20 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.post(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:post).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#post" do
+    describe "#request(:post)" do
       it "sends the body in the request" do
-        curb.expects(:http_post).with('xml=hi&name=123')
-        adapter.post(basic_request { |request| request.body = 'xml=hi&name=123' } )
+        curb.expects(:http_post).with("xml=hi&name=123")
+
+        request.body = "xml=hi&name=123"
+        adapter.request(:post)
       end
     end
 
-    describe "#head" do
+    describe "#request(:head)" do
       before do
         curb.expects(:http_head)
         curb.expects(:response_code).returns(200)
@@ -52,11 +56,11 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.head(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:head).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#put" do
+    describe "#request(:put)" do
       before do
         curb.expects(:http_put)
         curb.expects(:response_code).returns(200)
@@ -65,18 +69,20 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.put(basic_request).should match_response(:body => Fixture.xml)
+        adapter.request(:put).should match_response(:body => Fixture.xml)
       end
     end
 
-    describe "#put" do
+    describe "#request(:put)" do
       it "sends the body in the request" do
         curb.expects(:http_put).with('xml=hi&name=123')
-        adapter.put(basic_request { |request| request.body = 'xml=hi&name=123' } )
+
+        request.body = 'xml=hi&name=123'
+        adapter.request(:put)
       end
     end
 
-    describe "#delete" do
+    describe "#request(:delete)" do
       before do
         curb.expects(:http_delete)
         curb.expects(:response_code).returns(200)
@@ -85,7 +91,14 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.delete(basic_request).should match_response(:body => "")
+        adapter.request(:delete).should match_response(:body => "")
+      end
+    end
+
+    describe "#request(:custom)" do
+      it "raises a NotSupportedError" do
+        expect { adapter.request(:custom) }.
+          to raise_error(HTTPI::NotSupportedError, "Curb does not support custom HTTP methods")
       end
     end
 
@@ -94,145 +107,172 @@ unless RUBY_PLATFORM =~ /java/
 
       describe "url" do
         it "always sets the request url" do
-          curb.expects(:url=).with(basic_request.url.to_s)
-          adapter.get(basic_request)
+          curb.expects(:url=).with(request.url.to_s)
+          adapter.request(:get)
         end
       end
 
       describe "proxy_url" do
         it "is not set unless it's specified" do
           curb.expects(:proxy_url=).never
-          adapter.get(basic_request)
+          adapter.request(:get)
         end
 
         it "is set if specified" do
-          request = basic_request { |request| request.proxy = "http://proxy.example.com" }
-
+          request.proxy = "http://proxy.example.com"
           curb.expects(:proxy_url=).with(request.proxy.to_s)
-          adapter.get(request)
+
+          adapter.request(:get)
         end
       end
 
       describe "timeout" do
         it "is not set unless it's specified" do
           curb.expects(:timeout=).never
-          adapter.get(basic_request)
+          adapter.request(:get)
         end
 
         it "is set if specified" do
-          request = basic_request { |request| request.read_timeout = 30 }
+          request.read_timeout = 30
+          curb.expects(:timeout=).with(request.read_timeout)
 
-          curb.expects(:timeout=).with(30)
-          adapter.get(request)
+          adapter.request(:get)
         end
       end
 
       describe "connect_timeout" do
         it "is not set unless it's specified" do
           curb.expects(:connect_timeout=).never
-          adapter.get(basic_request)
+          adapter.request(:get)
         end
 
         it "is set if specified" do
-          request = basic_request { |request| request.open_timeout = 30 }
-
+          request.open_timeout = 30
           curb.expects(:connect_timeout=).with(30)
-          adapter.get(request)
+
+          adapter.request(:get)
         end
       end
 
       describe "headers" do
         it "is always set" do
           curb.expects(:headers=).with({})
-          adapter.get(basic_request)
+          adapter.request(:get)
         end
       end
 
       describe "verbose" do
         it "is always set to false" do
           curb.expects(:verbose=).with(false)
-          adapter.get(basic_request)
+          adapter.request(:get)
         end
       end
 
       describe "http_auth_types" do
         it "is set to :basic for HTTP basic auth" do
-          request = basic_request { |request| request.auth.basic "username", "password" }
-
+          request.auth.basic "username", "password"
           curb.expects(:http_auth_types=).with(:basic)
-          adapter.get(request)
+
+          adapter.request(:get)
         end
 
         it "is set to :digest for HTTP digest auth" do
-          request = basic_request { |request| request.auth.digest "username", "password" }
-
+          request.auth.digest "username", "password"
           curb.expects(:http_auth_types=).with(:digest)
-          adapter.get(request)
+
+          adapter.request(:get)
         end
 
         it "is set to :gssnegotiate for HTTP Negotiate auth" do
-          request = basic_request { |request| request.auth.gssnegotiate }
-
+          request.auth.gssnegotiate
           curb.expects(:http_auth_types=).with(:gssnegotiate)
-          adapter.get(request)
+
+          adapter.request(:get)
         end
       end
 
       describe "username and password" do
         it "is set for HTTP basic auth" do
-          request = basic_request { |request| request.auth.basic "username", "password" }
+          request.auth.basic "username", "password"
 
           curb.expects(:username=).with("username")
           curb.expects(:password=).with("password")
-          adapter.get(request)
+          adapter.request(:get)
         end
 
         it "is set for HTTP digest auth" do
-          request = basic_request { |request| request.auth.digest "username", "password" }
+          request.auth.digest "username", "password"
 
           curb.expects(:username=).with("username")
           curb.expects(:password=).with("password")
-          adapter.get(request)
+          adapter.request(:get)
         end
       end
 
       context "(for SSL client auth)" do
-        let(:ssl_auth_request) do
-          basic_request do |request|
-            request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
-            request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
-          end
+        let(:request) do
+          request = HTTPI::Request.new("http://example.com")
+          request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+          request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+          request
         end
 
         it "cert_key, cert and ssl_verify_peer should be set" do
-          curb.expects(:cert_key=).with(ssl_auth_request.auth.ssl.cert_key_file)
-          curb.expects(:cert=).with(ssl_auth_request.auth.ssl.cert_file)
+          curb.expects(:cert_key=).with(request.auth.ssl.cert_key_file)
+          curb.expects(:cert=).with(request.auth.ssl.cert_file)
           curb.expects(:ssl_verify_peer=).with(true)
-          curb.expects(:certtype=).with(ssl_auth_request.auth.ssl.cert_type.to_s.upcase)
+          curb.expects(:certtype=).with(request.auth.ssl.cert_type.to_s.upcase)
 
-          adapter.get(ssl_auth_request)
+          adapter.request(:get)
         end
 
         it "sets the cert_type to DER if specified" do
-          ssl_auth_request.auth.ssl.cert_type = :der
+          request.auth.ssl.cert_type = :der
           curb.expects(:certtype=).with(:der.to_s.upcase)
 
-          adapter.get(ssl_auth_request)
+          adapter.request(:get)
+        end
+
+        it "raise if an invalid cert type was set" do
+          expect { request.auth.ssl.cert_type = :invalid }.
+            to raise_error(ArgumentError, "Invalid SSL cert type :invalid\nPlease specify one of [:pem, :der]")
         end
 
         it "sets the cacert if specified" do
-          ssl_auth_request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
-          curb.expects(:cacert=).with(ssl_auth_request.auth.ssl.ca_cert_file)
+          request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
+          curb.expects(:cacert=).with(request.auth.ssl.ca_cert_file)
 
-          adapter.get(ssl_auth_request)
+          adapter.request(:get)
+        end
+
+        context 'sets ssl_version' do
+          it 'defaults to nil when no ssl_version is specified' do
+            curb.expects(:ssl_version=).with(nil)
+            adapter.request(:get)
+          end
+
+          it 'to 1 when ssl_version is specified as TLSv1' do
+            request.auth.ssl.ssl_version = :TLSv1
+            curb.expects(:ssl_version=).with(1)
+
+            adapter.request(:get)
+          end
+
+          it 'to 2 when ssl_version is specified as SSLv2' do
+            request.auth.ssl.ssl_version = :SSLv2
+            curb.expects(:ssl_version=).with(2)
+
+            adapter.request(:get)
+          end
+
+          it 'to 3 when ssl_version is specified as SSLv3' do
+            request.auth.ssl.ssl_version = :SSLv3
+            curb.expects(:ssl_version=).with(3)
+
+            adapter.request(:get)
+          end
         end
       end
-    end
-
-    def basic_request
-      request = HTTPI::Request.new :url => "http://example.com"
-      yield request if block_given?
-      request
     end
 
   end

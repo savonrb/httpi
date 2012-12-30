@@ -7,5 +7,5 @@ tmp
 *.gem
 .bundle
 Gemfile.lock
-mytest.rb
-.rvmrc
+.idea/*
+.rbx/

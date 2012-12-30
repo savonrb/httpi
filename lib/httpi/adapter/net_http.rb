@@ -1,4 +1,6 @@
 require "uri"
+
+require "httpi/adapter/base"
 require "httpi/response"
 require 'kconv'
 
@@ -9,106 +11,95 @@ module HTTPI
     #
     # Adapter for the Net::HTTP client.
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
-    class NetHTTP
+    class NetHTTP < Base
+
+      register :net_http, :deps => %w(net/https)
 
       def initialize(request)
-        self.client = new_client request
+        @request = request
+        @client = create_client
       end
 
       attr_reader :client
 
-      # Executes an HTTP GET request.
-      # @see HTTPI.get
-      def get(request)
-        do_request :get, request do |http, get|
-          http.request get
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method)
+        unless REQUEST_METHODS.include? method
+          raise NotSupportedError, "Net::HTTP does not support custom HTTP methods"
         end
+
+        do_request(method) do |http, http_request|
+          http_request.body = @request.body
+          if @request.on_body then
+            http.request(http_request) do |res|
+              res.read_body do |seg|
+                @request.on_body.call(seg)
+              end
+            end
+          else
+            http.request http_request
+          end
+        end
+      rescue OpenSSL::SSL::SSLError
+        raise SSLError
+      rescue Errno::ECONNREFUSED   # connection refused
+        $!.extend ConnectionError
+        raise
       end
 
-      # Executes an HTTP POST request.
-      # @see HTTPI.post
-      def post(request)
-        do_request :post, request do |http, post|
-          post.body = request.body
-          http.request post
-        end
-      end
+      private
 
-      # Executes an HTTP HEAD request.
-      # @see HTTPI.head
-      def head(request)
-        do_request :head, request do |http, head|
-          http.request head
-        end
-      end
-
-      # Executes an HTTP PUT request.
-      # @see HTTPI.put
-      def put(request)
-        do_request :put, request do |http, put|
-          put.body = request.body
-          http.request put
-        end
-      end
-
-      # Executes an HTTP DELETE request.
-      # @see HTTPI.delete
-      def delete(request)
-        do_request :delete, request do |http, delete|
-          http.request delete
-        end
-      end
-
-    private
-
-      attr_writer :client
-
-      def new_client(request)
-        proxy_url = request.proxy || URI("")
+      def create_client
+        proxy_url = @request.proxy || URI("")
         proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
-        proxy.new request.url.host, request.url.port
+        proxy.new(@request.url.host, @request.url.port)
       end
 
-      def do_request(type, request)
-        setup_client request
-        setup_ssl_auth request.auth.ssl if request.auth.ssl?
-                
-        respond_with(client.start do |http|
-          if request.auth.ntlm?
-            # first request... (exchange secret and auth)
+      def do_request(type)
+        setup_client
+        setup_ssl_auth if @request.auth.ssl?
+
+        respond_with(@client.start do |http|
+          if @request.auth.ntlm?
+            # first yield request is to authenticate (exchange secret and auth)...
             t1 = Net::NTLM::Message::Type1.new()
-            request.headers["Authorization"] = "NTLM #{t1.encode64}" 
-            #request.headers["Keep-Alive"] = "300"
-            #request.headers["Connnection"] = "keep-alive"
-            resp = respond_with(yield http, request_client(:head, request))
+            @request.headers["Authorization"] = "NTLM #{t1.encode64}" 
+            resp = respond_with(yield(http, request_client(:head)))
 
             if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
               msg = $2
               t2 = Net::NTLM::Message.decode64(msg)
-              t3 = t2.response({:user => request.auth.ntlm.username, :password => request.auth.ntlm.password}, {:ntlmv2 => true})
-              request.headers["Authorization"] = "NTLM #{t3.encode64}"
+              t3 = t2.response({:user => @request.auth.ntlm[0], :password => @request.auth.ntlm[1]}, {:ntlmv2 => true})
+              @request.headers["Authorization"] = "NTLM #{t3.encode64}"
             end
+            # second yield request below is made with the authorization.
           end
 
-          # second request (submit auth and get response)
-          yield http, request_client(type, request)
+          yield http, request_client(type)
         end)
       end
 
-      def setup_client(request)
-        client.use_ssl = request.ssl?
-        client.open_timeout = request.open_timeout if request.open_timeout
-        client.read_timeout = request.read_timeout if request.read_timeout
+      def setup_client
+        @client.use_ssl = @request.ssl?
+        @client.open_timeout = @request.open_timeout if @request.open_timeout
+        @client.read_timeout = @request.read_timeout if @request.read_timeout
       end
 
-      def setup_ssl_auth(ssl)
-        client.key = ssl.cert_key
-        client.cert = ssl.cert
-        client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
-        client.verify_mode = ssl.openssl_verify_mode
+      def setup_ssl_auth
+        ssl = @request.auth.ssl
+
+        unless ssl.verify_mode == :none
+          @client.key = ssl.cert_key
+          @client.cert = ssl.cert
+          @client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+        end
+
+        @client.verify_mode = ssl.openssl_verify_mode
+        @client.ssl_version = ssl.ssl_version if ssl.ssl_version
       end
 
-      def request_client(type, request)
+      def request_client(type)
         request_class = case type
           when :get    then Net::HTTP::Get
           when :post   then Net::HTTP::Post
@@ -117,16 +108,19 @@ module HTTPI
           when :delete then Net::HTTP::Delete
         end
 
-        request_client = request_class.new request.url.request_uri, request.headers
-        request_client.basic_auth *request.auth.credentials if request.auth.basic?
+        request_client = request_class.new @request.url.request_uri, @request.headers
+        request_client.basic_auth *@request.auth.credentials if @request.auth.basic?
 
         request_client
       end
 
       def respond_with(response)
         headers = response.to_hash
-        headers.each { |key, value| headers[key] = value[0] }
-        Response.new response.code, headers, response.body
+        headers.each do |key, value|
+          headers[key] = value[0] if value.size <= 1
+        end
+        body = (response.body.kind_of?(Net::ReadAdapter) ? "" : response.body)
+        Response.new response.code, headers, body
       end
 
     end
