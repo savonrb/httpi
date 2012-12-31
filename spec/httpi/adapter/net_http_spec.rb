@@ -59,6 +59,14 @@ describe HTTPI::Adapter::NetHTTP do
       response = HTTPI.get(request, adapter)
       response.body.should eq("basic-auth")
     end
+
+    it "supports ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      response = HTTPI.get(request, adapter)
+      response.body.should eq("ntlm-auth")
+    end
   end
 
   # it does not support digest auth

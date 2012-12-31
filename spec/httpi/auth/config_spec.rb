@@ -132,4 +132,32 @@ describe HTTPI::Auth::Config do
     end
   end
 
+  describe "#ntlm" do
+    it "lets you specify the ntlm auth credentials" do
+      auth.ntlm "username", "password"
+      auth.ntlm.should == ["username", "password"]
+    end
+
+    it "also accepts an Array of credentials" do
+      auth.ntlm ["username", "password"]
+      auth.ntlm.should == ["username", "password"]
+    end
+
+    it "sets the authentication type to :ntlm" do
+      auth.ntlm "username", "password"
+      auth.type.should == :ntlm
+    end
+  end
+
+  describe "#ntlm?" do
+    it "defaults to return false" do
+      auth.should_not be_ntlm
+    end
+
+    it "returns true for HTTP ntlm auth" do
+      auth.ntlm "username", "password"
+      auth.should be_ntlm
+    end
+  end
+
 end

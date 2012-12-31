@@ -104,16 +104,22 @@ describe HTTPI::Adapter::NetHTTP do
     end
   end
 
-  # There is no way (I know of) to spawn an integration test server for NTLM the way 
-  # that the Puma server is spawned above.  So this integration test requires special
-  # setup using the instructions found here: 
-  # https://github.com/coldnebo/httpi/wiki/NTLM-Integration-Test-Plan
+  # The built-in Rack IntegrationServer and specs support a basic simulated NTLM exchange
+  # that does not require anything outside of the normal gem test infrastructure. 
+  #   (see spec/httpi/adapter/net_http_spec.rb: it "supports ntlm authentication"
+  #    and spec/integration/support/application.rb: map "/ntlm-auth")
+  # But since that simulated exchange is based on recorded traffic, you may wish to 
+  # run the following integration test against a real external NTLM server from time to time.
+  #
+  # This test must be specially enabled because it requires an external 
+  # Windows 2012 Server configured according to the instructions found here: 
+  #   https://github.com/coldnebo/httpi/wiki/NTLM-Integration-Test-Plan
   # 
   # Once you have that server running as instructed, you can include this test by setting 
-  # NTLM=on via the command line, e.g.: 
-  # $ NTLM=on rspec
-  # 
-  if ENV["NTLM"]=="on"
+  # NTLM=external via the command line, e.g.: 
+  #   $ NTLM=external bundle exec rspec
+  #
+  if ENV["NTLM"]=="external"
     context "http request via NTLM" do
       it "works with NTLM connections" do
         user = "tester"
@@ -123,6 +129,9 @@ describe HTTPI::Adapter::NetHTTP do
         response = HTTPI.get(request, adapter) 
         expect(response.code).to eq(200)
         response.body.should match(/iis-8\.png/)
+
+        puts "EXTERNAL NTLM INTEGRATION TEST, response body:"
+        puts response.body
       end
     end
   end
