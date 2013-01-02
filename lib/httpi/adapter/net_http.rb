@@ -2,6 +2,7 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
+require 'net/ntlm'
 require 'kconv'
 
 module HTTPI
