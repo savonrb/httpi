@@ -2,6 +2,8 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
+require 'net/ntlm'
+require 'kconv'
 
 module HTTPI
   module Adapter
@@ -60,6 +62,21 @@ module HTTPI
         setup_ssl_auth if @request.auth.ssl?
 
         respond_with(@client.start do |http|
+          if @request.auth.ntlm?
+            # first yield request is to authenticate (exchange secret and auth)...
+            t1 = Net::NTLM::Message::Type1.new()
+            @request.headers["Authorization"] = "NTLM #{t1.encode64}" 
+            resp = respond_with(yield(http, request_client(:head)))
+
+            if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
+              msg = $2
+              t2 = Net::NTLM::Message.decode64(msg)
+              t3 = t2.response({:user => @request.auth.ntlm[0], :password => @request.auth.ntlm[1]}, {:ntlmv2 => true})
+              @request.headers["Authorization"] = "NTLM #{t3.encode64}"
+            end
+            # second yield request below is made with the authorization.
+          end
+
           yield http, request_client(type)
         end)
       end
