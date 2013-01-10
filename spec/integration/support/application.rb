@@ -47,6 +47,26 @@ class IntegrationServer
       }
     end
 
+    map "/ntlm-auth" do
+      run lambda { |env|
+        resp = [401, {"WWW-Authenticate" => "NTLM unexpected testcase"}, []]
+        # head request 1: challenge & response (from actual server)
+        if env["HTTP_AUTHORIZATION"] == "NTLM TlRMTVNTUAABAAAAB4IIAA=="
+          resp = [401, {
+            "Content-Type" => "text/html; charset=us-ascii",
+            "Server" => "Microsoft-HTTPAPI/2.0",
+            "WWW-Authenticate" => "NTLM TlRMTVNTUAACAAAAEAAQADgAAAAFgooCj/AvDazHhQsAAAAAAAAAAGAAYABIAAAABgLwIwAAAA9OAFQATABNAFQARQBTAFQAAgAQAE4AVABMAE0AVABFAFMAVAABABAATgBUAEwATQBUAEUAUwBUAAQAEABuAHQAbABtAHQAZQBzAHQAAwAQAG4AdABsAG0AdABlAHMAdAAHAAgAfzQp037nzQEAAAAA",
+            "Date" => "Mon, 31 Dec 2012 17:46:55 GMT",
+            "Content-Length" => "341"
+            }, []]
+        else env["HTTP_AUTHORIZATION"] =~ /NTLM (.+)/
+          # request 2: serve content 
+          resp = IntegrationServer.respond_with "ntlm-auth" 
+        end
+        resp
+      }
+    end
+
     map "/digest-auth" do
       unprotected_app = lambda { |env|
         IntegrationServer.respond_with "digest-auth"
