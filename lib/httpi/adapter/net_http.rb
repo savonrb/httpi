@@ -65,7 +65,7 @@ module HTTPI
           if @request.auth.ntlm?
             # first yield request is to authenticate (exchange secret and auth)...
             t1 = Net::NTLM::Message::Type1.new()
-            @request.headers["Authorization"] = "NTLM #{t1.encode64}" 
+            @request.headers["Authorization"] = "NTLM #{t1.encode64}"
             resp = respond_with(yield(http, request_client(:head)))
 
             if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/

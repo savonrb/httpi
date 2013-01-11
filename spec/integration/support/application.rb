@@ -60,8 +60,8 @@ class IntegrationServer
             "Content-Length" => "341"
             }, []]
         else env["HTTP_AUTHORIZATION"] =~ /NTLM (.+)/
-          # request 2: serve content 
-          resp = IntegrationServer.respond_with "ntlm-auth" 
+          # request 2: serve content
+          resp = IntegrationServer.respond_with "ntlm-auth"
         end
         resp
       }

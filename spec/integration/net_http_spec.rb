@@ -105,18 +105,18 @@ describe HTTPI::Adapter::NetHTTP do
   end
 
   # The built-in Rack IntegrationServer and specs support a basic simulated NTLM exchange
-  # that does not require anything outside of the normal gem test infrastructure. 
+  # that does not require anything outside of the normal gem test infrastructure.
   #   (see spec/httpi/adapter/net_http_spec.rb: it "supports ntlm authentication"
   #    and spec/integration/support/application.rb: map "/ntlm-auth")
-  # But since that simulated exchange is based on recorded traffic, you may wish to 
+  # But since that simulated exchange is based on recorded traffic, you may wish to
   # run the following integration test against a real external NTLM server from time to time.
   #
-  # This test must be specially enabled because it requires an external 
-  # Windows 2012 Server configured according to the instructions found here: 
+  # This test must be specially enabled because it requires an external
+  # Windows 2012 Server configured according to the instructions found here:
   #   https://github.com/coldnebo/httpi/wiki/NTLM-Integration-Test-Plan
-  # 
-  # Once you have that server running as instructed, you can include this test by setting 
-  # NTLM=external via the command line, e.g.: 
+  #
+  # Once you have that server running as instructed, you can include this test by setting
+  # NTLM=external via the command line, e.g.:
   #   $ NTLM=external bundle exec rspec
   #
   if ENV["NTLM"]=="external"
@@ -126,7 +126,7 @@ describe HTTPI::Adapter::NetHTTP do
         pass = "vReqSoafRe5O"
         request = HTTPI::Request.new("http://ntlmtest/")
         request.auth.ntlm(user,pass)
-        response = HTTPI.get(request, adapter) 
+        response = HTTPI.get(request, adapter)
         expect(response.code).to eq(200)
         response.body.should match(/iis-8\.png/)
 
