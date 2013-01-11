@@ -113,7 +113,7 @@ describe HTTPI::Adapter::NetHTTP do
   #
   # This test must be specially enabled because it requires an external
   # Windows 2012 Server configured according to the instructions found here:
-  #   https://github.com/coldnebo/httpi/wiki/NTLM-Integration-Test-Plan
+  #   https://github.com/savonrb/httpi/wiki/NTLM-Integration-Test-Plan
   #
   # Once you have that server running as instructed, you can include this test by setting
   # NTLM=external via the command line, e.g.:
