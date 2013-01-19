@@ -91,10 +91,12 @@ module HTTPI
         ssl = @request.auth.ssl
 
         unless ssl.verify_mode == :none
-          @client.key = ssl.cert_key
-          @client.cert = ssl.cert
           @client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
         end
+
+        # Send client-side certificate regardless of state of SSL verify mode
+        @client.key = ssl.cert_key
+        @client.cert = ssl.cert
 
         @client.verify_mode = ssl.openssl_verify_mode
         @client.ssl_version = ssl.ssl_version if ssl.ssl_version
