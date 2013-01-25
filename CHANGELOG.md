@@ -1,3 +1,8 @@
+## 2.0.1 (2013-01-25)
+
+* Fix: [#72](https://github.com/savonrb/httpi/pull/72) standardized response
+  headers from all adapters.
+
 ## 2.0.0 (2012-12-16)
 
 * Feature: [#66](https://github.com/savonrb/httpi/pull/66) adds a `query` method
