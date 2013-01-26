@@ -78,9 +78,15 @@ module HTTPI
       headers["Accept-Encoding"] = "gzip,deflate"
     end
 
-    # Sets the cookies from a given +http_response+.
-    def set_cookies(http_response)
-      cookie_store.add *http_response.cookies
+    # Sets the cookies from an object responding to `cookies` (e.g. `HTTPI::Response`)
+    # or an Array of `HTTPI::Cookie` objects.
+    def set_cookies(object_or_array)
+      if object_or_array.respond_to?(:cookies)
+        cookie_store.add *object_or_array.cookies
+      else
+        cookie_store.add *object_or_array
+      end
+
       cookies = cookie_store.fetch
       headers["Cookie"] = cookies if cookies
     end

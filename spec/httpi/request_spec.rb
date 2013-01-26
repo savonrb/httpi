@@ -142,9 +142,24 @@ describe HTTPI::Request do
       request.headers["Cookie"].should include("some-cookie=choc-chip", "second-cookie=oatmeal")
     end
 
+    it "accepts an Array of cookies" do
+      cookies = [
+        new_cookie("some-cookie=choc-chip"),
+        new_cookie("second-cookie=oatmeal")
+      ]
+
+      request.set_cookies(cookies)
+
+      request.headers["Cookie"].should include("some-cookie=choc-chip", "second-cookie=oatmeal")
+    end
+
     it "doesn't do anything if the response contains no cookies" do
       request.set_cookies HTTPI::Response.new(200, {}, "")
       request.headers.should_not include("Cookie")
+    end
+
+    def new_cookie(cookie_string)
+      HTTPI::Cookie.new(cookie_string)
     end
 
     def response_with_cookie(cookie)
