@@ -1,3 +1,8 @@
+## 2.0.2 (2013-01-26)
+
+* Feature: Changed `HTTPI::Request#set_cookies` to accept an Array of `HTTPI::Cookie`
+  objects as well as any object that responds to `cookies` (like an `HTTPI::Response`).
+
 ## 2.0.1 (2013-01-25)
 
 * Fix: [#72](https://github.com/savonrb/httpi/pull/72) standardized response
