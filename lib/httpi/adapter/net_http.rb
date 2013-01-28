@@ -2,8 +2,6 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
-require 'net/ntlm'
-require 'kconv'
 
 module HTTPI
   module Adapter
@@ -69,20 +67,24 @@ module HTTPI
       end
 
       def negotiate_ntlm_auth(http, &requester)
-        # first call request is to authenticate (exchange secret and auth)...
-        ntlm_message_type1 = Net::NTLM::Message::Type1.new
-        @request.headers["Authorization"] = "NTLM #{ntlm_message_type1.encode64}"
+        if defined?(HTTPI::Auth::NTLM)
+          # first call request is to authenticate (exchange secret and auth)...
+          ntlm_message_type1 = Net::NTLM::Message::Type1.new
+          @request.headers["Authorization"] = "NTLM #{ntlm_message_type1.encode64}"
 
-        auth_response = respond_with(requester.call(http, request_client(:head)))
+          auth_response = respond_with(requester.call(http, request_client(:head)))
 
-        if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
-          auth_token = $2
-          ntlm_message = Net::NTLM::Message.decode64(auth_token)
-          ntlm_response = ntlm_message.response({:user => @request.auth.ntlm[0],
-                                                 :password => @request.auth.ntlm[1]},
-                                                 {:ntlmv2 => true})
-          # Finally add header of Authorization
-          @request.headers["Authorization"] = "NTLM #{ntlm_response.encode64}"
+          if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
+            auth_token = $2
+            ntlm_message = Net::NTLM::Message.decode64(auth_token)
+            ntlm_response = ntlm_message.response({:user => @request.auth.ntlm[0],
+                                                   :password => @request.auth.ntlm[1]},
+                                                   {:ntlmv2 => true})
+            # Finally add header of Authorization
+            @request.headers["Authorization"] = "NTLM #{ntlm_response.encode64}"
+          end
+        else
+          raise "You need to require 'httpi/auth/ntlm' to enable ntlm support"
         end
 
         nil
