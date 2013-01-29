@@ -70,12 +70,17 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     it "supports ntlm authentication" do
-      require 'httpi/auth/ntlm'
-      request = HTTPI::Request.new(@server.url + "ntlm-auth")
-      request.auth.ntlm("tester", "vReqSoafRe5O")
+      # Forking was the easy way that i found to avoid
+      # "conflicts" on auth/ntlm spec.
+      pid = fork do
+        require 'httpi/auth/ntlm'
+        request = HTTPI::Request.new(@server.url + "ntlm-auth")
+        request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      response = HTTPI.get(request, adapter)
-      response.body.should eq("ntlm-auth")
+        response = HTTPI.get(request, adapter)
+        response.body.should eq("ntlm-auth")
+      end
+      Process.wait(pid)
     end
 
   end
