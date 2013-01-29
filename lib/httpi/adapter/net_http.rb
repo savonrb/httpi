@@ -2,8 +2,6 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
-require 'net/ntlm'
-require 'kconv'
 
 module HTTPI
   module Adapter
@@ -57,28 +55,39 @@ module HTTPI
         proxy.new(@request.url.host, @request.url.port)
       end
 
-      def do_request(type)
+      def do_request(type, &requester)
         setup_client
         setup_ssl_auth if @request.auth.ssl?
 
-        respond_with(@client.start do |http|
-          if @request.auth.ntlm?
-            # first yield request is to authenticate (exchange secret and auth)...
-            t1 = Net::NTLM::Message::Type1.new()
-            @request.headers["Authorization"] = "NTLM #{t1.encode64}"
-            resp = respond_with(yield(http, request_client(:head)))
+        response = @client.start do |http|
+          negotiate_ntlm_auth(http, &requester) if @request.auth.ntlm?
+          requester.call(http, request_client(type))
+        end
+        respond_with(response)
+      end
 
-            if resp.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
-              msg = $2
-              t2 = Net::NTLM::Message.decode64(msg)
-              t3 = t2.response({:user => @request.auth.ntlm[0], :password => @request.auth.ntlm[1]}, {:ntlmv2 => true})
-              @request.headers["Authorization"] = "NTLM #{t3.encode64}"
-            end
-            # second yield request below is made with the authorization.
+      def negotiate_ntlm_auth(http, &requester)
+        if defined?(HTTPI::Auth::NTLM)
+          # first call request is to authenticate (exchange secret and auth)...
+          ntlm_message_type1 = Net::NTLM::Message::Type1.new
+          @request.headers["Authorization"] = "NTLM #{ntlm_message_type1.encode64}"
+
+          auth_response = respond_with(requester.call(http, request_client(:head)))
+
+          if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
+            auth_token = $2
+            ntlm_message = Net::NTLM::Message.decode64(auth_token)
+            ntlm_response = ntlm_message.response({:user => @request.auth.ntlm[0],
+                                                   :password => @request.auth.ntlm[1]},
+                                                   {:ntlmv2 => true})
+            # Finally add header of Authorization
+            @request.headers["Authorization"] = "NTLM #{ntlm_response.encode64}"
           end
+        else
+          raise "You need to require 'httpi/auth/ntlm' to enable ntlm support"
+        end
 
-          yield http, request_client(type)
-        end)
+        nil
       end
 
       def setup_client

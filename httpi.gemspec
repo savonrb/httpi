@@ -15,12 +15,12 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
 
   s.add_dependency "rack"
-  s.add_dependency "rubyntlm"
 
-  s.add_development_dependency "rake",  "~> 10.0"
-  s.add_development_dependency "rspec", "~> 2.12"
-  s.add_development_dependency "mocha", "~> 0.13"
-  s.add_development_dependency "puma",  ">= 2.0.0.b3"
+  s.add_development_dependency "rubyntlm" # optional NTLM auth
+  s.add_development_dependency "rake",    "~> 10.0"
+  s.add_development_dependency "rspec",   "~> 2.12"
+  s.add_development_dependency "mocha",   "~> 0.13"
+  s.add_development_dependency "puma",    ">= 2.0.0.b3"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"

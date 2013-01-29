@@ -60,13 +60,29 @@ describe HTTPI::Adapter::NetHTTP do
       response.body.should eq("basic-auth")
     end
 
-    it "supports ntlm authentication" do
+    it "raise error if ntlm auth not defined" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      response = HTTPI.get(request, adapter)
-      response.body.should eq("ntlm-auth")
+      expect {
+        HTTPI.get(request, adapter)
+      }.to raise_error(RuntimeError)
     end
+
+    it "supports ntlm authentication" do
+      # Forking was the easy way that i found to avoid
+      # "conflicts" on auth/ntlm spec.
+      pid = fork do
+        require 'httpi/auth/ntlm'
+        request = HTTPI::Request.new(@server.url + "ntlm-auth")
+        request.auth.ntlm("tester", "vReqSoafRe5O")
+
+        response = HTTPI.get(request, adapter)
+        response.body.should eq("ntlm-auth")
+      end
+      Process.wait(pid)
+    end
+
   end
 
   # it does not support digest auth
