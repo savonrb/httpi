@@ -147,13 +147,6 @@ describe HTTPI::Adapter::HTTPClient do
         adapter.request(:get)
       end
 
-      it "does not set client_cert and client_key "do
-        ssl_config.expects(:client_cert=).never
-        ssl_config.expects(:client_key=).never
-
-        adapter.request(:get)
-      end
-
       it "does not raise an exception" do
         expect { adapter.request(:get) }.to_not raise_error
       end
