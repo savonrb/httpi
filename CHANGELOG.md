@@ -4,6 +4,9 @@
 
 * Feature: [#71](https://github.com/savonrb/httpi/pull/71) chunked responses.
 
+* Fix: [#81](https://github.com/savonrb/httpi/issues/81) send SSL client certificate
+  even when `:ssl_verify_mode` is set to `:none`.
+
 * Fix: [#69](https://github.com/savonrb/httpi/issues/69) truncating response headers.
 
 ### 2.0.2 (2013-01-26)
