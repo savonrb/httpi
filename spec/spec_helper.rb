@@ -14,3 +14,4 @@ HTTPI.log = false
 
 require "support/fixture"
 require "support/matchers"
+require "support/clients"
