@@ -1,5 +1,7 @@
 ### Edge
 
+* Feature: [#80](https://github.com/savonrb/httpi/pull/80) NTLM support.
+
 * Feature: [#75](https://github.com/savonrb/httpi/pull/75) Rack adapter.
 
 * Feature: [#71](https://github.com/savonrb/httpi/pull/71) chunked responses.
