@@ -138,7 +138,7 @@ describe HTTPI::Adapter::HTTPClient do
 
       it 'should set the ssl_version if specified' do
         request.auth.ssl.ssl_version = :SSLv3
-        ssl_config.expects(:ssl_version=).with(request.auth.ssl.ssl_version)
+        ssl_config.expects(:ssl_version=).with('SSLv3')
 
         adapter.request(:get)
       end
