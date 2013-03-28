@@ -13,6 +13,7 @@ describe HTTPI do
   let(:client) { HTTPI }
   let(:httpclient) { HTTPI::Adapter.load(:httpclient) }
   let(:net_http) { HTTPI::Adapter.load(:net_http) }
+  let(:net_http_persistent) { HTTPI::Adapter.load(:net_http_persistent) }
 
   before(:all) do
     HTTPI::Adapter::Rack.mount('example.com', IntegrationServer::Application)
@@ -209,11 +210,12 @@ describe HTTPI do
       HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
         unless (adapter == :em_http && RUBY_VERSION =~ /1\.8/) || (adapter == :curb && RUBY_PLATFORM =~ /java/)
           client_class = {
-            :httpclient => lambda { HTTPClient },
-            :curb       => lambda { Curl::Easy },
-            :net_http   => lambda { Net::HTTP },
-            :em_http    => lambda { EventMachine::HttpConnection },
-            :rack       => lambda { Rack::MockRequest }
+            :httpclient          => lambda { HTTPClient },
+            :curb                => lambda { Curl::Easy },
+            :net_http            => lambda { Net::HTTP },
+            :net_http_persistent => lambda { Net::HTTP::Persistent },
+            :em_http             => lambda { EventMachine::HttpConnection },
+            :rack                => lambda { Rack::MockRequest }
           }
 
           context "using #{adapter}" do

@@ -29,17 +29,16 @@ module HTTPI
         unless REQUEST_METHODS.include? method
           raise NotSupportedError, "Net::HTTP does not support custom HTTP methods"
         end
-
         do_request(method) do |http, http_request|
           http_request.body = @request.body
           if @request.on_body then
-            http.request(http_request) do |res|
+            perform(http, http_request) do |res|
               res.read_body do |seg|
                 @request.on_body.call(seg)
               end
             end
           else
-            http.request http_request
+            perform(http, http_request)
           end
         end
       rescue OpenSSL::SSL::SSLError
@@ -51,6 +50,10 @@ module HTTPI
 
       private
 
+      def perform(http, http_request, &block)
+        http.request http_request, &block
+      end
+
       def create_client
         proxy_url = @request.proxy || URI("")
         proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
@@ -58,14 +61,17 @@ module HTTPI
       end
 
       def do_request(type, &requester)
-        setup_client
-        setup_ssl_auth if @request.auth.ssl?
-
+        setup
         response = @client.start do |http|
           negotiate_ntlm_auth(http, &requester) if @request.auth.ntlm?
           requester.call(http, request_client(type))
         end
         respond_with(response)
+      end
+
+      def setup
+        setup_client
+        setup_ssl_auth if @request.auth.ssl?
       end
 
       def negotiate_ntlm_auth(http, &requester)
