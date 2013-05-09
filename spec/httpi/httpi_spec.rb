@@ -213,7 +213,8 @@ describe HTTPI do
             :curb       => lambda { Curl::Easy },
             :net_http   => lambda { Net::HTTP },
             :em_http    => lambda { EventMachine::HttpConnection },
-            :rack       => lambda { Rack::MockRequest }
+            :rack       => lambda { Rack::MockRequest },
+            :excon      => lambda { Excon::Connection }
           }
 
           context "using #{adapter}" do
