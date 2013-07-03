@@ -40,13 +40,13 @@ module HTTPI
         ssl  = @request.auth.ssl
 
         opts = {
-          host: url.host,
-          path: url.path,
-          port: url.port.to_s,
-          query: url.query,
-          scheme: url.scheme,
-          headers: @request.headers,
-          body: @request.body
+          :host => url.host,
+          :path => url.path,
+          :port => url.port.to_s,
+          :query => url.query,
+          :scheme => url.scheme,
+          :headers => @request.headers,
+          :body => @request.body
         }
 
         opts[:user], opts[:password] = *@request.auth.credentials if @request.auth.basic?
