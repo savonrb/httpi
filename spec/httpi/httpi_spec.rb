@@ -13,6 +13,7 @@ describe HTTPI do
   let(:client) { HTTPI }
   let(:httpclient) { HTTPI::Adapter.load(:httpclient) }
   let(:net_http) { HTTPI::Adapter.load(:net_http) }
+  let(:net_http_persistent) { HTTPI::Adapter.load(:net_http_persistent) }
 
   before(:all) do
     HTTPI::Adapter::Rack.mount('example.com', IntegrationServer::Application)
@@ -212,6 +213,7 @@ describe HTTPI do
             :httpclient => lambda { HTTPClient },
             :curb       => lambda { Curl::Easy },
             :net_http   => lambda { Net::HTTP },
+            :net_http_persistent => lambda { Net::HTTP::Persistent },
             :em_http    => lambda { EventMachine::HttpConnection },
             :rack       => lambda { Rack::MockRequest },
             :excon      => lambda { Excon::Connection }

@@ -9,3 +9,4 @@ gem "curb",            "~> 0.8", :require => false, :platforms => :ruby
 gem 'em-http-request',           :require => false, :platforms => [:ruby, :jruby]
 gem 'em-synchrony',              :require => false, :platforms => [:ruby, :jruby]
 gem 'excon',        "~> 0.21.0", :require => false, :platforms => [:ruby, :jruby]
+gem "net-http-persistent", "~> 2.8", :require => false

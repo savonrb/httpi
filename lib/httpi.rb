@@ -7,6 +7,7 @@ require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
 require "httpi/adapter/excon"
 require "httpi/adapter/net_http"
+require "httpi/adapter/net_http_persistent"
 require "httpi/adapter/em_http"
 require "httpi/adapter/rack"
 
