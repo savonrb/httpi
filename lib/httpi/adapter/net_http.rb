@@ -4,6 +4,7 @@ require "httpi/adapter/base"
 require "httpi/response"
 require 'net/ntlm'
 require 'kconv'
+require 'socket'
 
 module HTTPI
   module Adapter
@@ -75,20 +76,53 @@ module HTTPI
       end
 
       def negotiate_ntlm_auth(http, &requester)
-        # first call request is to authenticate (exchange secret and auth)...
+        # first figure out if we should use NTLM or Negotiate
+        nego_auth_response = respond_with(requester.call(http, request_client(:head)))
+        if nego_auth_response.headers['www-authenticate'].include? 'Negotiate'
+          auth_method = 'Negotiate'
+        elsif nego_auth_response.headers['www-authenticate'].include? 'NTLM'
+          auth_method = 'NTLM'
+        else
+          auth_method = 'NTLM'
+          HTTPI.logger.debug 'Server does not support NTLM/Negotiate. Trying NTLM anyway'
+        end
+
+        # initiate a request is to authenticate (exchange secret and auth) using the method determined above...
         ntlm_message_type1 = Net::NTLM::Message::Type1.new
-        @request.headers["Authorization"] = "NTLM #{ntlm_message_type1.encode64}"
+        %w(workstation domain).each do |a|
+          ntlm_message_type1.send("#{a}=",'')
+          ntlm_message_type1.enable(a.to_sym)
+        end
+
+        @request.headers["Authorization"] = "#{auth_method} #{ntlm_message_type1.encode64}"
 
         auth_response = respond_with(requester.call(http, request_client(:head)))
 
+        # build an authentication request based on the token provided by the server
         if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
           auth_token = $2
           ntlm_message = Net::NTLM::Message.decode64(auth_token)
-          ntlm_response = ntlm_message.response({:user => @request.auth.ntlm[0],
-                                                 :password => @request.auth.ntlm[1]},
+          
+          message_builder = {}
+          # copy the username and password from the authorization parameters
+          message_builder[:user] = @request.auth.ntlm[0]
+          message_builder[:password] = @request.auth.ntlm[1]
+
+          # we need to provide a domain in the packet if an only if it was provided by the user in the auth request
+          if @request.auth.ntlm[2]
+            message_builder[:domain] = Net::NTLM.encode_utf16le(@request.auth.ntlm[2].upcase)
+          else
+            message_builder[:domain] = ''
+          end
+
+          # we should also provide the workstation name, currently the rubyntlm provider does not automatically
+          # set the workstation name
+          message_builder[:workstation] = Net::NTLM.encode_utf16le(Socket.gethostname)
+          
+          ntlm_response = ntlm_message.response(message_builder ,
                                                  {:ntlmv2 => true})
           # Finally add header of Authorization
-          @request.headers["Authorization"] = "NTLM #{ntlm_response.encode64}"
+          @request.headers["Authorization"] = "#{auth_method} #{ntlm_response.encode64}"
         end
 
         nil
