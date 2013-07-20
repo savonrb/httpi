@@ -14,6 +14,10 @@
 * Fix: [#88](https://github.com/savonrb/httpi/issues/88) timeout and proxy options
   are now properly passed to the EM-HTTP-Request client.
 
+* Fix: [#90](https://github.com/savonrb/httpi/issues/90) we now raise an error if
+  you try to use Net::HTTP with HTTP digest authentication, because Net::HTTP does
+  not support digest authentication.
+
 ### 2.0.2 (2013-01-26)
 
 * Feature: Changed `HTTPI::Request#set_cookies` to accept an Array of `HTTPI::Cookie`
