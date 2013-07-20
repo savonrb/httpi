@@ -33,7 +33,7 @@ module HTTPI
 
       def initialize(request)
         @request = request
-        @client = EventMachine::HttpRequest.new build_request_url(request.url)
+        @client = EventMachine::HttpRequest.new build_request_url(request.url), connection_options
       end
 
       attr_reader :client
@@ -54,7 +54,6 @@ module HTTPI
 
       def _request
         options = client_options
-        setup_proxy(options) if @request.proxy
         setup_http_auth(options) if @request.auth.http?
 
         if @request.auth.ssl?
@@ -69,18 +68,27 @@ module HTTPI
         respond_with yield(options), start_time
       end
 
+      def connection_options
+        options = {
+          :connect_timeout    => @request.open_timeout,
+          :inactivity_timeout => @request.read_timeout
+        }
+
+        options[:proxy] = proxy_options if @request.proxy
+
+        options
+      end
+
       def client_options
         {
-          :query              => @request.url.query,
-          :connect_timeout    => @request.open_timeout,
-          :inactivity_timeout => @request.read_timeout,
-          :head               => @request.headers.to_hash,
-          :body               => @request.body
+          :query => @request.url.query,
+          :head  => @request.headers.to_hash,
+          :body  => @request.body
         }
       end
 
-      def setup_proxy(options)
-        options[:proxy] = {
+      def proxy_options
+        {
           :host          => @request.proxy.host,
           :port          => @request.proxy.port,
           :authorization => [@request.proxy.user, @request.proxy.password]

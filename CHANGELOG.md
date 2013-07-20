@@ -11,6 +11,9 @@
 
 * Fix: [#69](https://github.com/savonrb/httpi/issues/69) truncating response headers.
 
+* Fix: [#88](https://github.com/savonrb/httpi/issues/88) timeout and proxy options
+  are now properly passed to the EM-HTTP-Request client.
+
 ### 2.0.2 (2013-01-26)
 
 * Feature: Changed `HTTPI::Request#set_cookies` to accept an Array of `HTTPI::Cookie`

@@ -21,7 +21,7 @@ begin
     describe "#request(:get)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:get).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).
+          with(:query => nil, :head => {}, :body => nil).
           returns(http_message)
 
         adapter.request(:get).should match_response(:body => Fixture.xml)
@@ -31,7 +31,7 @@ begin
     describe "#request(:post)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:post).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => Fixture.xml).
+          with(:query => nil, :head => {}, :body => Fixture.xml).
           returns(http_message)
 
         request.body = Fixture.xml
@@ -42,7 +42,7 @@ begin
     describe "#request(:head)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:head).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).
+          with(:query => nil, :head => {}, :body => nil).
           returns(http_message)
 
         adapter.request(:head).should match_response(:body => Fixture.xml)
@@ -52,7 +52,7 @@ begin
     describe "#request(:put)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:put).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => Fixture.xml).
+          with(:query => nil, :head => {}, :body => Fixture.xml).
           returns(http_message)
 
         request.body = Fixture.xml
@@ -63,7 +63,7 @@ begin
     describe "#request(:delete)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:delete).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).
+          with(:query => nil, :head => {}, :body => nil).
           returns(http_message(""))
 
         adapter.request(:delete).should match_response(:body => "")
@@ -73,7 +73,7 @@ begin
     describe "#request(:custom)" do
       it "returns a valid HTTPI::Response" do
         em_http.expects(:custom).
-          with(:query => nil, :connect_timeout => nil, :inactivity_timeout => nil, :head => {}, :body => nil).
+          with(:query => nil, :head => {}, :body => nil).
           returns(http_message(""))
 
         adapter.request(:custom).should match_response(:body => "")
@@ -88,38 +88,48 @@ begin
           request.proxy.password = "password"
         end
 
-        it "sets host, port, and authorization" do
-          em_http.expects(:get).once.
-            with(has_entries(:proxy => { :host => "proxy-host.com", :port => 443, :authorization => %w( username password ) })).
-            returns(http_message)
+        it "sets host, port and authorization" do
+          url = 'http://example.com:80'
 
-          adapter.request(:get)
+          connection_options = {
+            :connect_timeout    => nil,
+            :inactivity_timeout => nil,
+            :proxy              => {
+              :host          => 'proxy-host.com',
+              :port          => 443,
+              :authorization => ['username', 'password']
+            }
+          }
+
+          EventMachine::HttpRequest.expects(:new).with(url, connection_options)
+
+          adapter
         end
       end
 
       describe "connect_timeout" do
-        it "is not set unless specified" do
-          em_http.expects(:get).once.with(has_entries(:connect_timeout => nil)).returns(http_message)
-          adapter.request(:get)
-        end
-
-        it "is set if specified" do
+        it "is passed as a connection option" do
           request.open_timeout = 30
-          em_http.expects(:get).once.with(has_entries(:connect_timeout => 30)).returns(http_message)
-          adapter.request(:get)
+
+          url = 'http://example.com:80'
+          connection_options = { :connect_timeout => 30, :inactivity_timeout => nil }
+
+          EventMachine::HttpRequest.expects(:new).with(url, connection_options)
+
+          adapter
         end
       end
 
       describe "receive_timeout" do
-        it "is not set unless specified" do
-          em_http.expects(:get).once.with(has_entries(:inactivity_timeout => nil)).returns(http_message)
-          adapter.request(:get)
-        end
+        it "is passed as a connection option" do
+          request.read_timeout = 60
 
-        it "is set if specified" do
-          request.read_timeout = 30
-          em_http.expects(:get).once.with(has_entries(:inactivity_timeout => 30)).returns(http_message)
-          adapter.request(:get)
+          url = 'http://example.com:80'
+          connection_options = { :connect_timeout => nil, :inactivity_timeout => 60 }
+
+          EventMachine::HttpRequest.expects(:new).with(url, connection_options)
+
+          adapter
         end
       end
 
