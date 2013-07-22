@@ -52,8 +52,8 @@ module HTTPI
       def setup_ssl_auth
         ssl = @request.auth.ssl
 
-        unless ssl.verify_mode == :none
-          @client.ssl_config.add_trust_ca(ssl.ca_cert_file) if ssl.ca_cert_file
+        if ssl.ca_cert_file && ssl.verify_mode != :none
+          @client.ssl_config.add_trust_ca(ssl.ca_cert_file)
         end
 
         # Send client-side certificate regardless of state of SSL verify mode
