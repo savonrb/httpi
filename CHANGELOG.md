@@ -1,22 +1,25 @@
-### Edge
+### 2.1.0 (UPCOMING)
 
-* Feature: [#80](https://github.com/savonrb/httpi/pull/80) NTLM support.
+* Feature: [#75] Rack adapter.
 
-* Feature: [#75](https://github.com/savonrb/httpi/pull/75) Rack adapter.
+* Feature: [#91] New excon adapter.
 
-* Feature: [#71](https://github.com/savonrb/httpi/pull/71) chunked responses.
+* Feature: [#92] New net-http-persistent adapter.
 
-* Fix: [#81](https://github.com/savonrb/httpi/issues/81) send SSL client certificate
-  even when `:ssl_verify_mode` is set to `:none`.
+* Feature: [#87] NTLM support with full domain and server authentication.
 
-* Fix: [#69](https://github.com/savonrb/httpi/issues/69) truncating response headers.
+* Feature: [#71] chunked responses.
 
-* Fix: [#88](https://github.com/savonrb/httpi/issues/88) timeout and proxy options
-  are now properly passed to the EM-HTTP-Request client.
+* Fix: [#81] send SSL client certificate even when `:ssl_verify_mode` is set to `:none`.
 
-* Fix: [#90](https://github.com/savonrb/httpi/issues/90) we now raise an error if
-  you try to use Net::HTTP with HTTP digest authentication, because Net::HTTP does
-  not support digest authentication.
+* Fix: [#69] truncating response headers.
+
+* Fix: [#88] timeout and proxy options are now properly passed to the EM-HTTP-Request client.
+
+* Fix: [#69] Fixes a problem where the response headers were truncated.
+
+* Fix: [#90] we now raise an error if you try to use Net::HTTP with HTTP digest authentication,
+  because Net::HTTP does not support digest authentication.
 
 ### 2.0.2 (2013-01-26)
 
