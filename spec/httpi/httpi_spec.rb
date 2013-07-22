@@ -1,6 +1,10 @@
 require "spec_helper"
+require "integration/support/server"
 
 # find out why httpi doesn't load these automatically. [dh, 2012-12-15]
+require "excon"
+require "net/http/persistent"
+
 unless RUBY_VERSION < "1.9"
   require "em-synchrony"
   require "em-http-request"
