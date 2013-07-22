@@ -28,6 +28,10 @@ module HTTPI
       end
 
       def setup_client
+        if @request.auth.ntlm?
+          raise NotSupportedError, "Net::HTTP-Persistent does not support NTLM authentication"
+        end
+
         @client.open_timeout = @request.open_timeout if @request.open_timeout
         @client.read_timeout = @request.read_timeout if @request.read_timeout
       end

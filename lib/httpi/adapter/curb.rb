@@ -51,6 +51,11 @@ module HTTPI
 
       def setup_client
         basic_setup
+
+        if @request.auth.ntlm?
+          raise NotSupportedError, "curb does not support NTLM authentication"
+        end
+
         setup_http_auth if @request.auth.http?
         setup_gssnegotiate_auth if @request.auth.gssnegotiate?
         setup_ssl_auth if @request.auth.ssl?

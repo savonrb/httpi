@@ -168,6 +168,15 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
 
+      describe "NTLM authentication" do
+        it "is not supported" do
+          request.auth.ntlm("tester", "vReqSoafRe5O")
+
+          expect { adapter.request(:get) }.
+            to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
+        end
+      end
+
       describe "http_auth_types" do
         it "is set to :basic for HTTP basic auth" do
           request.auth.basic "username", "password"

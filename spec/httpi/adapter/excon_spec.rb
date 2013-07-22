@@ -60,23 +60,12 @@ describe HTTPI::Adapter::Excon do
       response.body.should eq("basic-auth")
     end
 
-    it "supports ntlm authentication" do
-      pending "the excon adapter does not yet support NTLM auth"
-      # when excon was added, net-http.rb and net-http-spec.rb seem to have been a starting point.
-      # however, excon doesn't implement the NTLM protocol.  Without an implementation, this is a 
-      # vanilla GET which results in a 401 as designed.
-
-      # compare httpi/lib/httpi/adapter/net_http.rb, 33, 67, 78 (impl of NTLM protocol on top of net_http)
-      # with httpi/lib/httpi/adapter/excon.rb:25 which is a straight passthru to the excon client without NTLM
-      
-      # For the implementation of the Puma test app /ntlm-auth, see httpi/spec/integration/support/application.rb:50
-      # (this is based on recorded exchange as mentioned in httpi/spec/integration/net_http_spec.rb:107)
-
+    it "does not support ntlm authentication" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      response = HTTPI.get(request, adapter)
-      response.body.should eq("ntlm-auth")
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
   end
 

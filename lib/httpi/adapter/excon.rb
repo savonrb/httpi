@@ -49,6 +49,12 @@ module HTTPI
           :body => @request.body
         }
 
+        if @request.auth.digest?
+          raise NotSupportedError, "excon does not support HTTP digest authentication"
+        elsif @request.auth.ntlm?
+          raise NotSupportedError, "excon does not support NTLM authentication"
+        end
+
         opts[:user], opts[:password] = *@request.auth.credentials if @request.auth.basic?
         opts[:connect_timeout] = @request.open_timeout if @request.open_timeout
         opts[:read_timeout]    = @request.read_timeout if @request.read_timeout
