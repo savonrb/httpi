@@ -161,6 +161,13 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
+  it "does not support NTLM authentication" do
+    request.auth.ntlm("tester", "vReqSoafRe5O")
+
+    expect { adapter.request(:get) }.
+      to raise_error(HTTPI::NotSupportedError, /adapter does not support NTLM authentication/)
+  end
+
   def httpclient_expects(method)
     httpclient.expects(:request).
       with(method, request.url, nil, request.body, request.headers).

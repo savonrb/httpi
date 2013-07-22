@@ -35,6 +35,11 @@ module HTTPI
 
       def setup_client
         basic_setup
+
+        if @request.auth.ntlm?
+          raise NotSupportedError, "HTTPClient adapter does not support NTLM authentication"
+        end
+
         setup_auth if @request.auth.http?
         setup_ssl_auth if @request.auth.ssl?
       end
