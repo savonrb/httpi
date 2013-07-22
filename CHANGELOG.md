@@ -1,4 +1,4 @@
-### 2.1.0 (UPCOMING)
+### 2.1.0 (2013-07-22)
 
 * Feature: [#75](https://github.com/savonrb/httpi/pull/75) Rack adapter.
 
