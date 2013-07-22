@@ -1,5 +1,3 @@
-require 'net/http/persistent'
-
 module HTTPI
   module Adapter
 
@@ -39,6 +37,7 @@ module HTTPI
       def thread_key
         @request.url.host.split(/\W/).reject{|p|p == ""}.join('-')
       end
+
     end
   end
 end
