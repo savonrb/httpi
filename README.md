@@ -1,13 +1,17 @@
-HTTPI [![Build Status](https://secure.travis-ci.org/savonrb/httpi.png)](http://travis-ci.org/savonrb/httpi)
-=====
+# HTTPI
 
-HTTPI provides a common interface for Ruby's HTTP libraries.
+A common interface for Ruby's HTTP libraries.
 
 [Documentation](http://httpirb.com) | [RDoc](http://rubydoc.info/gems/httpi) |
 [Mailing list](https://groups.google.com/forum/#!forum/httpirb)
 
-Installation
-------------
+[![Build Status](https://secure.travis-ci.org/savonrb/httpi.png?branch=master)](http://travis-ci.org/savonrb/httpi)
+[![Gem Version](https://badge.fury.io/rb/httpi.png)](http://badge.fury.io/rb/httpi)
+[![Code Climate](https://codeclimate.com/github/savonrb/httpi.png)](https://codeclimate.com/github/savonrb/httpi)
+[![Coverage Status](https://coveralls.io/repos/savonrb/httpi/badge.png?branch=master)](https://coveralls.io/r/savonrb/httpi)
+
+
+## Installation
 
 HTTPI is available through [Rubygems](http://rubygems.org/gems/httpi) and can be installed via:
 
@@ -15,9 +19,15 @@ HTTPI is available through [Rubygems](http://rubygems.org/gems/httpi) and can be
 $ gem install httpi
 ```
 
+or add it to your Gemfile like this:
 
-Introduction
-------------
+```
+gem 'httpi', '~> 2.1.0'
+```
+
+
+## Usage example
+
 
 ``` ruby
 require "httpi"
@@ -39,7 +49,7 @@ HTTPI.adapter = :httpclient
 HTTPI.request(:custom, request)
 ```
 
-Documentation
--------------
+
+## Documentation
 
 Continue reading at [httpirb.com](http://httpirb.com)
