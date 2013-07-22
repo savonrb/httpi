@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha', '~> 0.13'
   s.add_development_dependency 'puma',  '~> 2.3.2'
 
-  s.files = `git ls-files`.split('\n')
+  s.files = `git ls-files`.split("\n")
   s.require_path = 'lib'
 end
