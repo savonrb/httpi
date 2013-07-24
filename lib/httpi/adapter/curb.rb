@@ -29,7 +29,14 @@ module HTTPI
           arguments << (@request.body || "")
         end
 
-        client.on_body(&@request.on_body) if @request.on_body
+        if @request.on_body
+          client.on_body do |data|
+            @request.on_body.call(data)
+            # curb requires you to return the length of the data read from the block.
+            # It allows you to abort the connection by returning a smaller value
+            data.length
+          end
+        end
 
         do_request { |client| client.send(*arguments) }
       rescue Curl::Err::SSLCACertificateError
