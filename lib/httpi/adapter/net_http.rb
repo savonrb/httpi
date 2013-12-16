@@ -110,14 +110,10 @@ module HTTPI
 
           # we need to provide a domain in the packet if an only if it was provided by the user in the auth request
           if @request.auth.ntlm[2]
-            message_builder[:domain] = Net::NTLM::EncodeUtil.encode_utf16le(@request.auth.ntlm[2].upcase)
+            message_builder[:domain] = @request.auth.ntlm[2].upcase
           else
             message_builder[:domain] = ''
           end
-
-          # we should also provide the workstation name, currently the rubyntlm provider does not automatically
-          # set the workstation name
-          message_builder[:workstation] = Net::NTLM::EncodeUtil.encode_utf16le(Socket.gethostname)
           
           ntlm_response = ntlm_message.response(message_builder ,
                                                  {:ntlmv2 => true})
