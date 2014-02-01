@@ -16,12 +16,12 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency 'rack'
-  s.add_dependency 'rubyntlm',          '~> 0.3.2'
 
-  s.add_development_dependency 'rake',  '~> 10.0'
-  s.add_development_dependency 'rspec', '~> 2.12'
-  s.add_development_dependency 'mocha', '~> 0.13'
-  s.add_development_dependency 'puma',  '~> 2.3.2'
+  s.add_development_dependency 'rubyntlm', '~> 0.3.2'
+  s.add_development_dependency 'rake',     '~> 10.0'
+  s.add_development_dependency 'rspec',    '~> 2.12'
+  s.add_development_dependency 'mocha',    '~> 0.13'
+  s.add_development_dependency 'puma',     '~> 2.3.2'
 
   s.files = `git ls-files`.split("\n")
   s.require_path = 'lib'

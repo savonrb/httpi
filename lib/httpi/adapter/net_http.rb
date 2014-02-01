@@ -2,9 +2,17 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
-require 'net/ntlm'
 require 'kconv'
 require 'socket'
+
+begin
+  require 'net/ntlm'
+  unless Net::NTLM::VERSION::STRING >= '0.3.2'
+    raise ArgumentError('Invalid version of rubyntlm. Please use v0.3.2+')
+  end
+rescue LoadError => e
+  HTTPI.logger.debug('Net::NTLM is not available')
+end
 
 module HTTPI
   module Adapter
@@ -102,7 +110,7 @@ module HTTPI
         if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
           auth_token = $2
           ntlm_message = Net::NTLM::Message.decode64(auth_token)
-          
+
           message_builder = {}
           # copy the username and password from the authorization parameters
           message_builder[:user] = @request.auth.ntlm[0]
@@ -114,7 +122,7 @@ module HTTPI
           else
             message_builder[:domain] = ''
           end
-          
+
           ntlm_response = ntlm_message.response(message_builder ,
                                                  {:ntlmv2 => true})
           # Finally add header of Authorization
