@@ -1,3 +1,7 @@
+### 2.2.0 (edge)
+
+* Feature: [#108](https://github.com/savonrb/httpi/pull/108) Make `rubyntlm` gem, an optional dependency.
+
 ### 2.1.0 (2013-07-22)
 
 * Feature: [#75](https://github.com/savonrb/httpi/pull/75) Rack adapter.

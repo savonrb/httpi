@@ -2,9 +2,17 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
-require 'net/ntlm'
 require 'kconv'
 require 'socket'
+
+begin
+  require 'net/ntlm'
+  unless Net::NTLM::VERSION::STRING >= '0.3.2'
+    raise ArgumentError('Invalid version of rubyntlm. Please use v0.3.2+.')
+  end
+rescue LoadError => e
+  HTTPI.logger.debug('Net::NTLM is not available. Install via gem install rubyntlm.')
+end
 
 module HTTPI
   module Adapter
@@ -76,6 +84,10 @@ module HTTPI
       end
 
       def negotiate_ntlm_auth(http, &requester)
+        unless Net.const_defined?(:NTLM)
+          HTTPI.logger.fatal('Cannot negotiate ntlm auth if net/ntlm is not present. Perhaps the net/ntlm gem is not installed?')
+        end
+
         # first figure out if we should use NTLM or Negotiate
         nego_auth_response = respond_with(requester.call(http, request_client(:head)))
         if nego_auth_response.headers['www-authenticate'].include? 'Negotiate'
@@ -102,7 +114,7 @@ module HTTPI
         if auth_response.headers["WWW-Authenticate"] =~ /(NTLM|Negotiate) (.+)/
           auth_token = $2
           ntlm_message = Net::NTLM::Message.decode64(auth_token)
-          
+
           message_builder = {}
           # copy the username and password from the authorization parameters
           message_builder[:user] = @request.auth.ntlm[0]
@@ -114,7 +126,7 @@ module HTTPI
           else
             message_builder[:domain] = ''
           end
-          
+
           ntlm_response = ntlm_message.response(message_builder ,
                                                  {:ntlmv2 => true})
           # Finally add header of Authorization
