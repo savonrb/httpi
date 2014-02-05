@@ -84,6 +84,10 @@ module HTTPI
       end
 
       def negotiate_ntlm_auth(http, &requester)
+        unless Net.const_defined?(:NTLM)
+          HTTPI.logger.fatal('Cannot negotiate ntlm auth if net/ntlm is not present. Perhaps the net/ntlm gem is not installed?')
+        end
+
         # first figure out if we should use NTLM or Negotiate
         nego_auth_response = respond_with(requester.call(http, request_client(:head)))
         if nego_auth_response.headers['www-authenticate'].include? 'Negotiate'

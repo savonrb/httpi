@@ -75,6 +75,17 @@ describe HTTPI::Adapter::NetHTTP do
       response = HTTPI.get(request, adapter)
       response.body.should eq("ntlm-auth")
     end
+
+    it 'fatal logs when net/ntlm is not available, but ntlm authentication was requested' do
+      Net.expects(:const_defined?).with(:NTLM).returns false
+
+      request = HTTPI::Request.new(@server.url + 'ntlm-auth')
+      request.auth.ntlm("testing", "failures")
+      HTTPI.logger.expects(:fatal)
+
+      response = HTTPI.get(request, adapter)
+      response.body.should eq("ntlm-auth")
+    end
   end
 
   # it does not support digest auth
