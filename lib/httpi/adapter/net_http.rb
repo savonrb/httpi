@@ -80,7 +80,7 @@ module HTTPI
 
       def setup
         setup_client
-        setup_ssl_auth if @request.auth.ssl?
+        setup_ssl_auth if @request.auth.ssl? || @request.ssl?
       end
 
       def negotiate_ntlm_auth(http, &requester)
@@ -145,15 +145,18 @@ module HTTPI
       def setup_ssl_auth
         ssl = @request.auth.ssl
 
-        unless ssl.verify_mode == :none
-          @client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+        if @request.auth.ssl?
+          unless ssl.verify_mode == :none
+            @client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+          end
+
+          # Send client-side certificate regardless of state of SSL verify mode
+          @client.key = ssl.cert_key
+          @client.cert = ssl.cert
+
+          @client.verify_mode = ssl.openssl_verify_mode
         end
 
-        # Send client-side certificate regardless of state of SSL verify mode
-        @client.key = ssl.cert_key
-        @client.cert = ssl.cert
-
-        @client.verify_mode = ssl.openssl_verify_mode
         @client.ssl_version = ssl.ssl_version if ssl.ssl_version
       end
 

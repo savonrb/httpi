@@ -41,7 +41,7 @@ module HTTPI
         end
 
         setup_auth if @request.auth.http?
-        setup_ssl_auth if @request.auth.ssl?
+        setup_ssl_auth if @request.auth.ssl? || @request.ssl?
       end
 
       def basic_setup
@@ -57,15 +57,18 @@ module HTTPI
       def setup_ssl_auth
         ssl = @request.auth.ssl
 
-        if ssl.ca_cert_file && ssl.verify_mode != :none
-          @client.ssl_config.add_trust_ca(ssl.ca_cert_file)
+        if @request.auth.ssl?
+          if ssl.ca_cert_file && ssl.verify_mode != :none
+            @client.ssl_config.add_trust_ca(ssl.ca_cert_file)
+          end
+
+          # Send client-side certificate regardless of state of SSL verify mode
+          @client.ssl_config.client_cert = ssl.cert
+          @client.ssl_config.client_key = ssl.cert_key
+
+          @client.ssl_config.verify_mode = ssl.openssl_verify_mode
         end
 
-        # Send client-side certificate regardless of state of SSL verify mode
-        @client.ssl_config.client_cert = ssl.cert
-        @client.ssl_config.client_key = ssl.cert_key
-
-        @client.ssl_config.verify_mode = ssl.openssl_verify_mode
         @client.ssl_config.ssl_version = ssl.ssl_version.to_s if ssl.ssl_version
       end
 

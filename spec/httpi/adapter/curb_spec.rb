@@ -218,6 +218,42 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
 
+      context "(for SSL without auth)" do
+        let(:request) do
+          request = HTTPI::Request.new("http://example.com")
+          request.ssl = true
+          request
+        end
+
+        context 'sets ssl_version' do
+          it 'defaults to nil when no ssl_version is specified' do
+            curb.expects(:ssl_version=).with(nil)
+            adapter.request(:get)
+          end
+
+          it 'to 1 when ssl_version is specified as TLSv1' do
+            request.auth.ssl.ssl_version = :TLSv1
+            curb.expects(:ssl_version=).with(1)
+
+            adapter.request(:get)
+          end
+
+          it 'to 2 when ssl_version is specified as SSLv2' do
+            request.auth.ssl.ssl_version = :SSLv2
+            curb.expects(:ssl_version=).with(2)
+
+            adapter.request(:get)
+          end
+
+          it 'to 3 when ssl_version is specified as SSLv3' do
+            request.auth.ssl.ssl_version = :SSLv3
+            curb.expects(:ssl_version=).with(3)
+
+            adapter.request(:get)
+          end
+        end
+      end
+
       context "(for SSL client auth)" do
         let(:request) do
           request = HTTPI::Request.new("http://example.com")
@@ -260,34 +296,6 @@ unless RUBY_PLATFORM =~ /java/
           curb.expects(:cacert=).with(request.auth.ssl.ca_cert_file)
 
           adapter.request(:get)
-        end
-
-        context 'sets ssl_version' do
-          it 'defaults to nil when no ssl_version is specified' do
-            curb.expects(:ssl_version=).with(nil)
-            adapter.request(:get)
-          end
-
-          it 'to 1 when ssl_version is specified as TLSv1' do
-            request.auth.ssl.ssl_version = :TLSv1
-            curb.expects(:ssl_version=).with(1)
-
-            adapter.request(:get)
-          end
-
-          it 'to 2 when ssl_version is specified as SSLv2' do
-            request.auth.ssl.ssl_version = :SSLv2
-            curb.expects(:ssl_version=).with(2)
-
-            adapter.request(:get)
-          end
-
-          it 'to 3 when ssl_version is specified as SSLv3' do
-            request.auth.ssl.ssl_version = :SSLv3
-            curb.expects(:ssl_version=).with(3)
-
-            adapter.request(:get)
-          end
         end
       end
     end

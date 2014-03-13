@@ -65,7 +65,7 @@ module HTTPI
 
         setup_http_auth if @request.auth.http?
         setup_gssnegotiate_auth if @request.auth.gssnegotiate?
-        setup_ssl_auth if @request.auth.ssl?
+        setup_ssl_auth if @request.auth.ssl? || @request.ssl?
       end
 
       def basic_setup
@@ -93,16 +93,19 @@ module HTTPI
       def setup_ssl_auth
         ssl = @request.auth.ssl
 
-        unless ssl.verify_mode == :none
-          @client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
-          @client.certtype = ssl.cert_type.to_s.upcase
+        if @request.auth.ssl?
+          unless ssl.verify_mode == :none
+            @client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
+            @client.certtype = ssl.cert_type.to_s.upcase
+          end
+
+          # Send client-side certificate regardless of state of SSL verify mode
+          @client.cert_key = ssl.cert_key_file
+          @client.cert = ssl.cert_file
+
+          @client.ssl_verify_peer = ssl.verify_mode == :peer
         end
-
-        # Send client-side certificate regardless of state of SSL verify mode
-        @client.cert_key = ssl.cert_key_file
-        @client.cert = ssl.cert_file
-
-        @client.ssl_verify_peer = ssl.verify_mode == :peer
+        
         @client.ssl_version = case ssl.ssl_version
           when :TLSv1 then 1
           when :SSLv2 then 2

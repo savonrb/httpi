@@ -107,6 +107,19 @@ describe HTTPI::Adapter::HTTPClient do
       end
     end
 
+    context "(for SSL without auth)" do
+      before do
+        request.ssl = true
+      end
+
+      it 'should set the ssl_version if specified' do
+        request.auth.ssl.ssl_version = :SSLv3
+        ssl_config.expects(:ssl_version=).with('SSLv3')
+
+        adapter.request(:get)
+      end
+    end
+
     context "(for SSL client auth)" do
       before do
         request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
