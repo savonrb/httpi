@@ -1,6 +1,8 @@
 ### 2.2.0 (edge)
 
-* Feature: [#108](https://github.com/savonrb/httpi/pull/108) Make `rubyntlm` gem, an optional dependency.
+* Fix: [#111](https://github.com/savonrb/httpi/pull/111) Check rubyntlm version in a 0.4.0+ compatible way. Thanks to [Carl Zulauf](https://github.com/carlzulauf).
+* Fix: [#109](https://github.com/savonrb/httpi/pull/109) SSL version is set regardless of SSL auth settings. Thanks to [Mike Campbell](https://github.com/mikecmpbll).
+* Feature: [#108](https://github.com/savonrb/httpi/pull/108) Make `rubyntlm` gem, an optional dependency. Thanks to [Tim Jarratt](https://github.com/tjarratt).
 
 ### 2.1.0 (2013-07-22)
 
