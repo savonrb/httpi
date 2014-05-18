@@ -8,36 +8,36 @@ describe HTTPI::Response do
 
     describe "#error?" do
       it "returns false" do
-        response.should_not be_an_error
+        expect(response).not_to be_an_error
       end
     end
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        response.headers.should == {}
+        expect(response.headers).to eq({})
       end
     end
 
     describe "#code" do
       it "returns the HTTP response code" do
-        response.code.should == 200
+        expect(response.code).to eq(200)
       end
 
       it "always returns an Integer" do
         response = HTTPI::Response.new "200", {}, ""
-        response.code.should == 200
+        expect(response.code).to eq(200)
       end
     end
 
     describe "#multipart" do
       it "returns false" do
-        response.should_not be_multipart
+        expect(response).not_to be_multipart
       end
     end
 
     describe "#cookies" do
       it "returns an empty list" do
-        response.cookies.should == []
+        expect(response.cookies).to eq([])
       end
     end
   end
@@ -48,7 +48,7 @@ describe HTTPI::Response do
     describe "#cookies" do
       it "returns a list of cookies" do
         cookie = response.cookies.first
-        cookie.should be_a(HTTPI::Cookie)
+        expect(cookie).to be_a(HTTPI::Cookie)
       end
     end
   end
@@ -58,7 +58,7 @@ describe HTTPI::Response do
 
     describe "#body" do
       it "returns an empty String" do
-        response.body.should == ""
+        expect(response.body).to eq("")
       end
     end
   end
@@ -68,7 +68,7 @@ describe HTTPI::Response do
 
     describe "#multipart" do
       it "returns true" do
-        response.should be_multipart
+        expect(response).to be_multipart
       end
     end
   end
@@ -78,7 +78,7 @@ describe HTTPI::Response do
 
     describe "#error?" do
       it "returns true" do
-        response.should be_an_error
+        expect(response).to be_an_error
       end
     end
   end
@@ -88,13 +88,13 @@ describe HTTPI::Response do
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        response.headers.should == { "Content-Encoding" => "gzip" }
+        expect(response.headers).to eq({ "Content-Encoding" => "gzip" })
       end
     end
 
     describe "#body" do
       it "returns the (gzip decoded) HTTP response body" do
-        response.body.should == Fixture.xml
+        expect(response.body).to eq(Fixture.xml)
       end
 
       it "bubbles Zlib errors" do
@@ -106,7 +106,7 @@ describe HTTPI::Response do
 
     describe "#raw_body" do
       it "returns the raw HTML response body" do
-        response.raw_body.should == Fixture.gzip
+        expect(response.raw_body).to eq(Fixture.gzip)
       end
     end
   end
@@ -116,19 +116,19 @@ describe HTTPI::Response do
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        response.headers.should == { "Content-Type" => "application/dime" }
+        expect(response.headers).to eq({ "Content-Type" => "application/dime" })
       end
     end
 
     describe "#body" do
       it "returns the (dime decoded) HTTP response body" do
-        response.body.should == Fixture.xml_dime
+        expect(response.body).to eq(Fixture.xml_dime)
       end
     end
 
     describe "#raw_body" do
       it "returns the raw HTML response body" do
-        response.raw_body.should == Fixture.dime
+        expect(response.raw_body).to eq(Fixture.dime)
       end
     end
 

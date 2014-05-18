@@ -10,26 +10,26 @@ describe HTTPI::Cookie do
       headers = { "Set-Cookie" => "token=strawberry; Path=/; HttpOnly" }
       cookies = HTTPI::Cookie.list_from_headers(headers)
 
-      cookies.should have(1).item
-      cookies.first.should be_a(HTTPI::Cookie)
+      expect(cookies.size).to eq(1)
+      expect(cookies.first).to be_a(HTTPI::Cookie)
     end
 
     it "handles multiple cookies" do
       headers = { "Set-Cookie" => ["user=chucknorris; Path=/; HttpOnly", "token=strawberry; Path=/; HttpOnly"] }
       cookies = HTTPI::Cookie.list_from_headers(headers)
-      cookies.should have(2).items
+      expect(cookies.size).to eq(2)
     end
   end
 
   describe "#name" do
     it "returns the name of the cookie" do
-      cookie.name.should == "token"
+      expect(cookie.name).to eq("token")
     end
   end
 
   describe "#name_and_value" do
     it "returns the name and value of the cookie" do
-      cookie.name_and_value.should == "token=choc-choc-chip"
+      expect(cookie.name_and_value).to eq("token=choc-choc-chip")
     end
   end
 

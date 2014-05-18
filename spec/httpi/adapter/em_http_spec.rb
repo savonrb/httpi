@@ -24,7 +24,7 @@ begin
           with(:query => nil, :head => {}, :body => nil).
           returns(http_message)
 
-        adapter.request(:get).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:get)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -35,7 +35,7 @@ begin
           returns(http_message)
 
         request.body = Fixture.xml
-        adapter.request(:post).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:post)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -45,7 +45,7 @@ begin
           with(:query => nil, :head => {}, :body => nil).
           returns(http_message)
 
-        adapter.request(:head).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:head)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -56,7 +56,7 @@ begin
           returns(http_message)
 
         request.body = Fixture.xml
-        adapter.request(:put).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:put)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -66,7 +66,7 @@ begin
           with(:query => nil, :head => {}, :body => nil).
           returns(http_message(""))
 
-        adapter.request(:delete).should match_response(:body => "")
+        expect(adapter.request(:delete)).to match_response(:body => "")
       end
     end
 
@@ -76,7 +76,7 @@ begin
           with(:query => nil, :head => {}, :body => nil).
           returns(http_message(""))
 
-        adapter.request(:custom).should match_response(:body => "")
+        expect(adapter.request(:custom)).to match_response(:body => "")
       end
     end
 

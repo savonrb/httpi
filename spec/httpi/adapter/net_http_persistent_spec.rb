@@ -19,37 +19,37 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       request.headers["X-Header"] = "HTTPI"
 
       response = HTTPI.get(request, adapter)
-      response.body.should include("HTTPI")
+      expect(response.body).to include("HTTPI")
     end
 
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
-      response.body.should eq("get")
-      response.headers["Content-Type"].should eq("text/plain")
+      expect(response.body).to eq("get")
+      expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
     it "executes POST requests" do
       response = HTTPI.post(@server.url, "<some>xml</some>", adapter)
-      response.body.should eq("post")
-      response.headers["Content-Type"].should eq("text/plain")
+      expect(response.body).to eq("post")
+      expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
     it "executes HEAD requests" do
       response = HTTPI.head(@server.url, adapter)
-      response.code.should == 200
-      response.headers["Content-Type"].should eq("text/plain")
+      expect(response.code).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
     it "executes PUT requests" do
       response = HTTPI.put(@server.url, "<some>xml</some>", adapter)
-      response.body.should eq("put")
-      response.headers["Content-Type"].should eq("text/plain")
+      expect(response.body).to eq("put")
+      expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
     it "executes DELETE requests" do
       response = HTTPI.delete(@server.url, adapter)
-      response.body.should eq("delete")
-      response.headers["Content-Type"].should eq("text/plain")
+      expect(response.body).to eq("delete")
+      expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
     it "supports basic authentication" do
@@ -57,7 +57,7 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       request.auth.basic("admin", "secret")
 
       response = HTTPI.get(request, adapter)
-      response.body.should eq("basic-auth")
+      expect(response.body).to eq("basic-auth")
     end
 
     it "does not support ntlm authentication" do

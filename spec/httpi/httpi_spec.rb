@@ -249,19 +249,19 @@ describe HTTPI do
 
     describe ".log" do
       it "defaults to true" do
-        HTTPI.log?.should be_true
+        expect(HTTPI.log?).to be_true
       end
     end
 
     describe ".logger" do
       it "defaults to Logger writing to STDOUT" do
-        HTTPI.logger.should be_a(Logger)
+        expect(HTTPI.logger).to be_a(Logger)
       end
     end
 
     describe ".log_level" do
       it "defaults to :debug" do
-        HTTPI.log_level.should == :debug
+        expect(HTTPI.log_level).to eq(:debug)
       end
     end
 

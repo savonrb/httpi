@@ -12,8 +12,8 @@ describe HTTPI::Adapter do
 
       adapter.register(name, klass, deps)
 
-      HTTPI::Adapter::ADAPTERS[:custom].should include(:class => klass, :deps => deps)
-      HTTPI::Adapter::ADAPTER_CLASS_MAP[klass].should be(name)
+      expect(HTTPI::Adapter::ADAPTERS[:custom]).to include(:class => klass, :deps => deps)
+      expect(HTTPI::Adapter::ADAPTER_CLASS_MAP[klass]).to be(name)
     end
   end
 
@@ -25,14 +25,14 @@ describe HTTPI::Adapter do
     end
 
     it "sets the adapter to use" do
-      adapter.use.should_not == :net_http
+      expect(adapter.use).not_to eq(:net_http)
 
       adapter.use = :net_http
-      adapter.use.should == :net_http
+      expect(adapter.use).to eq(:net_http)
     end
 
     it "defaults to use the HTTPClient adapter" do
-      adapter.use.should == :httpclient
+      expect(adapter.use).to eq(:httpclient)
     end
 
     it "loads the adapter's client library" do
@@ -48,13 +48,13 @@ describe HTTPI::Adapter do
   describe ".load" do
     context "called with a valid adapter" do
       it "returns the adapter's name and class" do
-        adapter.load(:net_http).should == HTTPI::Adapter::NetHTTP
+        expect(adapter.load(:net_http)).to eq(HTTPI::Adapter::NetHTTP)
       end
     end
 
     context "called with nil" do
       it "returns the default adapter's name and class" do
-        adapter.load(nil).should == HTTPI::Adapter::HTTPClient
+        expect(adapter.load(nil)).to eq(HTTPI::Adapter::HTTPClient)
       end
     end
 
