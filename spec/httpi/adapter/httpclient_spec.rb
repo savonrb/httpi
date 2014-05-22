@@ -13,7 +13,7 @@ describe HTTPI::Adapter::HTTPClient do
   describe "#request(:get)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:get)
-      adapter.request(:get).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:get)).to match_response(:body => Fixture.xml)
     end
   end
 
@@ -22,14 +22,14 @@ describe HTTPI::Adapter::HTTPClient do
       request.body = Fixture.xml
       httpclient_expects(:post)
 
-      adapter.request(:post).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:post)).to match_response(:body => Fixture.xml)
     end
   end
 
   describe "#request(:head)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:head)
-      adapter.request(:head).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:head)).to match_response(:body => Fixture.xml)
     end
   end
 
@@ -38,21 +38,21 @@ describe HTTPI::Adapter::HTTPClient do
       request.body = Fixture.xml
       httpclient_expects(:put)
 
-      adapter.request(:put).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:put)).to match_response(:body => Fixture.xml)
     end
   end
 
   describe "#request(:delete)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:delete)
-      adapter.request(:delete).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:delete)).to match_response(:body => Fixture.xml)
     end
   end
 
   describe "#request(:custom)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:custom)
-      adapter.request(:custom).should match_response(:body => Fixture.xml)
+      expect(adapter.request(:custom)).to match_response(:body => Fixture.xml)
     end
   end
 

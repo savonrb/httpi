@@ -21,7 +21,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.request(:get).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:get)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -34,7 +34,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.request(:post).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:post)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -56,7 +56,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.request(:head).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:head)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -69,7 +69,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.request(:put).should match_response(:body => Fixture.xml)
+        expect(adapter.request(:put)).to match_response(:body => Fixture.xml)
       end
     end
 
@@ -91,7 +91,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        adapter.request(:delete).should match_response(:body => "")
+        expect(adapter.request(:delete)).to match_response(:body => "")
       end
     end
 

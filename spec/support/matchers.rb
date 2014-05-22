@@ -3,10 +3,10 @@ RSpec::Matchers.define :match_response do |options|
   response = defaults.merge options
 
   match do |actual|
-    actual.should be_an(HTTPI::Response)
-    actual.code.should == response[:code]
-    downcase(actual.headers).should == downcase(response[:headers])
-    actual.body.should == response[:body]
+    expect(actual).to be_an(HTTPI::Response)
+    expect(actual.code).to eq(response[:code])
+    expect(downcase(actual.headers)).to eq(downcase(response[:headers]))
+    expect(actual.body).to eq(response[:body])
   end
 
   def downcase(hash)
