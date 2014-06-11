@@ -1,4 +1,8 @@
-### 2.2.0 (edge)
+### 2.2.1 (2014-06-11)
+
+* Fix: [#116](https://github.com/savonrb/httpi/pull/116) Fix NoMethodError when not using NTLM.
+
+### 2.2.0 (2014-05-22)
 
 * Fix: [#111](https://github.com/savonrb/httpi/pull/111) Check rubyntlm version in a 0.4.0+ compatible way. Thanks to [Carl Zulauf](https://github.com/carlzulauf).
 * Fix: [#109](https://github.com/savonrb/httpi/pull/109) SSL version is set regardless of SSL auth settings. Thanks to [Mike Campbell](https://github.com/mikecmpbll).
