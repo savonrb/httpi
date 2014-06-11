@@ -195,9 +195,23 @@ describe HTTPI do
   end
 
   describe ".request" do
+    let(:request) { HTTPI::Request.new('http://example.com') }
+
     it "allows custom HTTP methods" do
-      request = HTTPI::Request.new("http://example.com")
       httpclient.any_instance.expects(:request).with(:custom)
+
+      client.request(:custom, request, :httpclient)
+    end
+
+    it 'follows redirects' do
+      request.follow_redirect = true
+      redirect_location = 'http://foo.bar'
+
+      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
+      response = HTTPI::Response.new(200, {}, 'success')
+
+      httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
+      request.expects(:url=).with(redirect_location)
 
       client.request(:custom, request, :httpclient)
     end
@@ -249,7 +263,7 @@ describe HTTPI do
 
     describe ".log" do
       it "defaults to true" do
-        expect(HTTPI.log?).to be_true
+        expect(HTTPI.log?).to be_truthy
       end
     end
 

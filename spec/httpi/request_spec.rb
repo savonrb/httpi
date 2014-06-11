@@ -206,11 +206,22 @@ describe HTTPI::Request do
   describe "#auth?" do
     it "returns true when auth credentials are specified" do
       request.auth.basic "username", "password"
-      expect(request.auth?).to be_true
+      expect(request.auth?).to be_truthy
     end
 
     it "returns false otherwise" do
-      expect(request.auth?).to be_false
+      expect(request.auth?).to be_falsey
+    end
+  end
+
+  describe '#follow_redirect?' do
+    it 'returns true when follow_redirect is set to true' do
+      request.follow_redirect = true
+      expect(request.follow_redirect?).to be_truthy
+    end
+
+    it 'returns false by default' do
+      expect(request.follow_redirect?).to be_falsey
     end
   end
 
