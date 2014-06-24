@@ -92,9 +92,9 @@ module HTTPI
       # Sets the +OpenSSL+ ca certificate.
       attr_writer :ca_cert
 
-      # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +cert_key_file+.
+      # Returns an <tt>OpenSSL::PKey</tt> subclass (usually <tt>OpenSSL::PKey::RSA</tt>) for the +cert_key_file+.
       def cert_key
-        @cert_key ||= (OpenSSL::PKey::RSA.new(File.read(cert_key_file), cert_key_password) if cert_key_file)
+        @cert_key ||= (OpenSSL::PKey.read(File.read(cert_key_file), cert_key_password) if cert_key_file)
       end
 
       # Sets the +OpenSSL+ certificate key.
