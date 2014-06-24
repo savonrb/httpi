@@ -1,3 +1,7 @@
+### 2.2.2 (edge)
+
+* Feature: [#118](https://github.com/savonrb/httpi/pull/118) Support for other SSL certificate keys, not only RSA. Thanks to [Novikov Andrey](https://github.com/Envek).
+
 ### 2.2.1 (2014-06-11)
 
 * Fix: [#116](https://github.com/savonrb/httpi/pull/116) Fix NoMethodError when not using NTLM.
