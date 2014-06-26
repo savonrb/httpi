@@ -11,7 +11,7 @@ module HTTPI
   class Request
 
     # Available attribute writers.
-    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout]
+    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :follow_redirect]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
@@ -121,6 +121,13 @@ module HTTPI
     # Expects a Hash of +args+ to assign.
     def mass_assign(args)
       ATTRIBUTES.each { |key| send("#{key}=", args[key]) if args[key] }
+    end
+
+    attr_writer :follow_redirect
+
+    # Returns whether or not redirects should be followed - defaults to false if not set.
+    def follow_redirect?
+      @follow_redirect ||= false
     end
 
     private
