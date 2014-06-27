@@ -1,4 +1,13 @@
-### 2.2.2 (edge)
+### 2.2.4 (edge)
+
+* Fix: [#120](https://github.com/savonrb/httpi/pull/120) fixed an unintended crash when an incompatible version of NTLM was required. Thanks to [hubrix](https://github.com/hubrix)
+
+### 2.2.3
+
+* Feature: [#117](https://github.com/savonrb/httpi/pull/117) Follow 302 redirects
+* Feature: [#118](https://github.com/savonrb/httpi/pull/118) Support for SSL certificate private keys in formats other than RSA
+
+### 2.2.2
 
 * Feature: [#118](https://github.com/savonrb/httpi/pull/118) Support for other SSL certificate keys, not only RSA. Thanks to [Novikov Andrey](https://github.com/Envek).
 
