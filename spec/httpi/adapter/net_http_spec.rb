@@ -76,15 +76,14 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.body).to eq("ntlm-auth")
     end
 
-    it 'fatal logs when net/ntlm is not available, but ntlm authentication was requested' do
+    it 'does not support ntlm authentication when Net::NTLM is not available' do
       Net.expects(:const_defined?).with(:NTLM).returns false
 
       request = HTTPI::Request.new(@server.url + 'ntlm-auth')
       request.auth.ntlm("testing", "failures")
-      HTTPI.logger.expects(:fatal)
 
-      response = HTTPI.get(request, adapter)
-      expect(response.body).to eq("ntlm-auth")
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /Net::NTLM is not available/)
     end
   end
 

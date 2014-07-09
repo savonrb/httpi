@@ -11,8 +11,7 @@ begin
   unless Net::NTLM::VERSION::STRING >= '0.3.2'
     raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
   end
-rescue LoadError => e
-  HTTPI.logger.debug('Net::NTLM is not available. Install via gem install rubyntlm.')
+rescue LoadError
 end
 
 module HTTPI
@@ -86,7 +85,7 @@ module HTTPI
 
       def negotiate_ntlm_auth(http, &requester)
         unless Net.const_defined?(:NTLM)
-          HTTPI.logger.fatal('Cannot negotiate ntlm auth if net/ntlm is not present. Perhaps the net/ntlm gem is not installed?')
+          raise NotSupportedError, 'Net::NTLM is not available. Install via gem install rubyntlm.'
         end
 
         # first figure out if we should use NTLM or Negotiate
