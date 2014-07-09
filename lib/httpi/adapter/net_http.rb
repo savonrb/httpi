@@ -11,8 +11,7 @@ begin
   unless Net::NTLM::VERSION::STRING >= '0.3.2'
     raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
   end
-rescue LoadError => e
-  HTTPI.logger.debug('Net::NTLM is not available. Install via gem install rubyntlm.')
+rescue LoadError
 end
 
 module HTTPI
