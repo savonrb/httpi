@@ -98,6 +98,9 @@ module HTTPI
   end
 
   class << self
+    # Defines if the query string uses flat or nested queries
+    attr_accessor :use_nested_query
+    @use_nested_query = false
 
     # Executes an HTTP GET request.
     def get(request, adapter = nil, &block)

@@ -47,28 +47,93 @@ describe HTTPI::Request do
     it "raises an ArgumentError if url not respond to query" do
       expect { request.query = "q=query" }.to raise_error(ArgumentError)
     end
-    it "lets you specify query parameter as String" do
-      request.url = "http://example.com"
-      request.query = "q=query"
-      expect(request.url.to_s).to eq("http://example.com?q=query")
-    end
-    it "lets you specify query parameter as Hash" do
-      request.url = "http://example.com"
-      request.query = {:q => "query"}
-      expect(request.url.to_s).to eq("http://example.com?q=query")
-    end
+
     it "getter return nil for invalid url" do
       expect(request.query).to be_nil
     end
-    it "getter return String for query parameter as String" do
-      request.url = "http://example.com"
-      request.query = "q=query"
-      expect(request.query).to eq("q=query")
+
+    context "with query parameter as String" do
+      it "lets you specify query parameter as String" do
+        request.url = "http://example.com"
+        request.query = "q=query"
+        expect(request.url.to_s).to eq("http://example.com?q=query")
+      end
+
+      it "getter return String for query parameter as String" do
+        request.url = "http://example.com"
+        request.query = "q=query"
+        expect(request.query).to eq("q=query")
+      end
     end
-    it "getter return String for query parameter as Hash" do
-      request.url = "http://example.com"
-      request.query = {:q => "query"}
-      expect(request.query).to eq("q=query")
+
+    context "with query parameter as Hash" do
+      context "with a flat query" do
+        context "without nested query config in use" do
+          it "lets you specify query parameter as Hash" do
+            request.url = "http://example.com"
+            request.query = {:q => "query"}
+            expect(request.url.to_s).to eq("http://example.com?q=query")
+          end
+
+          it "getter return String for query parameter as Hash" do
+            request.url = "http://example.com"
+            request.query = {:q => "query"}
+            expect(request.query).to eq("q=query")
+          end
+        end
+
+        context "with nested query config in use" do
+          after { HTTPI.use_nested_query =  false }
+
+          it "lets you specify query parameter as Hash" do
+            HTTPI.use_nested_query = true
+            request.url = "http://example.com"
+            request.query = {:q => "query"}
+            expect(request.url.to_s).to eq("http://example.com?q=query")
+          end
+
+          it "getter return String for query parameter as Hash" do
+            HTTPI.use_nested_query = true
+            request.url = "http://example.com"
+            request.query = {:q => "query"}
+            expect(request.query).to eq("q=query")
+          end
+        end
+      end
+
+      context "with a nested query" do
+        context "without nested query config in use" do
+          it "lets you specify query parameter as Hash" do
+            request.url = "http://example.com"
+            request.query = {:q => ["nested", "query"]}
+            expect(request.url.to_s).to eq("http://example.com?q=nested&q=query")
+          end
+
+          it "getter return String for query parameter as Hash" do
+            request.url = "http://example.com"
+            request.query = {:q => ["nested", "query"]}
+            expect(request.query).to eq("q=nested&q=query")
+          end
+        end
+
+        context "with nested query config in use" do
+          after { HTTPI.use_nested_query =  false }
+
+          it "lets you specify query parameter as Hash" do
+            HTTPI.use_nested_query = true
+            request.url = "http://example.com"
+            request.query = {:q => ["nested", "query"]}
+            expect(request.url.to_s).to eq("http://example.com?q[]=nested&q[]=query")
+          end
+
+          it "getter return String for query parameter as Hash" do
+            HTTPI.use_nested_query = true
+            request.url = "http://example.com"
+            request.query = {:q => ["nested", "query"]}
+            expect(request.query).to eq("q[]=nested&q[]=query")
+          end
+        end
+      end
     end
   end
 
