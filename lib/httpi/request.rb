@@ -96,11 +96,7 @@ module HTTPI
 
     # Sets a body request given a String or a Hash.
     def body=(params)
-      if params.kind_of?(Hash)
-        @body = build_query_from_hash(params)
-      else
-        @body = params
-      end
+      @body = params.kind_of?(Hash) ? build_query_from_hash(params) : params
     end
 
     # Sets the block to be called while processing the response. The block
