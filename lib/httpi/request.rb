@@ -96,7 +96,11 @@ module HTTPI
 
     # Sets a body request given a String or a Hash.
     def body=(params)
-      @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
+      if params.kind_of?(Hash)
+        @body = build_query_from_hash(params)
+      else
+        @body = params
+      end
     end
 
     # Sets the block to be called while processing the response. The block
@@ -145,8 +149,20 @@ module HTTPI
 
     # Returns a +query+ string given a +Hash+
     def build_query_from_hash(query)
-      HTTPI.use_nested_query ? Rack::Utils.build_nested_query(query) : Rack::Utils.build_query(query)
+      HTTPI.use_nested_query ?  Rack::Utils.build_nested_query(stringify_hash_values(query)) : Rack::Utils.build_query(query)
     end
 
+    # Changes Hash values into Strings
+    def stringify_hash_values(query)
+      query.each do |param, value|
+        if value.kind_of?(Hash)
+          query[param] = stringify_hash_values(value)
+        elsif value.kind_of?(Array)
+          query[param] = value.map(&:to_s)
+        else
+          query[param] = value.to_s
+        end
+      end
+    end
   end
 end

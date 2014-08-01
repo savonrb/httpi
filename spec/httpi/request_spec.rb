@@ -233,14 +233,50 @@ describe HTTPI::Request do
   end
 
   describe "#body" do
-    it "lets you specify the HTTP request body using a String" do
-      request.body = "<some>xml</some>"
-      expect(request.body).to eq("<some>xml</some>")
+    context "with query parameter as String" do
+      it "lets you specify the HTTP request body using a String" do
+        request.body = "<some>xml</some>"
+        expect(request.body).to eq("<some>xml</some>")
+      end
     end
+    context "with query parameter as Hash" do
+      context "with a flat query" do
+        context "without nested query config in use" do
+          it "lets you specify the HTTP request body using a Hash" do
+            request.body = {:foo => :bar, :baz => :foo}
+            expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+          end
+        end
 
-    it "lets you specify the HTTP request body using a Hash" do
-      request.body = {:foo => :bar, :baz => :foo}
-      expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+        context "with nested query config in use" do
+          after { HTTPI.use_nested_query =  false }
+
+          it "lets you specify the HTTP request body using a Hash" do
+            HTTPI.use_nested_query = true
+            request.body = {:foo => :bar, :baz => :foo}
+            expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+          end
+        end
+      end
+
+      context "with a nested query" do
+        context "without nested query config in use" do
+          it "lets you specify the HTTP request body using a Hash" do
+            request.body = {:foo => :bar, :baz => [:foo, :tst]}
+            expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo", "baz=tst"])
+          end
+        end
+
+        context "with nested query config in use" do
+          after { HTTPI.use_nested_query =  false }
+
+          it "lets you specify the HTTP request body using a Hash" do
+            HTTPI.use_nested_query = true
+            request.body = {:foo => :bar, :baz => [:foo, :tst]}
+            expect(request.body.split("&")).to match_array(["foo=bar", "baz[]=foo", "baz[]=tst"])
+          end
+        end
+      end
     end
   end
 
