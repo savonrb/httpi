@@ -1,4 +1,8 @@
-### 2.2.4 (edge)
+### 2.2.5
+
+* Feature: [#123](https://github.com/savonrb/httpi/pull/123) Don't warn about missing rubyntlm gem if it is optional. Thanks to [PChambino](https://github.com/PChambino)
+
+### 2.2.4
 
 * Fix: [#120](https://github.com/savonrb/httpi/pull/120) fixed an unintended crash when an incompatible version of NTLM was required. Thanks to [hubrix](https://github.com/hubrix)
 
