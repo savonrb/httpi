@@ -35,7 +35,7 @@ module HTTPI
     def query=(query)
       raise ArgumentError, "Invalid URL: #{self.url}" unless self.url.respond_to?(:query)
       if query.kind_of?(Hash)
-        query = Rack::Utils.build_query(query)
+        query = build_query_from_hash(query)
       end
       query = query.to_s unless query.is_a?(String)
       self.url.query = query
@@ -96,7 +96,7 @@ module HTTPI
 
     # Sets a body request given a String or a Hash.
     def body=(params)
-      @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
+      @body = params.kind_of?(Hash) ? build_query_from_hash(params) : params
     end
 
     # Sets the block to be called while processing the response. The block
@@ -143,5 +143,22 @@ module HTTPI
       url.kind_of?(URI) ? url : URI(url)
     end
 
+    # Returns a +query+ string given a +Hash+
+    def build_query_from_hash(query)
+      HTTPI.use_nested_query ?  Rack::Utils.build_nested_query(stringify_hash_values(query)) : Rack::Utils.build_query(query)
+    end
+
+    # Changes Hash values into Strings
+    def stringify_hash_values(query)
+      query.each do |param, value|
+        if value.kind_of?(Hash)
+          query[param] = stringify_hash_values(value)
+        elsif value.kind_of?(Array)
+          query[param] = value.map(&:to_s)
+        else
+          query[param] = value.to_s
+        end
+      end
+    end
   end
 end
