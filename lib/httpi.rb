@@ -1,6 +1,7 @@
 require "httpi/version"
 require "httpi/logger"
 require "httpi/request"
+require "httpi/query_builder"
 
 require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
@@ -98,9 +99,25 @@ module HTTPI
   end
 
   class << self
-    # Defines if the query string uses flat or nested queries
-    attr_accessor :use_nested_query
-    @use_nested_query = false
+
+    def query_builder
+      @query_builder || HTTPI::QueryBuilder::Flat
+    end
+
+    def query_builder=(builder)
+      if builder.is_a?(Symbol)
+        builder_name = builder.to_s.capitalize
+        begin
+          builder = HTTPI::QueryBuilder.const_get(builder_name)
+        rescue NameError => ex
+          raise ArgumentError, "Invalid builder. Available builders are: [:flat, :nested]"
+        end
+      end
+      unless builder.respond_to?(:build)
+        raise ArgumentError, "Query builder object should respond to build method"
+      end
+      @query_builder = builder
+    end
 
     # Executes an HTTP GET request.
     def get(request, adapter = nil, &block)

@@ -145,20 +145,8 @@ module HTTPI
 
     # Returns a +query+ string given a +Hash+
     def build_query_from_hash(query)
-      HTTPI.use_nested_query ?  Rack::Utils.build_nested_query(stringify_hash_values(query)) : Rack::Utils.build_query(query)
+      HTTPI.query_builder.build(query)
     end
 
-    # Changes Hash values into Strings
-    def stringify_hash_values(query)
-      query.each do |param, value|
-        if value.kind_of?(Hash)
-          query[param] = stringify_hash_values(value)
-        elsif value.kind_of?(Array)
-          query[param] = value.map(&:to_s)
-        else
-          query[param] = value.to_s
-        end
-      end
-    end
   end
 end
