@@ -34,6 +34,33 @@ describe HTTPI do
     end
   end
 
+  describe ".query_builder" do
+    it "gets flat builder by default" do
+      expect(client.query_builder).to eq(HTTPI::QueryBuilder::Flat)
+    end
+    context "setter" do
+      after { client.query_builder = HTTPI::QueryBuilder::Flat }
+      it "looks up for class if symbol" do
+        client.query_builder = :nested
+        expect(client.query_builder).to eq(HTTPI::QueryBuilder::Nested)
+      end
+      it "validates if symbol is a valid option" do
+        expect do
+          client.query_builder = :xxx
+        end.to raise_error(ArgumentError)
+      end
+      it "validates if value respond to build" do
+        expect do
+          client.query_builder = nil
+        end.to raise_error(ArgumentError)
+      end
+      it "accepts valid class" do
+        client.query_builder = HTTPI::QueryBuilder::Nested
+        expect(client.query_builder).to eq(HTTPI::QueryBuilder::Nested)
+      end
+    end
+  end
+
   describe ".get(request)" do
     it "executes a GET request using the default adapter" do
       request = HTTPI::Request.new("http://example.com")

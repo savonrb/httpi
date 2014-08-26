@@ -47,28 +47,57 @@ describe HTTPI::Request do
     it "raises an ArgumentError if url not respond to query" do
       expect { request.query = "q=query" }.to raise_error(ArgumentError)
     end
-    it "lets you specify query parameter as String" do
-      request.url = "http://example.com"
-      request.query = "q=query"
-      expect(request.url.to_s).to eq("http://example.com?q=query")
-    end
-    it "lets you specify query parameter as Hash" do
-      request.url = "http://example.com"
-      request.query = {:q => "query"}
-      expect(request.url.to_s).to eq("http://example.com?q=query")
-    end
+
     it "getter return nil for invalid url" do
       expect(request.query).to be_nil
     end
-    it "getter return String for query parameter as String" do
-      request.url = "http://example.com"
-      request.query = "q=query"
-      expect(request.query).to eq("q=query")
+
+    context "with query parameter as String" do
+      it "lets you specify query parameter as String" do
+        request.url = "http://example.com"
+        request.query = "q=query"
+        expect(request.url.to_s).to eq("http://example.com?q=query")
+      end
+
+      it "getter return String for query parameter as String" do
+        request.url = "http://example.com"
+        request.query = "q=query"
+        expect(request.query).to eq("q=query")
+      end
     end
-    it "getter return String for query parameter as Hash" do
-      request.url = "http://example.com"
-      request.query = {:q => "query"}
-      expect(request.query).to eq("q=query")
+
+    context "with query parameter as Hash" do
+      context "with flat query builder" do
+        before do
+          request.url = "http://example.com"
+          request.query = {:q => ["nested", "query"]}
+        end
+
+        it "lets you specify query parameter as Hash" do
+          expect(request.url.to_s).to eq("http://example.com?q=nested&q=query")
+        end
+
+        it "getter return String for query parameter as Hash" do
+          expect(request.query).to eq("q=nested&q=query")
+        end
+      end
+      context "with nested query builder" do
+        before do
+          HTTPI.query_builder = :nested
+
+          request.url = "http://example.com"
+          request.query = {:q => ["nested", "query"]}
+        end
+        after { HTTPI.query_builder = :flat }
+
+        it "lets you specify query parameter as Hash" do
+          expect(request.url.to_s).to eq("http://example.com?q[]=nested&q[]=query")
+        end
+
+        it "getter return String for query parameter as Hash" do
+          expect(request.query).to eq("q[]=nested&q[]=query")
+        end
+      end
     end
   end
 
@@ -168,14 +197,41 @@ describe HTTPI::Request do
   end
 
   describe "#body" do
-    it "lets you specify the HTTP request body using a String" do
-      request.body = "<some>xml</some>"
-      expect(request.body).to eq("<some>xml</some>")
+    context "with query parameter as String" do
+      it "lets you specify the HTTP request body using a String" do
+        request.body = "<some>xml</some>"
+        expect(request.body).to eq("<some>xml</some>")
+      end
     end
-
-    it "lets you specify the HTTP request body using a Hash" do
-      request.body = {:foo => :bar, :baz => :foo}
-      expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+    context "with flat query builder" do
+      it "lets you specify the HTTP request body using a Hash" do
+        request.body = {:foo => :bar, :baz => :foo}
+        expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+      end
+    end
+    context "with query parameter as Hash" do
+      context "with flat query builder" do
+        it "request body using a Hash" do
+          request.body = {:foo => :bar, :baz => :foo}
+          expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+        end
+        it "request body using a Hash with Array" do
+          request.body = {:foo => :bar, :baz => [:foo, :tst]}
+          expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo", "baz=tst"])
+        end
+      end
+      context "with nested query builder" do
+        before { HTTPI.query_builder = :nested }
+        after  { HTTPI.query_builder = :flat }
+        it "request body using a Hash" do
+          request.body = {:foo => :bar, :baz => :foo}
+          expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
+        end
+        it "request body using a Hash with Array" do
+          request.body = {:foo => :bar, :baz => [:foo, :tst]}
+          expect(request.body.split("&")).to match_array(["foo=bar", "baz[]=foo", "baz[]=tst"])
+        end
+      end
     end
   end
 

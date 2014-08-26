@@ -35,7 +35,7 @@ module HTTPI
     def query=(query)
       raise ArgumentError, "Invalid URL: #{self.url}" unless self.url.respond_to?(:query)
       if query.kind_of?(Hash)
-        query = Rack::Utils.build_query(query)
+        query = build_query_from_hash(query)
       end
       query = query.to_s unless query.is_a?(String)
       self.url.query = query
@@ -96,7 +96,7 @@ module HTTPI
 
     # Sets a body request given a String or a Hash.
     def body=(params)
-      @body = params.kind_of?(Hash) ? Rack::Utils.build_query(params) : params
+      @body = params.kind_of?(Hash) ? build_query_from_hash(params) : params
     end
 
     # Sets the block to be called while processing the response. The block
@@ -141,6 +141,11 @@ module HTTPI
     def normalize_url!(url)
       raise ArgumentError, "Invalid URL: #{url}" unless url.to_s =~ /^http/
       url.kind_of?(URI) ? url : URI(url)
+    end
+
+    # Returns a +query+ string given a +Hash+
+    def build_query_from_hash(query)
+      HTTPI.query_builder.build(query)
     end
 
   end
