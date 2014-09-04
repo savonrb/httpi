@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = HTTPI::VERSION
   s.authors     = ['Daniel Harrington', 'Martin Tepper']
   s.email       = 'me@rubiii.com'
-  s.homepage    = 'http://github.com/savonrb/#{s.name}'
+r s.homepage    = "http://github.com/savonrb/#{s.name}"
   s.summary     = "Common interface for Ruby's HTTP libraries"
   s.description = s.summary
 
