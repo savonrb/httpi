@@ -1,3 +1,7 @@
+### 2.2.6
+
+* Fix: [#128](https://github.com/savonrb/httpi/pull/128) Fix for libcURL crash on some ssystems.
+
 ### 2.2.5
 
 * Feature: [#123](https://github.com/savonrb/httpi/pull/123) Don't warn about missing rubyntlm gem if it is optional. Thanks to [PChambino](https://github.com/PChambino)
