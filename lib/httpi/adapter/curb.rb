@@ -75,6 +75,10 @@ module HTTPI
         @client.connect_timeout = @request.open_timeout if @request.open_timeout
         @client.headers = @request.headers.to_hash
         @client.verbose = false
+        # cURL workaround
+        # see: http://stackoverflow.com/a/10755612/102920
+        #      https://github.com/typhoeus/typhoeus/issues/260
+        @client.set(:NOSIGNAL, true)
       end
 
       def setup_http_auth
@@ -105,7 +109,7 @@ module HTTPI
 
           @client.ssl_verify_peer = ssl.verify_mode == :peer
         end
-        
+
         @client.ssl_version = case ssl.ssl_version
           when :TLSv1 then 1
           when :SSLv2 then 2
