@@ -1,3 +1,7 @@
+### 2.2.7
+
+* Fix: [#131](https://github.com/savonrb/httpi/pull/131) Excon adapter should respect :ssl_version
+
 ### 2.2.6
 
 * Fix: [#128](https://github.com/savonrb/httpi/pull/128) Fix for libcURL crash on some ssystems.
