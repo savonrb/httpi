@@ -66,6 +66,7 @@ module HTTPI
           opts[:ssl_ca_file] = ssl.ca_cert_file if ssl.ca_cert_file
           opts[:client_cert] = ssl.cert     if ssl.cert
           opts[:client_key]  = ssl.cert_key if ssl.cert_key
+	  opts[:ssl_version] = ssl.ssl_version if ssl.ssl_version
         end
 
         opts
