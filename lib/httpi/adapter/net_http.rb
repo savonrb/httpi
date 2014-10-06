@@ -170,7 +170,7 @@ module HTTPI
         end
 
         request_client = request_class.new @request.url.request_uri, @request.headers
-        request_client.basic_auth *@request.auth.credentials if @request.auth.basic?
+        request_client.basic_auth(*@request.auth.credentials) if @request.auth.basic?
 
         if @request.auth.digest?
           raise NotSupportedError, "Net::HTTP does not support HTTP digest authentication"
