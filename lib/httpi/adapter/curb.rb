@@ -118,7 +118,7 @@ module HTTPI
       end
 
       def respond_with(client)
-        status, headers = parse_header_string(client.header_str)
+        headers = parse_header_string(client.header_str).last
         Response.new client.response_code, headers, client.body_str
       end
 

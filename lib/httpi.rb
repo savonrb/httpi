@@ -109,7 +109,7 @@ module HTTPI
         builder_name = builder.to_s.capitalize
         begin
           builder = HTTPI::QueryBuilder.const_get(builder_name)
-        rescue NameError => ex
+        rescue NameError
           raise ArgumentError, "Invalid builder. Available builders are: [:flat, :nested]"
         end
       end
