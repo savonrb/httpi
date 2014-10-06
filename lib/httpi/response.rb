@@ -24,7 +24,8 @@ module HTTPI
       self.raw_body = body
     end
 
-    attr_accessor :code, :headers, :raw_body, :attachments
+    attr_accessor :code, :headers, :raw_body
+    attr_writer :attachments
 
     # Returns whether the HTTP response is considered successful.
     def error?
