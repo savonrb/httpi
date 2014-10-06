@@ -82,9 +82,9 @@ module HTTPI
     # or an Array of `HTTPI::Cookie` objects.
     def set_cookies(object_or_array)
       if object_or_array.respond_to?(:cookies)
-        cookie_store.add *object_or_array.cookies
+        cookie_store.add(*object_or_array.cookies)
       else
-        cookie_store.add *object_or_array
+        cookie_store.add(*object_or_array)
       end
 
       cookies = cookie_store.fetch

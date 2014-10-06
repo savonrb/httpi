@@ -1,4 +1,3 @@
-require "httpi"
 require "httpi/adapter"
 
 module HTTPI
