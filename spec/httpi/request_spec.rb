@@ -11,9 +11,10 @@ describe HTTPI::Request do
     end
 
     it "accepts a Hash of accessors to set" do
-      request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30
-      expect(request.url).to eq(URI("http://example.com"))
+      request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30, :query => { key: "value" }
+      expect(request.url).to eq(URI("http://example.com?key=value"))
       expect(request.open_timeout).to eq(30)
+      expect(request.query).to eq("key=value")
     end
   end
 
