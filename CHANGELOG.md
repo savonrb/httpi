@@ -1,3 +1,8 @@
+### 2.2.8 (edge)
+
+* Improvement: [#133](https://github.com/savonrb/httpi/pull/133) Add 'query' to available attribute writers so it can be set with 'new'
+* Fix: [#132](https://github.com/savonrb/httpi/pull/132) Fix a few warnings, among which a circular require
+
 ### 2.2.7
 
 * Fix: [#131](https://github.com/savonrb/httpi/pull/131) Excon adapter should respect :ssl_version
