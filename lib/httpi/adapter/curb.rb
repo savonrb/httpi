@@ -111,9 +111,12 @@ module HTTPI
         end
 
         @client.ssl_version = case ssl.ssl_version
-          when :TLSv1 then 1
-          when :SSLv2 then 2
-          when :SSLv3 then 3
+          when :TLSv1_2 then 1
+          when :TLSv1_1 then 1
+          when :TLSv1   then 1
+          when :SSLv2   then 2
+          when :SSLv23  then 2
+          when :SSLv3   then 3
         end
       end
 
