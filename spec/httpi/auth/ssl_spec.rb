@@ -2,6 +2,9 @@ require "spec_helper"
 require "httpi/auth/ssl"
 
 describe HTTPI::Auth::SSL do
+  before(:all) do
+    @ssl_versions = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match /server|client/ }.sort.reverse
+  end
 
   describe "VERIFY_MODES" do
     it "contains the supported SSL verify modes" do
@@ -136,32 +139,22 @@ describe HTTPI::Auth::SSL do
 
   describe "SSL_VERSIONS" do
     it "contains the supported SSL versions" do
-      expect(HTTPI::Auth::SSL::SSL_VERSIONS).to eq([:TLSv1, :SSLv2, :SSLv3])
+      expect(HTTPI::Auth::SSL::SSL_VERSIONS).to eq(@ssl_versions)
     end
   end
 
   describe "#ssl_version" do
     subject { HTTPI::Auth::SSL.new }
 
-    it 'returns the SSL version for :TLSv1' do
-      subject.ssl_version = :TLSv1
-      expect(subject.ssl_version).to eq(:TLSv1)
-    end
-
-    it 'returns the SSL version for :SSLv2' do
-      subject.ssl_version = :SSLv2
-      expect(subject.ssl_version).to eq(:SSLv2)
-    end
-
-    it 'returns the SSL version for :SSLv3' do
-      subject.ssl_version = :SSLv3
-      expect(subject.ssl_version).to eq(:SSLv3)
+    it "returns the SSL version" do
+      subject.ssl_version = @ssl_versions.first
+      expect(subject.ssl_version).to eq(@ssl_versions.first)
     end
 
     it 'raises ArgumentError if the version is unsupported' do
       expect { ssl.ssl_version = :ssl_fail }.
         to raise_error(ArgumentError, "Invalid SSL version :ssl_fail\n" +
-                                      "Please specify one of [:TLSv1, :SSLv2, :SSLv3]")
+                                      "Please specify one of #{@ssl_versions}")
     end
   end
 
