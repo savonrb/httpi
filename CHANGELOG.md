@@ -1,3 +1,7 @@
+### 2.3.0
+
+* Improvement: [#136](https://github.com/savonrb/httpi/pull/136) Allow setting of ssl versions depending on what versions OpenSSL provides at runtime.
+
 ### 2.2.8 (edge)
 
 * Improvement: [#133](https://github.com/savonrb/httpi/pull/133) Add 'query' to available attribute writers so it can be set with 'new'
