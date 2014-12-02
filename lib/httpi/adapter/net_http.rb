@@ -5,15 +5,6 @@ require "httpi/response"
 require 'kconv'
 require 'socket'
 
-begin
-  require 'net/ntlm'
-  require 'net/ntlm/version' unless Net::NTLM.const_defined?(:VERSION)
-  unless Net::NTLM::VERSION::STRING >= '0.3.2'
-    raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
-  end
-rescue LoadError
-end
-
 module HTTPI
   module Adapter
 
@@ -24,8 +15,9 @@ module HTTPI
     class NetHTTP < Base
 
       register :net_http, :deps => %w(net/https)
-
       def initialize(request)
+        check_net_ntlm_version!
+
         @request = request
         @client = create_client
       end
@@ -58,6 +50,16 @@ module HTTPI
       end
 
       private
+      def check_net_ntlm_version!
+        begin
+          require 'net/ntlm'
+          require 'net/ntlm/version' unless Net::NTLM.const_defined?(:VERSION)
+          unless Net::NTLM::VERSION::STRING >= '0.3.2'
+            raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
+          end
+        rescue LoadError
+        end
+      end
 
       def perform(http, http_request, &block)
         http.request http_request, &block
