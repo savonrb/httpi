@@ -159,8 +159,10 @@ module HTTPI
       response = adapter_class.request(method)
 
       if response &&  HTTPI::Response::RedirectResponseCodes.member?(response.code) && request.follow_redirect?
-        log("Following redirect: '#{response.headers['location']}'.")
-        request.url = response.headers['location']
+        redirect_url = response.headers['location']
+        redirect_url = "#{request.url.scheme}://#{request.url.host}#{redirect_url}" if redirect_url.start_with?('/')
+        log("Following redirect: '#{redirect_url}'.")
+        request.url = redirect_url
         return request(method, request, adapter)
       end
 
