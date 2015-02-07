@@ -222,7 +222,7 @@ describe HTTPI do
   end
 
   describe ".request" do
-    let(:request) { HTTPI::Request.new('http://example.com') }
+    let(:request) { HTTPI::Request.new('http://example.com/foo/') }
 
     it "allows custom HTTP methods" do
       httpclient.any_instance.expects(:request).with(:custom)
@@ -238,7 +238,33 @@ describe HTTPI do
       response = HTTPI::Response.new(200, {}, 'success')
 
       httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
-      request.expects(:url=).with(redirect_location)
+      request.expects(:url=).with(URI.parse(redirect_location))
+
+      client.request(:custom, request, :httpclient)
+    end
+
+    it 'follows redirects with absolute path' do
+      request.follow_redirect = true
+      redirect_location = '/bar/foo'
+
+      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
+      response = HTTPI::Response.new(200, {}, 'success')
+
+      httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
+      request.expects(:url=).with(URI.parse('http://example.com/bar/foo'))
+
+      client.request(:custom, request, :httpclient)
+    end
+
+    it 'follows redirects with relative path' do
+      request.follow_redirect = true
+      redirect_location = 'bar/foo'
+
+      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
+      response = HTTPI::Response.new(200, {}, 'success')
+
+      httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
+      request.expects(:url=).with(URI.parse('http://example.com/foo/bar/foo'))
 
       client.request(:custom, request, :httpclient)
     end
