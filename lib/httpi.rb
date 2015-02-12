@@ -1,3 +1,4 @@
+require "uri"
 require "httpi/version"
 require "httpi/logger"
 require "httpi/request"
@@ -159,8 +160,8 @@ module HTTPI
       response = adapter_class.request(method)
 
       if response &&  HTTPI::Response::RedirectResponseCodes.member?(response.code) && request.follow_redirect?
-        log("Following redirect: '#{response.headers['location']}'.")
-        request.url = response.headers['location']
+        request.url = URI.join(request.url, response.headers['location'])
+        log("Following redirect: '#{request.url}'.")
         return request(method, request, adapter)
       end
 
