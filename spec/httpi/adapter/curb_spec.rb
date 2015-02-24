@@ -2,9 +2,29 @@ require "spec_helper"
 require "httpi/adapter/curb"
 require "httpi/request"
 
+require "integration/support/server"
+
 # curb does not run on jruby
 unless RUBY_PLATFORM =~ /java/
   HTTPI::Adapter.load_adapter(:curb)
+
+  describe "NTLM authentication" do
+    before :all do
+      @server = IntegrationServer.run
+    end
+
+    after :all do
+      @server.stop
+    end
+
+    it "supports ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      adapter = HTTPI::Adapter::Curb.new(request)
+      
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+      expect(adapter.request(:get).body).to eq("ntlm-auth")
+    end
+  end
 
   describe HTTPI::Adapter::Curb do
 
@@ -168,15 +188,6 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
 
-      describe "NTLM authentication" do
-        it "is not supported" do
-          request.auth.ntlm("tester", "vReqSoafRe5O")
-
-          expect { adapter.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
-        end
-      end
-
       describe "http_auth_types" do
         it "is set to :basic for HTTP basic auth" do
           request.auth.basic "username", "password"
@@ -195,6 +206,13 @@ unless RUBY_PLATFORM =~ /java/
         it "is set to :gssnegotiate for HTTP Negotiate auth" do
           request.auth.gssnegotiate
           curb.expects(:http_auth_types=).with(:gssnegotiate)
+
+          adapter.request(:get)
+        end
+
+        it "is set to :ntlm for HTTP NTLM auth" do
+          request.auth.ntlm("tester", "vReqSoafRe5O")
+          curb.expects(:http_auth_types=).with(:ntlm)
 
           adapter.request(:get)
         end

@@ -59,10 +59,11 @@ module HTTPI
       def setup_client
         basic_setup
 
-        if @request.auth.ntlm?
-          raise NotSupportedError, "curb does not support NTLM authentication"
-        end
+        # if @request.auth.ntlm?
+        #   raise NotSupportedError, "curb does not support NTLM authentication"
+        # end
 
+        setup_ntlm_auth if @request.auth.ntlm?
         setup_http_auth if @request.auth.http?
         setup_gssnegotiate_auth if @request.auth.gssnegotiate?
         setup_ssl_auth if @request.auth.ssl? || @request.ssl?
@@ -79,6 +80,11 @@ module HTTPI
         # see: http://stackoverflow.com/a/10755612/102920
         #      https://github.com/typhoeus/typhoeus/issues/260
         @client.set(:NOSIGNAL, true)
+      end
+
+      def setup_ntlm_auth
+        @client.http_auth_types = @request.auth.type
+        @client.username, @client.password = *@request.auth.credentials
       end
 
       def setup_http_auth
