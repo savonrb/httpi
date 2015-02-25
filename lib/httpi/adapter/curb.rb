@@ -60,7 +60,7 @@ module HTTPI
         basic_setup
 
         if @request.auth.ntlm? && !Curl.ntlm?
-          raise NotSupportedError, "curb does not support NTLM authentication"
+          raise NotSupportedError, "installed version of libcurl does not support NTLM authentication"
         end
 
         setup_ntlm_auth if @request.auth.ntlm?
