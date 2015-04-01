@@ -1,3 +1,7 @@
+### 2.4.0
+
+* Formally drop support for ruby 1.8.7
+
 ### 2.3.0
 
 * Improvement: [#136](https://github.com/savonrb/httpi/pull/136) Allow setting of ssl versions depending on what versions OpenSSL provides at runtime.
