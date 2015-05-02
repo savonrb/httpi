@@ -43,13 +43,18 @@ module HTTPI
         if @request.ssl?
           context = OpenSSL::SSL::SSLContext.new
 
-          context.ca_file     = @request.auth.ssl.ca_cert_file
+          context.options = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options]
+
+          if @request.auth.ssl.ca_cert_file != nil
+            context.ca_file = @request.auth.ssl.ca_cert_file
+          else
+            context.cert_store = OpenSSL::SSL::SSLContext::DEFAULT_CERT_STORE
+          end
+
           context.cert        = @request.auth.ssl.cert
           context.key         = @request.auth.ssl.cert_key
           context.ssl_version = @request.auth.ssl.ssl_version if @request.auth.ssl.ssl_version != nil
           context.verify_mode = @request.auth.ssl.openssl_verify_mode
-
-          context
 
           client = ::HTTP::Client.new(:ssl_context => context)
         else
