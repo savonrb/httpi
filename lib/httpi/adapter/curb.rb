@@ -98,7 +98,9 @@ module HTTPI
         ssl = @request.auth.ssl
 
         if @request.auth.ssl?
-          unless ssl.verify_mode == :none
+          if ssl.verify_mode == :none
+            @client.ssl_verify_host = 0
+          else
             @client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
             @client.certtype = ssl.cert_type.to_s.upcase
           end
