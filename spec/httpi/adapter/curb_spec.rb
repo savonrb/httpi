@@ -266,6 +266,7 @@ unless RUBY_PLATFORM =~ /java/
 
         it "send certificate regardless of state of SSL verify mode" do
           request.auth.ssl.verify_mode = :none
+          curb.expects(:ssl_verify_host=).with(0) # avoid "SSL peer certificate" error
           curb.expects(:cert_key=).with(request.auth.ssl.cert_key_file)
           curb.expects(:cert=).with(request.auth.ssl.cert_file)
 
