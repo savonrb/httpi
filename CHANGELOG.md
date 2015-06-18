@@ -1,3 +1,9 @@
+### 2.4.1
+
+* Fix: [#147](https://github.com/savonrb/httpi/pull/147) Fix call Curb client "SSL peer certificate or SSH remote key was not OK" bug
+* Feature: [#145](https://github.com/savonrb/httpi/pull/145) Add support to http.rb adapter
+* Feature: [#144](https://github.com/savonrb/httpi/pull/144) Add NTLM support for CURB
+
 ### 2.4.0
 
 * Formally drop support for ruby 1.8.7
