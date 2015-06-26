@@ -92,9 +92,9 @@ module HTTPI
 
         # first figure out if we should use NTLM or Negotiate
         nego_auth_response = respond_with(requester.call(http, request_client(:head)))
-        if nego_auth_response.headers['www-authenticate'].include? 'Negotiate'
+        if nego_auth_response.headers['www-authenticate'] && nego_auth_response.headers['www-authenticate'].include?('Negotiate')
           auth_method = 'Negotiate'
-        elsif nego_auth_response.headers['www-authenticate'].include? 'NTLM'
+        elsif nego_auth_response.headers['www-authenticate'] && nego_auth_response.headers['www-authenticate'].include?('NTLM')
           auth_method = 'NTLM'
         else
           auth_method = 'NTLM'

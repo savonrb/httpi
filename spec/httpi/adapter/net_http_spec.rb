@@ -85,6 +85,17 @@ describe HTTPI::Adapter::NetHTTP do
       expect { HTTPI.get(request, adapter) }.
         to raise_error(HTTPI::NotSupportedError, /Net::NTLM is not available/)
     end
+
+    it "does not crash when authenticate header is missing (on second request)" do
+      request = HTTPI::Request.new(@server.url + 'ntlm-auth')
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      expect { HTTPI.get(request, adapter) }.
+        to_not raise_error
+
+      expect { HTTPI.get(request, adapter) }.
+        to_not raise_error
+    end
   end
 
   # it does not support digest auth
