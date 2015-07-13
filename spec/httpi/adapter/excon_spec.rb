@@ -67,6 +67,13 @@ describe HTTPI::Adapter::Excon do
       expect { HTTPI.get(request, adapter) }.
         to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
+
+    it "supports disabling verify mode" do
+      request = HTTPI::Request.new(@server.url)
+      request.auth.ssl.verify_mode = :none
+      adapter_class = HTTPI::Adapter.load(adapter).new(request)
+      expect(adapter_class.client.data[:ssl_verify_peer]).to eq(false)
+    end
   end
 
   # it does not support digest auth
