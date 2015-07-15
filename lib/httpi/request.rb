@@ -139,7 +139,7 @@ module HTTPI
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
     def normalize_url!(url)
-      raise ArgumentError, "Invalid URL: #{url}" unless url.to_s =~ /^http/
+      raise ArgumentError, "Invalid URL: #{url}" unless url.to_s =~ /^http|socks/
       url.kind_of?(URI) ? url : URI(url)
     end
 

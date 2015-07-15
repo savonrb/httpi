@@ -108,6 +108,11 @@ describe HTTPI::Request do
       expect(request.proxy).to eq(URI("http://proxy.example.com"))
     end
 
+    it 'also accepts the socks URL to use as a String' do
+      request.proxy ="socks://socks.example.com"
+      expect(request.proxy).to eq(URI("socks://socks.example.com"))
+    end
+
     it "also accepts a URI object" do
       request.proxy = URI("http://proxy.example.com")
       expect(request.proxy).to eq(URI("http://proxy.example.com"))
