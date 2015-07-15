@@ -26,8 +26,12 @@ module HTTPI
       # Executes arbitrary HTTP requests.
       # @see HTTPI.request
       def request(method)
-        unless REQUEST_METHODS.include? method
-          raise NotSupportedError, "Net::HTTP does not support custom HTTP methods"
+        # Determine if Net::HTTP supports the method using reflection
+        unless Net::HTTP.const_defined?(:"#{method.to_s.capitalize}") &&
+            Net::HTTP.const_get(:"#{method.to_s.capitalize}").class == Class
+
+          raise NotSupportedError, "Net::HTTP does not support "\
+            "#{method.to_s.upcase}"
         end
 
         do_request(method) do |http, http_request|
@@ -101,13 +105,7 @@ module HTTPI
       end
 
       def request_client(type)
-        request_class = case type
-          when :get    then Net::HTTP::Get
-          when :post   then Net::HTTP::Post
-          when :head   then Net::HTTP::Head
-          when :put    then Net::HTTP::Put
-          when :delete then Net::HTTP::Delete
-        end
+        request_class = Net::HTTP.const_get(:"#{type.to_s.capitalize}")
 
         request_client = request_class.new @request.url.request_uri, @request.headers
         request_client.basic_auth *@request.auth.credentials if @request.auth.basic?
