@@ -68,6 +68,36 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.headers["Content-Type"]).to eq("text/plain")
     end
 
+    context "supports custom methods supported by Net::HTTP" do
+      let(:request) do
+        HTTPI::Request.new(@server.url).tap do|r|
+          r.body = request_body if request_body
+        end
+      end
+
+      let(:request_body) { nil }
+
+      let(:response) { HTTPI.request(http_method, request, adapter) }
+
+      shared_examples_for 'any supported custom method' do
+        specify { response.body.should eq http_method.to_s }
+        specify { response.headers["Content-Type"].should eq('text/plain') }
+      end
+
+      context 'PATCH' do
+        let(:http_method) { :patch }
+        let(:request_body) { "<some>xml</some>" }
+
+        it_behaves_like 'any supported custom method'
+      end
+
+      context 'UNSUPPORTED method' do
+        let(:http_method) { :unsupported }
+
+        specify { expect { response }.to raise_error HTTPI::NotSupportedError }
+      end
+    end
+
     it "supports basic authentication" do
       request = HTTPI::Request.new(@server.url + "basic-auth")
       request.auth.basic("admin", "secret")
