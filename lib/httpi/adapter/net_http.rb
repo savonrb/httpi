@@ -4,6 +4,8 @@ require "httpi/adapter/base"
 require "httpi/response"
 require 'kconv'
 require 'socket'
+require "socksify"
+require 'socksify/http'
 
 module HTTPI
   module Adapter
@@ -67,7 +69,11 @@ module HTTPI
 
       def create_client
         proxy_url = @request.proxy || URI("")
-        proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
+        if URI(proxy_url).scheme == 'socks'
+          proxy =Net::HTTP.SOCKSProxy(proxy_url.host, proxy_url.port)
+        else
+          proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
+        end
         proxy.new(@request.url.host, @request.url.port)
       end
 
