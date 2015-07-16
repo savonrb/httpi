@@ -14,6 +14,22 @@ describe HTTPI::Adapter::NetHTTP do
       @server.stop
     end
 
+    context 'when socks is specified' do
+
+      let(:socks_client) { mock('socks_client') }
+      let(:request){HTTPI::Request.new(@server.url)}
+
+      it 'uses Net::HTTP.SOCKSProxy as client' do
+        socks_client.expects(:new).with(URI(@server.url).host, URI(@server.url).port).returns(:socks_client_instance)
+        Net::HTTP.expects(:SOCKSProxy).with('localhost', 8080).returns socks_client
+
+        request.proxy = 'socks://localhost:8080'
+        adapter = HTTPI::Adapter::NetHTTP.new(request)
+
+        expect(adapter.client).to eq(:socks_client_instance)
+      end
+    end
+
     it "sends and receives HTTP headers" do
       request = HTTPI::Request.new(@server.url + "x-header")
       request.headers["X-Header"] = "HTTPI"
