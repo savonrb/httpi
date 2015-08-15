@@ -269,6 +269,20 @@ describe HTTPI do
 
       client.request(:custom, request, :httpclient)
     end
+
+    it 'follows redirects at maximum of the redirect limit' do
+      request.follow_redirect = true
+      request.redirect_limit = 2
+      redirect_location = 'http://foo.bar'
+
+      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
+      response = HTTPI::Response.new(200, {}, 'success')
+
+      httpclient.any_instance.expects(:request).times(2).with(:custom).returns(redirect, response)
+      request.expects(:url=).with(URI.parse(redirect_location))
+
+      client.request(:custom, request, :httpclient)
+    end
   end
 
   HTTPI::REQUEST_METHODS.each do |method|
