@@ -152,7 +152,7 @@ module HTTPI
     end
 
     # Executes an HTTP request for the given +method+.
-    def request(method, request, adapter = nil)
+    def request(method, request, adapter = nil, redirects = 0)
       adapter_class = load_adapter(adapter, request)
 
       yield adapter_class.client if block_given?
@@ -160,10 +160,10 @@ module HTTPI
 
       response = adapter_class.request(method)
 
-      if response &&  HTTPI::Response::RedirectResponseCodes.member?(response.code) && request.follow_redirect?
+      if response && HTTPI::Response::RedirectResponseCodes.member?(response.code) && request.follow_redirect? && redirects < request.redirect_limit
         request.url = URI.join(request.url, response.headers['location'])
         log("Following redirect: '#{request.url}'.")
-        return request(method, request, adapter)
+        return request(method, request, adapter, redirects + 1)
       end
 
       response

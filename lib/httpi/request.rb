@@ -11,7 +11,7 @@ module HTTPI
   class Request
 
     # Available attribute writers.
-    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :follow_redirect, :query]
+    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
@@ -128,6 +128,13 @@ module HTTPI
     # Returns whether or not redirects should be followed - defaults to false if not set.
     def follow_redirect?
       @follow_redirect ||= false
+    end
+
+    attr_writer :redirect_limit
+
+    # Returns how many redirects should be followed - defaults to 3 if not set.
+    def redirect_limit
+      @redirect_limit ||= 3
     end
 
     private
