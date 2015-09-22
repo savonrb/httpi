@@ -1,6 +1,7 @@
 require "spec_helper"
 require "httpi/adapter/httpclient"
 require "httpi/request"
+require "integration/support/server"
 
 HTTPI::Adapter.load_adapter(:httpclient)
 
@@ -9,6 +10,14 @@ describe HTTPI::Adapter::HTTPClient do
   let(:httpclient) { HTTPClient.any_instance }
   let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
   let(:request)    { HTTPI::Request.new("http://example.com") }
+
+  before :all do
+    @server = IntegrationServer.run
+  end
+
+  after :all do
+    @server.stop
+  end
 
   describe "#request(:get)" do
     it "returns a valid HTTPI::Response" do
@@ -174,11 +183,12 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
-  it "does not support NTLM authentication" do
-    request.auth.ntlm("tester", "vReqSoafRe5O")
+  it "supports NTLM authentication" do
+    request = HTTPI::Request.new(@server.url + "ntlm-auth")
 
-    expect { adapter.request(:get) }.
-      to raise_error(HTTPI::NotSupportedError, /adapter does not support NTLM authentication/)
+    request.auth.ntlm("tester", "vReqSoafRe5O")
+    response = HTTPI.get(request, :httpclient)
+    expect(response.body).to eq("ntlm-auth")
   end
 
   def httpclient_expects(method)
