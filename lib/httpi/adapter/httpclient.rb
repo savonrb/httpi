@@ -36,11 +36,8 @@ module HTTPI
       def setup_client
         basic_setup
 
-        if @request.auth.ntlm?
-          raise NotSupportedError, "HTTPClient adapter does not support NTLM authentication"
-        end
-
         setup_auth if @request.auth.http?
+        setup_ntlm_auth if @request.auth.ntlm?
         setup_ssl_auth if @request.auth.ssl? || @request.ssl?
       end
 
@@ -52,6 +49,16 @@ module HTTPI
 
       def setup_auth
         @client.set_auth @request.url, *@request.auth.credentials
+      end
+
+      def setup_ntlm_auth
+        username, password, domain = @request.auth.credentials
+
+        unless domain.nil?
+          username = "#{domain.upcase}\\#{username}"
+        end
+
+        @client.set_auth @request.url, username, password
       end
 
       def setup_ssl_auth
