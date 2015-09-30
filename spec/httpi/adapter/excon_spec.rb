@@ -90,9 +90,30 @@ describe HTTPI::Adapter::Excon do
       end
 
       # it does not raise when no certificate was set up
-      it "works when set up properly" do
+      it "works when no client cert is specified" do
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+
+      it "works with client cert and key provided as file path" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+        request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+
+      it "works with client cert and key set directly" do
+        request = HTTPI::Request.new(@server.url)
+        
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.cert = OpenSSL::X509::Certificate.new File.open("spec/fixtures/client_cert.pem").read
+        request.auth.ssl.cert_key = OpenSSL::PKey.read File.open("spec/fixtures/client_key.pem").read
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")

@@ -65,8 +65,8 @@ module HTTPI
         when :peer
           opts[:ssl_verify_peer] = true
           opts[:ssl_ca_file] = ssl.ca_cert_file if ssl.ca_cert_file
-          opts[:client_cert] = ssl.cert     if ssl.cert
-          opts[:client_key]  = ssl.cert_key if ssl.cert_key
+          opts[:certificate] = ssl.cert.to_pem     if ssl.cert
+          opts[:private_key] = ssl.cert_key.to_pem if ssl.cert_key
         when :none
           opts[:ssl_verify_peer] = false
         end
