@@ -31,6 +31,12 @@ module HTTPI
       # Accessor for the cacert file to validate SSL certificates.
       attr_accessor :ca_cert_file
 
+      # Accessor for the ca_path to validate SSL certificates.
+      attr_accessor :ca_cert_path
+
+      # ertificate store holds trusted CA certificates used to verify peer certificates.
+      attr_accessor :cert_store
+
       # Returns the cert type to validate SSL certificates PEM|DER.
       def cert_type
         @cert_type ||= :pem

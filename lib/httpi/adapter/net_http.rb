@@ -19,7 +19,6 @@ module HTTPI
       register :net_http, :deps => %w(net/https)
       def initialize(request)
         check_net_ntlm_version!
-
         @request = request
         @client = create_client
       end
@@ -160,6 +159,8 @@ module HTTPI
         if @request.auth.ssl?
           unless ssl.verify_mode == :none
             @client.ca_file = ssl.ca_cert_file if ssl.ca_cert_file
+            @client.ca_path = ssl.ca_cert_path if ssl.ca_cert_path
+            @client.cert_store = ssl_cert_store(ssl)
           end
 
           # Send client-side certificate regardless of state of SSL verify mode
@@ -170,6 +171,15 @@ module HTTPI
         end
 
         @client.ssl_version = ssl.ssl_version if ssl.ssl_version
+      end
+
+      def ssl_cert_store(ssl)
+        return ssl.cert_store if ssl.cert_store
+
+        # Use the default cert store by default, i.e. system ca certs
+        cert_store = OpenSSL::X509::Store.new
+        cert_store.set_default_paths
+        cert_store
       end
 
       def request_client(type)
