@@ -10,7 +10,7 @@ module HTTPI
 
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]
-      SSL_VERSIONS = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match /server|client/ }.sort.reverse
+      SSL_VERSIONS = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match(/server|client/) }.sort.reverse
 
       # Returns whether SSL configuration is present.
       def present?
@@ -63,7 +63,7 @@ module HTTPI
 
       # Returns the SSL version number. Defaults to <tt>nil</tt> (auto-negotiate).
       def ssl_version
-        @ssl_version
+        @ssl_version ||= nil
       end
 
       # Sets the SSL version number. Expects one of <tt>HTTPI::Auth::SSL::SSL_VERSIONS</tt>.

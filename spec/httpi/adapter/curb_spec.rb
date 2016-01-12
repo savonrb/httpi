@@ -20,7 +20,7 @@ unless RUBY_PLATFORM =~ /java/
     it "supports ntlm authentication" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       adapter = HTTPI::Adapter::Curb.new(request)
-      
+
       request.auth.ntlm("tester", "vReqSoafRe5O")
       expect(adapter.request(:get).body).to eq("ntlm-auth")
     end
@@ -257,8 +257,8 @@ unless RUBY_PLATFORM =~ /java/
           end
 
           it 'to 2 when ssl_version is specified as SSLv2/SSLv23' do
-            version = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match /server|client/ }
-            version = version.select { |method| method.to_s.match /SSLv2|SSLv23/ }.first
+            version = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match(/server|client/) }
+            version = version.select { |method| method.to_s.match(/SSLv2|SSLv23/) }.first
             request.auth.ssl.ssl_version = version
             curb.expects(:ssl_version=).with(2)
 
