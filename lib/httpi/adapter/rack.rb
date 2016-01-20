@@ -1,3 +1,4 @@
+require 'base64'
 require 'httpi/adapter/base'
 require 'httpi/response'
 
@@ -61,17 +62,18 @@ module HTTPI
           raise NotSupportedError, "Rack adapter does not support custom HTTP methods"
         end
 
-        env = {}
-        @request.headers.each do |header, value|
-          env["HTTP_#{header.gsub('-', '_').upcase}"] = value
-        end
-
         if @request.proxy
           raise NotSupportedError, "Rack adapter does not support proxying"
         end
 
         if @request.auth.http?
-          raise NotSupportedError, "Rack adapter does not support HTTP auth"
+          if @request.auth.basic?
+            basic_auth = @request.auth.basic.join(':')
+            encoded = Base64.encode64(basic_auth).gsub('\n', '')
+            @request.headers['Authorization'] = "Basic #{encoded}"
+          else
+            raise NotSupportedError, "Rack adapter does not support HTTP #{@request.auth.type} auth"
+          end
         end
 
         if @request.auth.ssl?
@@ -80,6 +82,11 @@ module HTTPI
 
         if @request.on_body
           raise NotSupportedError, "Rack adapter does not support response streaming"
+        end
+
+        env = {}
+        @request.headers.each do |header, value|
+          env["HTTP_#{header.gsub('-', '_').upcase}"] = value
         end
 
         response = @client.request(method.to_s.upcase, @request.url.to_s,

@@ -82,14 +82,12 @@ describe HTTPI::Adapter::NetHTTP do
         end
       end
 
-      describe "set_auth" do
-        before do
-          request.auth.basic "username", "password"
-        end
-
-        it "is not supported" do
-          expect { client.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support HTTP auth")
+      describe "basic auth" do
+        it "is supported" do
+          request = HTTPI::Request.new(@url + "basic-auth")
+          request.auth.basic("admin", "secret")
+          response = HTTPI.get(request, adapter)
+          expect(response.body).to eq("basic-auth")
         end
       end
 
