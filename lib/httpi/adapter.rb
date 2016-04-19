@@ -13,7 +13,7 @@ module HTTPI
     ADAPTERS = {}
     ADAPTER_CLASS_MAP = {}
 
-    LOAD_ORDER = [:httpclient, :curb, :em_http, :excon, :http, :net_http, :net_http_persistent]
+    LOAD_ORDER = [:httpclient, :curb, :em_http, :excon, :http, :net_http]
 
     class << self
 

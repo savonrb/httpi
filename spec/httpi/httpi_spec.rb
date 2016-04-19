@@ -4,6 +4,7 @@ require "integration/support/server"
 # find out why httpi doesn't load these automatically. [dh, 2012-12-15]
 require "excon"
 require "net/http/persistent"
+require "net/http/post/multipart"
 require "http"
 
 unless RUBY_VERSION < "1.9"
@@ -19,6 +20,7 @@ describe HTTPI do
   let(:httpclient) { HTTPI::Adapter.load(:httpclient) }
   let(:net_http) { HTTPI::Adapter.load(:net_http) }
   let(:net_http_persistent) { HTTPI::Adapter.load(:net_http_persistent) }
+  let(:net_http_multipart) { HTTPI::Adapter.load(:net_http_multipart) }
 
   before(:all) do
     HTTPI::Adapter::Rack.mount('example.com', IntegrationServer::Application)
@@ -300,6 +302,7 @@ describe HTTPI do
             :curb       => lambda { Curl::Easy },
             :net_http   => lambda { Net::HTTP },
             :net_http_persistent => lambda { Net::HTTP::Persistent },
+            :net_http_multipart => lambda { Net::HTTP },
             :em_http    => lambda { EventMachine::HttpConnection },
             :rack       => lambda { Rack::MockRequest },
             :excon      => lambda { Excon::Connection },

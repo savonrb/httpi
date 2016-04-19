@@ -11,7 +11,7 @@ module HTTPI
   class Request
 
     # Available attribute writers.
-    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
+    ATTRIBUTES = [:url, :proxy, :headers, :body, :attachments, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
@@ -106,6 +106,13 @@ module HTTPI
         @on_body = block
       end
       @on_body
+    end
+
+    attr_writer :attachments
+
+    # Returns attachments if any - defaults to nil
+    def attachments
+      @attachments ||= nil
     end
 
     # Returns the <tt>HTTPI::Authentication</tt> object.

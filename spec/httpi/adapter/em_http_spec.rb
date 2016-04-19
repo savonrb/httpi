@@ -142,7 +142,7 @@ begin
 
         it "raises an error for HTTP digest auth" do
           request.auth.digest "username", "password"
-          expect { adapter.request(:get) }.to raise_error
+          expect { adapter.request(:get) }.to raise_error(HTTPI::NotSupportedError)
         end
       end
 

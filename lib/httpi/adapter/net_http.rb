@@ -36,7 +36,6 @@ module HTTPI
             "#{method.to_s.upcase}"
         end
         do_request(method) do |http, http_request|
-          http_request.body = @request.body
           if @request.on_body then
             perform(http, http_request) do |res|
               res.read_body do |seg|

@@ -80,8 +80,8 @@ describe HTTPI::Adapter::NetHTTP do
       let(:response) { HTTPI.request(http_method, request, adapter) }
 
       shared_examples_for 'any supported custom method' do
-        specify { response.body.should eq http_method.to_s }
-        specify { response.headers["Content-Type"].should eq('text/plain') }
+        specify { expect(response.body).to eq(http_method.to_s) }
+        specify { expect(response.headers["Content-Type"]).to eq('text/plain') }
       end
 
       context 'PATCH' do

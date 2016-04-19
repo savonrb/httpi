@@ -1,6 +1,8 @@
 require 'rack'
 require "rack/builder"
 
+require "composite_io"
+
 class IntegrationServer
 
   def self.respond_with(body)
@@ -12,6 +14,18 @@ class IntegrationServer
     map "/" do
       run lambda { |env|
         IntegrationServer.respond_with env["REQUEST_METHOD"].downcase
+      }
+    end
+
+    map "/attachments" do
+      run lambda { |env|
+        request = Rack::Multipart.parse_multipart(env)
+
+        # retrieve file names
+        files = []
+        request.each { |k,v| files << v[:name] if v.has_key?(:tempfile) }
+
+        IntegrationServer.respond_with "files: #{files.join(',')}"
       }
     end
 
@@ -63,7 +77,7 @@ class IntegrationServer
         elsif env["HTTP_AUTHORIZATION"] =~ /(NTLM|Negotiate) (.+)/
           # request 2: serve content
           resp = IntegrationServer.respond_with "ntlm-auth"
-        else 
+        else
           resp = [401, {
             "Content-Type" => "text/html; charset=us-ascii",
             "WWW-Authenticate" => "NTLM\r\nNegotiate",
