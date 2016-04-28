@@ -20,7 +20,7 @@ unless RUBY_PLATFORM =~ /java/
     it "supports ntlm authentication" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       adapter = HTTPI::Adapter::Curb.new(request)
-      
+
       request.auth.ntlm("tester", "vReqSoafRe5O")
       expect(adapter.request(:get).body).to eq("ntlm-auth")
     end
@@ -279,6 +279,7 @@ unless RUBY_PLATFORM =~ /java/
           request = HTTPI::Request.new("http://example.com")
           request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
           request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+          request.auth.ssl.cert_key_password = 'example'
           request
         end
 
@@ -287,6 +288,7 @@ unless RUBY_PLATFORM =~ /java/
           curb.expects(:ssl_verify_host=).with(0) # avoid "SSL peer certificate" error
           curb.expects(:cert_key=).with(request.auth.ssl.cert_key_file)
           curb.expects(:cert=).with(request.auth.ssl.cert_file)
+          curb.expects(:certpassword=).with(request.auth.ssl.cert_key_password)
 
           adapter.request(:get)
         end
@@ -294,6 +296,7 @@ unless RUBY_PLATFORM =~ /java/
         it "cert_key, cert and ssl_verify_peer should be set" do
           curb.expects(:cert_key=).with(request.auth.ssl.cert_key_file)
           curb.expects(:cert=).with(request.auth.ssl.cert_file)
+          curb.expects(:certpassword=).with(request.auth.ssl.cert_key_password)
           curb.expects(:ssl_verify_peer=).with(true)
           curb.expects(:certtype=).with(request.auth.ssl.cert_type.to_s.upcase)
 
