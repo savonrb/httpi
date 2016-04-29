@@ -114,6 +114,7 @@ module HTTPI
           # Send client-side certificate regardless of state of SSL verify mode
           @client.cert_key = ssl.cert_key_file
           @client.cert = ssl.cert_file
+          @client.certpassword = ssl.cert_key_password
 
           @client.ssl_verify_peer = ssl.verify_mode == :peer
         end
