@@ -56,8 +56,7 @@ module HTTPI
 
     # Returns whether to use SSL.
     def ssl?
-      return @ssl unless @ssl.nil?
-      !!(url.to_s =~ /^https/)
+      @ssl ||= !!(url.to_s =~ /^https/)
     end
 
     # Sets whether to use SSL.
@@ -102,6 +101,7 @@ module HTTPI
     # Sets the block to be called while processing the response. The block
     # accepts a single parameter - the chunked response body.
     def on_body(&block)
+      @on_body ||= nil
       if block_given? then
         @on_body = block
       end

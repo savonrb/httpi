@@ -103,7 +103,7 @@ module HTTPI
   class << self
 
     def query_builder
-      @query_builder || HTTPI::QueryBuilder::Flat
+      @query_builder ||= HTTPI::QueryBuilder::Flat
     end
 
     def query_builder=(builder)

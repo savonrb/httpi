@@ -44,12 +44,14 @@ module HTTPI
 
     # Returns any DIME attachments.
     def attachments
+      @body ||= nil
       decode_body unless @body
       @attachments ||= []
     end
 
     # Returns the HTTP response body.
     def body
+      @body ||= nil
       decode_body unless @body
       @body
     end
