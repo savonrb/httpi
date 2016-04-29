@@ -1,3 +1,17 @@
+### 2.4.2
+
+* Feature: [#165](https://github.com/savonrb/httpi/pull/165) Extended net_http adapter ssl options with cert_store and ca_path
+* Improvement: [#166](https://github.com/savonrb/httpi/pull/166) fix some warnings
+* Feature: [#167](https://github.com/savonrb/httpi/pull/167) adds missing support for cert password
+* Feature: [#163](https://github.com/savonrb/httpi/pull/163) Support HTTP Basic auth in Rack adapter
+* Fix: [#162](https://github.com/savonrb/httpi/pull/162) fixing excon adapter to pass client_cert and key as strings instead of objects
+* Fix: [#160](https://github.com/savonrb/httpi/pull/160) httpclient adapter now accepts NTLM auth
+* Improvement: [#158](https://github.com/savonrb/httpi/pull/158) Limit the maximum of redirects to prevent infinite redirects
+* Improvement: [#153](https://github.com/savonrb/httpi/pull/153) Dynamically determine methods Net::HTTP supports
+* Improvement: [#155](https://github.com/savonrb/httpi/pull/155) Enable socks proxy server specification
+* Improvement: [#151](https://github.com/savonrb/httpi/pull/151) Fix excon verify mode
+* Fix: [#149](https://github.com/savonrb/httpi/pull/149) Ensure that header exists before accessing it
+
 ### 2.4.1
 
 * Fix: [#147](https://github.com/savonrb/httpi/pull/147) Fix call Curb client "SSL peer certificate or SSH remote key was not OK" bug
