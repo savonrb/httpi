@@ -36,11 +36,6 @@ module HTTPI
             "#{method.to_s.upcase}"
         end
         do_request(method) do |http, http_request|
-          if !http_request.body_stream.nil?
-            http_request.body_stream = @request.body_stream
-          else
-            http_request.body = @request.body
-          end
           if @request.on_body then
             perform(http, http_request) do |res|
               res.read_body do |seg|
@@ -190,6 +185,7 @@ module HTTPI
         request_class = Net::HTTP.const_get(:"#{type.to_s.capitalize}")
 
         request_client = request_class.new @request.url.request_uri, @request.headers
+        request_client.body = @request.body if [:post, :put].include?(type)
         request_client.basic_auth(*@request.auth.credentials) if @request.auth.basic?
 
         if @request.auth.digest?
