@@ -12,6 +12,9 @@ module HTTPI
 
           request_client = request_class.new @request.url.request_uri, @request.attachments, @request.headers
 
+          # set request body_stream
+          @request.body_stream = request_client.body_stream
+
           request_client.basic_auth(*@request.auth.credentials) if @request.auth.basic?
 
           if @request.auth.digest?

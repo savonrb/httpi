@@ -36,6 +36,11 @@ module HTTPI
             "#{method.to_s.upcase}"
         end
         do_request(method) do |http, http_request|
+          if !http_request.body_stream.nil?
+            http_request.body_stream = @request.body_stream
+          else
+            http_request.body = @request.body
+          end
           if @request.on_body then
             perform(http, http_request) do |res|
               res.read_body do |seg|

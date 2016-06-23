@@ -11,7 +11,7 @@ module HTTPI
   class Request
 
     # Available attribute writers.
-    ATTRIBUTES = [:url, :proxy, :headers, :body, :attachments, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
+    ATTRIBUTES = [:url, :proxy, :headers, :body, :body_stream, :attachments, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
@@ -96,6 +96,15 @@ module HTTPI
     # Sets a body request given a String or a Hash.
     def body=(params)
       @body = params.kind_of?(Hash) ? build_query_from_hash(params) : params
+    end
+
+    attr_reader :body_stream
+
+    # Sets a body stream
+    def body_stream=(input)
+      @body = nil
+      @body_stream = input
+      input
     end
 
     # Sets the block to be called while processing the response. The block
