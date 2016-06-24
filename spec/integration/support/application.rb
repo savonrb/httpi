@@ -1,8 +1,6 @@
 require 'rack'
 require "rack/builder"
 
-require "composite_io"
-
 class IntegrationServer
 
   def self.respond_with(body)

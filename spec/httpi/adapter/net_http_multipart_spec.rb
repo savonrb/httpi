@@ -1,6 +1,8 @@
 require "spec_helper"
 require "integration/support/server"
 
+require "composite_io"
+
 describe HTTPI::Adapter::NetHTTPMultipart do
 
   subject(:adapter) { :net_http_multipart }
