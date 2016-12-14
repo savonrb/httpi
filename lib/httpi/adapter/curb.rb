@@ -115,6 +115,7 @@ module HTTPI
           @client.cert_key = ssl.cert_key_file
           @client.cert = ssl.cert_file
           @client.certpassword = ssl.cert_key_password
+          @client.set(:ssl_cipher_list, ssl.ciphers.join(':')) if ssl.ciphers
 
           @client.ssl_verify_peer = ssl.verify_mode == :peer
         end

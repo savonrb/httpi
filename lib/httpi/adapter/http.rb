@@ -59,6 +59,7 @@ module HTTPI
           context.key         = @request.auth.ssl.cert_key
           context.ssl_version = @request.auth.ssl.ssl_version if @request.auth.ssl.ssl_version != nil
           context.verify_mode = @request.auth.ssl.openssl_verify_mode
+          context.ciphers     = @request.auth.ssl.ciphers if @request.auth.ssl.ciphers
 
           client = ::HTTP::Client.new(:ssl_context => context)
         else

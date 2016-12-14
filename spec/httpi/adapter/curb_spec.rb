@@ -280,6 +280,7 @@ unless RUBY_PLATFORM =~ /java/
           request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
           request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
           request.auth.ssl.cert_key_password = 'example'
+          request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
           request
         end
 

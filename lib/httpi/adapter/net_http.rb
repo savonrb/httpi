@@ -166,6 +166,7 @@ module HTTPI
           # Send client-side certificate regardless of state of SSL verify mode
           @client.key = ssl.cert_key
           @client.cert = ssl.cert
+          @client.ciphers = ssl.ciphers if ssl.ciphers
 
           @client.verify_mode = ssl.openssl_verify_mode
         end

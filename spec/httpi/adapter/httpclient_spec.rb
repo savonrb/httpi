@@ -133,12 +133,14 @@ describe HTTPI::Adapter::HTTPClient do
       before do
         request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
         request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
       end
 
       it "send certificate regardless of state of SSL verify mode" do
         request.auth.ssl.verify_mode = :none
         ssl_config.expects(:client_cert=).with(request.auth.ssl.cert)
         ssl_config.expects(:client_key=).with(request.auth.ssl.cert_key)
+        ssl_config.expects(:ciphers=).with(request.auth.ssl.ciphers)
 
         adapter.request(:get)
       end
@@ -147,6 +149,7 @@ describe HTTPI::Adapter::HTTPClient do
         ssl_config.expects(:client_cert=).with(request.auth.ssl.cert)
         ssl_config.expects(:client_key=).with(request.auth.ssl.cert_key)
         ssl_config.expects(:verify_mode=).with(request.auth.ssl.openssl_verify_mode)
+        ssl_config.expects(:ciphers=).with(request.auth.ssl.ciphers)
 
         adapter.request(:get)
       end
@@ -187,6 +190,14 @@ describe HTTPI::Adapter::HTTPClient do
     request = HTTPI::Request.new(@server.url + "ntlm-auth")
 
     request.auth.ntlm("tester", "vReqSoafRe5O")
+    response = HTTPI.get(request, :httpclient)
+    expect(response.body).to eq("ntlm-auth")
+  end
+
+  it "supports NTLM authentication with domain" do
+    request = HTTPI::Request.new(@server.url + "ntlm-auth")
+
+    request.auth.ntlm("tester", "vReqSoafRe5O", "domain")
     response = HTTPI.get(request, :httpclient)
     expect(response.body).to eq("ntlm-auth")
   end

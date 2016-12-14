@@ -71,6 +71,7 @@ module HTTPI
           opts[:ssl_verify_peer] = false
         end
 
+        opts[:ciphers] = ssl.ciphers if ssl.ciphers
         opts[:ssl_version] = ssl.ssl_version if ssl.ssl_version
 
         opts

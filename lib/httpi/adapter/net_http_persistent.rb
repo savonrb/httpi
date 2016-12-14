@@ -12,7 +12,11 @@ module HTTPI
       private
 
       def create_client
-        Net::HTTP::Persistent.new thread_key
+        if Gem::Version.new(Net::HTTP::Persistent::VERSION) < Gem::Version.new('3.0.0')
+          Net::HTTP::Persistent.new thread_key
+        else
+          Net::HTTP::Persistent.new name: thread_key
+        end
       end
 
       def perform(http, http_request, &on_body)

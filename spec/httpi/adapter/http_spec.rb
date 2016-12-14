@@ -91,6 +91,7 @@ describe HTTPI::Adapter::HTTP do
       it "works when set up properly" do
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")

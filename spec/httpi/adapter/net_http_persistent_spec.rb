@@ -87,6 +87,10 @@ describe HTTPI::Adapter::NetHTTPPersistent do
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
 
+        if Gem::Version.new(Net::HTTP::Persistent::VERSION) >= Gem::Version.new('3.0.0')
+          request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
+        end
+
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")
       end

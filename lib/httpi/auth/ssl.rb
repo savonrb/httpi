@@ -34,8 +34,28 @@ module HTTPI
       # Accessor for the ca_path to validate SSL certificates.
       attr_accessor :ca_cert_path
 
-      # ertificate store holds trusted CA certificates used to verify peer certificates.
+      # Certificate store holds trusted CA certificates used to verify peer certificates.
       attr_accessor :cert_store
+
+      # Returns the available symmetric algorithms for encryption and decryption.
+      # @!attribute ciphers
+      #   @return [<String>, nil]
+      attr_reader :ciphers
+
+      # Sets the available symmetric algorithms for encryption and decryption.
+      # @see OpenSSL::SSL::SSLContext#ciphers
+      # @example
+      #   ssl.ciphers = "cipher1:cipher2:..."
+      #   ssl.ciphers = [name, ...]
+      #   ssl.ciphers = [[name, version, bits, alg_bits], ...]
+      def ciphers=(ciphers)
+        @ciphers =
+          if ciphers
+            context = OpenSSL::SSL::SSLContext.new
+            context.ciphers = ciphers
+            context.ciphers.map(&:first)
+          end
+      end
 
       # Returns the cert type to validate SSL certificates PEM|DER.
       def cert_type
