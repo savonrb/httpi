@@ -77,7 +77,11 @@ module HTTPI
       end
 
       def respond_with(response)
-        Response.new response.status, response.headers, response.body
+        headers = response.headers.dup
+        if (cookies = response.data[:cookies]) && !cookies.empty?
+          headers["Set-Cookie"] = cookies
+        end
+        Response.new response.status, headers, response.body
       end
 
     end
