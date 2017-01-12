@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
   s.license = 'MIT'
 
-  s.add_dependency 'rack'
+  s.add_dependency 'rack',    '~> 1.6.4'
   s.add_dependency 'socksify'
 
   s.add_development_dependency 'rubyntlm', '~> 0.3.2'
