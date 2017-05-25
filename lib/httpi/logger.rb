@@ -43,8 +43,13 @@ module HTTPI
     protected
 
     def log_request(method, request, adapter)
-      log("HTTPI #{method.to_s.upcase} request to #{request.url.host} (#{adapter})")
+      log("HTTPI #{request_ssl_info(request)} #{method.to_s.upcase} request to #{request.url.host} (#{adapter})")
     end
 
+    def request_ssl_info(request)
+      if request.auth && request.auth.ssl
+        "#{request.auth.ssl.ssl_version}/#{request.auth.ssl.verify_mode}"
+      end
+    end
   end
 end
