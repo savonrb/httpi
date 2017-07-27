@@ -132,6 +132,15 @@ describe HTTPI::Adapter::NetHTTP do
         to raise_error(HTTPI::NotSupportedError, /Net::NTLM is not available/)
     end
 
+    it 'does not require ntlm when ntlm authenication is not requested' do 
+      HTTPI::Adapter::NetHTTP.any_instance.stubs(:check_net_ntlm_version!).raises(RuntimeError)
+      request = HTTPI::Request.new(@server.url)
+          
+      expect(request.auth.ntlm?).to be false
+
+      expect { HTTPI.get(request, adapter) }.not_to raise_error
+    end
+
     it "does not crash when authenticate header is missing (on second request)" do
       request = HTTPI::Request.new(@server.url + 'ntlm-auth')
       request.auth.ntlm("tester", "vReqSoafRe5O")

@@ -18,7 +18,7 @@ module HTTPI
 
       register :net_http, :deps => %w(net/https)
       def initialize(request)
-        check_net_ntlm_version!
+        check_net_ntlm_version! if request.auth.ntlm?
         @request = request
         @client = create_client
       end
