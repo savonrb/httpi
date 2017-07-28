@@ -141,6 +141,24 @@ describe HTTPI::Adapter::NetHTTP do
       expect { HTTPI.get(request, adapter) }.not_to raise_error
     end
 
+    it 'does check ntlm when ntlm authentication is requested' do 
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+        
+      expect { HTTPI.get(request, adapter) }.not_to raise_error
+
+      # the check should also verify that the version of ntlm is supported
+      ver = Net::NTLM::VERSION::STRING
+      Net::NTLM::VERSION::STRING = "0.1.1"
+
+        request = HTTPI::Request.new(@server.url + "ntlm-auth")
+        request.auth.ntlm("tester", "vReqSoafRe5O")
+        
+        expect { HTTPI.get(request, adapter) }.to raise_error(ArgumentError, /Invalid version/)
+
+      Net::NTLM::VERSION::STRING = ver 
+    end
+
     it "does not crash when authenticate header is missing (on second request)" do
       request = HTTPI::Request.new(@server.url + 'ntlm-auth')
       request.auth.ntlm("tester", "vReqSoafRe5O")
