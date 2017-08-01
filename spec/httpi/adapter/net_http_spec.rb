@@ -134,11 +134,12 @@ describe HTTPI::Adapter::NetHTTP do
 
     it 'does not require ntlm when ntlm authenication is not requested' do 
       HTTPI::Adapter::NetHTTP.any_instance.stubs(:check_net_ntlm_version!).raises(RuntimeError)
-      request = HTTPI::Request.new(@server.url)
-          
-      expect(request.auth.ntlm?).to be false
+        request = HTTPI::Request.new(@server.url)
+        expect(request.auth.ntlm?).to be false
 
-      expect { HTTPI.get(request, adapter) }.not_to raise_error
+        # make sure a request doesn't call ntlm check if we don't ask for it.
+        expect { HTTPI.get(request, adapter) }.not_to raise_error
+      HTTPI::Adapter::NetHTTP.any_instance.unstub(:check_net_ntlm_version!)
     end
 
     it 'does check ntlm when ntlm authentication is requested' do 
