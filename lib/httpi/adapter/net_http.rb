@@ -55,11 +55,15 @@ module HTTPI
       end
 
       private
+      def ntlm_version
+        Net::NTLM::VERSION::STRING
+      end
+
       def check_net_ntlm_version!
         begin
           require 'net/ntlm'
           require 'net/ntlm/version' unless Net::NTLM.const_defined?(:VERSION, false)
-          unless Net::NTLM::VERSION::STRING >= '0.3.2'
+          unless ntlm_version >= '0.3.2'
             raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
           end
         rescue LoadError
