@@ -10,7 +10,9 @@ RSpec::Core::RakeTask.new "spec_integration" do |t|
   t.pattern = "spec/integration/*_spec.rb"
 end
 
-task :default => :spec
-
 desc "Run RSpec code and integration examples"
-task :ci => [:spec, :spec_integration]
+RSpec::Core::RakeTask.new "ci" do |t|
+  t.pattern = "spec/{httpi,integration}/**/*_spec.rb"
+end
+
+task :default => :spec
