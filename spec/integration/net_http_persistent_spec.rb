@@ -37,7 +37,9 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     it "executes POST requests" do
-      response = HTTPI.post(@server.url, "<some>xml</some>", adapter)
+      request = HTTPI::Request.new(url: @server.url, open_timeout: 1, read_timeout: 1, body: "<some>xml</some>")
+      
+      response = HTTPI.post(request, adapter)
       expect(response.body).to eq("post")
       expect(response.headers["Content-Type"]).to eq("text/plain")
     end
