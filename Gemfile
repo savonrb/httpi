@@ -3,6 +3,9 @@ gemspec
 
 gem 'jruby-openssl',                                       :platforms => :jruby
 
+# compatibility restrictions for http clients under existing travis test environments
+gem 'public_suffix', '~> 2.0'   # or remove rubies < 2.1 from travis.yml
+
 # http clients
 gem 'httpclient',          '~> 2.3',    :require => false
 gem 'curb',                '~> 0.8',    :require => false, :platforms => :ruby
