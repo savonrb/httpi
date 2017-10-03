@@ -7,3 +7,6 @@ rvm:
   - 2.2.4
   - 2.3.0
   - jruby
+env:
+  global:
+    - JRUBY_OPTS="--2.0"
