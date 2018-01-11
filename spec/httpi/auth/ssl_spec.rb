@@ -3,12 +3,7 @@ require "httpi/auth/ssl"
 
 describe HTTPI::Auth::SSL do
   before(:all) do
-    ssl_context = OpenSSL::SSL::SSLContext
-    @ssl_versions = if ssl_context.const_defined? :METHODS_MAP
-      ssl_context.const_get(:METHODS_MAP).keys
-    else
-      ssl_context::METHODS.reject { |method| method.match(/server|client/) }
-    end.sort.reverse
+    @ssl_versions = HTTPI::Auth::SSL::SSL_VERSIONS
   end
 
   describe "VERIFY_MODES" do

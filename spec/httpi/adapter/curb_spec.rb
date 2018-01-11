@@ -257,14 +257,7 @@ unless RUBY_PLATFORM =~ /java/
           end
 
           it 'to 2 when ssl_version is specified as SSLv2/SSLv23' do
-            ssl_context = OpenSSL::SSL::SSLContext
-            versions = if ssl_context.const_defined? :METHODS_MAP
-              ssl_context.const_get(:METHODS_MAP).keys
-            else
-              ssl_context::METHODS.reject { |method| method.match(/server|client/) }
-            end
-            
-            version = versions.select { |method| method.to_s.match(/SSLv2|SSLv23/) }.first
+            version = HTTPI::Auth::SSL::SSL_VERSIONS.select { |method| method.to_s.match(/SSLv2|SSLv23/) }.first
             request.auth.ssl.ssl_version = version
             curb.expects(:ssl_version=).with(2)
 
