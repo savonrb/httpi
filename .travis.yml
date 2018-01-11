@@ -12,5 +12,4 @@ env:
   global:
     - JRUBY_OPTS="--2.0"
 before_install:
-  - "travis_retry gem update --system"
   - "travis_retry gem install bundler"
