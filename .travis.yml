@@ -6,7 +6,10 @@ rvm:
   - 2.1.8
   - 2.2.4
   - 2.3.0
-  - jruby
+  - 2.5.0
+  - jruby-9.1.9.0
 env:
   global:
     - JRUBY_OPTS="--2.0"
+before_install:
+  - "travis_retry gem install bundler"

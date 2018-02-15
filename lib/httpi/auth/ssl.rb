@@ -10,7 +10,15 @@ module HTTPI
 
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]
-      SSL_VERSIONS = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match(/server|client/) }.sort.reverse
+
+      # Fix for
+      # httpi/auth/ssl.rb:13: warning: constant OpenSSL::SSL::SSLContext::METHODS is deprecated
+      ssl_context = OpenSSL::SSL::SSLContext
+      SSL_VERSIONS = if ssl_context.const_defined? :METHODS_MAP
+        ssl_context.const_get(:METHODS_MAP).keys
+      else
+        ssl_context::METHODS.reject { |method| method.match(/server|client/) }
+      end.sort.reverse
 
       # Returns whether SSL configuration is present.
       def present?

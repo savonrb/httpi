@@ -3,7 +3,7 @@ require "httpi/auth/ssl"
 
 describe HTTPI::Auth::SSL do
   before(:all) do
-    @ssl_versions = OpenSSL::SSL::SSLContext::METHODS.reject { |method| method.match(/server|client/) }.sort.reverse
+    @ssl_versions = HTTPI::Auth::SSL::SSL_VERSIONS
   end
 
   describe "VERIFY_MODES" do
