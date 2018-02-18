@@ -1,3 +1,11 @@
+### 2.4.3
+
+* Fix: [#171](https://github.com/savonrb/httpi/pull/171) bug with rubyntlm v0.6.0
+* Fix: [#181](https://github.com/savonrb/httpi/pull/181) excon and http adapters
+* Feature: [#183](https://github.com/savonrb/httpi/pull/183) Logging ssl information of a request
+* Fix: [#187](https://github.com/savonrb/httpi/pull/187) only require ntlm if ntlm auth was requested
+
+
 ### 2.4.2
 
 * Feature: [#165](https://github.com/savonrb/httpi/pull/165) Extended net_http adapter ssl options with cert_store and ca_path
