@@ -42,7 +42,7 @@ module HTTPI
         opts = {
           :host => url.host,
           :path => url.path,
-          :port => url.port.to_s,
+          :port => url.port,
           :query => url.query,
           :scheme => url.scheme,
           :headers => @request.headers,
