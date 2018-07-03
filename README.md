@@ -2,7 +2,7 @@
 
 A common interface for Ruby's HTTP libraries.
 
-[Documentation](http://httpirb.com) | [RDoc](http://rubydoc.info/gems/httpi) |
+[Documentation](https://www.rubydoc.info/gems/httpi) |
 [Mailing list](https://groups.google.com/forum/#!forum/httpirb)
 
 [![Build Status](https://secure.travis-ci.org/savonrb/httpi.png?branch=master)](http://travis-ci.org/savonrb/httpi)
@@ -13,7 +13,7 @@ A common interface for Ruby's HTTP libraries.
 
 ## Installation
 
-HTTPI is available through [Rubygems](http://rubygems.org/gems/httpi) and can be installed via:
+HTTPI is available through [Rubygems](https://rubygems.org/gems/httpi) and can be installed via:
 
 ```
 $ gem install httpi
@@ -52,4 +52,4 @@ HTTPI.request(:custom, request)
 
 ## Documentation
 
-Continue reading at [httpirb.com](http://httpirb.com)
+Continue reading at https://www.rubydoc.info/gems/httpi
