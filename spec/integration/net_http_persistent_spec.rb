@@ -30,6 +30,17 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.headers["Set-Cookie"]).to eq(cookies)
     end
 
+    it "it supports read timeout" do
+      require "net/http/persistent"
+
+      request = HTTPI::Request.new(@server.url + "timeout")
+      request.read_timeout = 0.5 # seconds
+
+      expect do
+        HTTPI.get(request, adapter)
+      end.to raise_exception(Net::HTTP::Persistent::Error, /Net::ReadTimeout/)
+    end
+
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
       expect(response.body).to eq("get")
@@ -38,7 +49,7 @@ describe HTTPI::Adapter::NetHTTP do
 
     it "executes POST requests" do
       request = HTTPI::Request.new(url: @server.url, open_timeout: 1, read_timeout: 1, body: "<some>xml</some>")
-      
+
       response = HTTPI.post(request, adapter)
       expect(response.body).to eq("post")
       expect(response.headers["Content-Type"]).to eq("text/plain")
