@@ -33,6 +33,17 @@ describe HTTPI::Adapter::Curb do
         expect(response.headers["Set-Cookie"]).to eq(cookies)
       end
 
+      it "it supports read timeout" do
+        require "curb"
+
+        request = HTTPI::Request.new(@server.url + "timeout")
+        request.read_timeout = 0.5 # seconds
+
+        expect do
+          puts HTTPI.get(request, adapter).inspect
+        end.to raise_exception(Curl::Err::TimeoutError)
+      end
+
       it "executes GET requests" do
         response = HTTPI.get(@server.url, adapter)
         expect(response.body).to eq("get")
