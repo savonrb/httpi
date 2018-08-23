@@ -81,6 +81,14 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.body).to eq("basic-auth")
     end
 
+    it "does not support ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
+    end
+
     # it does not support digest authentication
 
     it "supports chunked response" do
