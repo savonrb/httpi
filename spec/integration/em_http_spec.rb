@@ -42,6 +42,15 @@ describe HTTPI::Adapter::EmHttpRequest do
         expect(response.headers["Set-Cookie"]).to eq(cookies)
       end
 
+      it "it supports read timeout" do
+        request = HTTPI::Request.new(@server.url + "timeout")
+        request.read_timeout = 0.5 # seconds
+
+        expect do
+          puts HTTPI.get(request, adapter).inspect
+        end.to raise_exception(HTTPI::TimeoutError)
+      end
+
       it "executes GET requests" do
         response = HTTPI.get(@server.url, adapter)
         expect(response.body).to eq("get")
