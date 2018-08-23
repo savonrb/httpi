@@ -37,7 +37,7 @@ describe HTTPI::Adapter::HTTPClient do
       request.read_timeout = 0.5 # seconds
 
       expect do
-        puts HTTPI.get(request, adapter).inspect
+        HTTPI.get(request, adapter)
       end.to raise_exception(HTTPClient::ReceiveTimeoutError)
     end
 
