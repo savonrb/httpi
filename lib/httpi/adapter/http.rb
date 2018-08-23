@@ -76,6 +76,7 @@ module HTTPI
         timeouts = {}
         timeouts[:connect] = @request.open_timeout if @request.open_timeout
         timeouts[:read] = @request.read_timeout if @request.read_timeout
+        timeouts[:write] = @request.write_timeout if @request.write_timeout
         client = client.timeout(timeouts) if timeouts.any?
 
         client.headers(@request.headers)
