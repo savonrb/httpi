@@ -32,6 +32,7 @@ module HTTPI
 
         @client.open_timeout = @request.open_timeout if @request.open_timeout
         @client.read_timeout = @request.read_timeout if @request.read_timeout
+        raise NotSupportedError, "Net::HTTP::Persistent does not support write_timeout" if @request.write_timeout
       end
 
       def thread_key

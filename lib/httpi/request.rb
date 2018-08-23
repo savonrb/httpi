@@ -11,7 +11,7 @@ module HTTPI
   class Request
 
     # Available attribute writers.
-    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :follow_redirect, :redirect_limit, :query]
+    ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :write_timeout, :follow_redirect, :redirect_limit, :query]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
@@ -90,7 +90,7 @@ module HTTPI
       headers["Cookie"] = cookies if cookies
     end
 
-    attr_accessor :open_timeout, :read_timeout
+    attr_accessor :open_timeout, :read_timeout, :write_timeout
     attr_reader :body
 
     # Sets a body request given a String or a Hash.
