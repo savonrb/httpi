@@ -80,6 +80,22 @@ describe HTTPI::Adapter::HTTP do
       expect(response.body).to eq("basic-auth")
     end
 
+    it "does not support digest authentication" do
+      request = HTTPI::Request.new(@server.url + "digest-auth")
+      request.auth.digest("admin", "secret")
+
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
+    end
+
+    it "does not support ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support NTLM digest authentication/)
+    end
+
     it "supports chunked response" do
       skip("Needs investigation")
       request = HTTPI::Request.new(@server.url)
