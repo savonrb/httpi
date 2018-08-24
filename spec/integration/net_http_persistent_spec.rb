@@ -36,9 +36,12 @@ describe HTTPI::Adapter::NetHTTP do
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
-      expect do
-        HTTPI.get(request, adapter)
-      end.to raise_exception(Net::HTTP::Persistent::Error, /Net::ReadTimeout/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error { |error|
+          expect(error.message).to match(/Net::ReadTimeout/)
+          expect(error).to be_a(Net::HTTP::Persistent::Error)
+          expect(error).to be_a(HTTPI::TimeoutError)
+        }
     end
 
     it "executes GET requests" do

@@ -36,9 +36,11 @@ describe HTTPI::Adapter::HTTPClient do
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
-      expect do
-        HTTPI.get(request, adapter)
-      end.to raise_exception(Excon::Error::Timeout)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error { |error|
+          expect(error).to be_a(Excon::Error::Timeout)
+          expect(error).to be_a(HTTPI::TimeoutError)
+        }
     end
 
     it "executes GET requests" do

@@ -29,6 +29,9 @@ module HTTPI
       rescue Errno::ECONNREFUSED   # connection refused
         $!.extend ConnectionError
         raise
+      rescue ::HTTPClient::TimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private
