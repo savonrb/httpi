@@ -29,6 +29,9 @@ module HTTPI
       rescue Errno::ECONNREFUSED   # connection refused
         $!.extend ConnectionError
         raise
+      rescue ::HTTPClient::TimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private
@@ -45,6 +48,7 @@ module HTTPI
         @client.proxy = @request.proxy if @request.proxy
         @client.connect_timeout = @request.open_timeout if @request.open_timeout
         @client.receive_timeout = @request.read_timeout if @request.read_timeout
+        @client.send_timeout = @request.write_timeout if @request.write_timeout
       end
 
       def setup_auth

@@ -30,6 +30,17 @@ describe HTTPI::Adapter::HTTPClient do
       expect(response.headers["Set-Cookie"]).to eq(cookies)
     end
 
+    it "it supports read timeout" do
+      request = HTTPI::Request.new(@server.url + "timeout")
+      request.read_timeout = 0.5 # seconds
+
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error { |error|
+          expect(error).to be_a(HTTPClient::ReceiveTimeoutError)
+          expect(error).to be_a(HTTPI::TimeoutError)
+        }
+    end
+
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
       expect(response.body).to eq("get")

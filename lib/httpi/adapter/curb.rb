@@ -46,6 +46,9 @@ module HTTPI
       rescue Curl::Err::ConnectionFailedError  # connection refused
         $!.extend ConnectionError
         raise
+      rescue Curl::Err::TimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private
@@ -72,8 +75,9 @@ module HTTPI
       def basic_setup
         @client.url = @request.url.to_s
         @client.proxy_url = @request.proxy.to_s if @request.proxy
-        @client.timeout = @request.read_timeout if @request.read_timeout
-        @client.connect_timeout = @request.open_timeout if @request.open_timeout
+        read_or_write_timeout = @request.read_timeout || @request.write_timeout
+        @client.timeout_ms = read_or_write_timeout * 1000 if read_or_write_timeout
+        @client.connect_timeout_ms = @request.open_timeout * 1000 if @request.open_timeout
         @client.headers = @request.headers.to_hash
         @client.verbose = false
         # cURL workaround

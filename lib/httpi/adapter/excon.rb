@@ -31,6 +31,9 @@ module HTTPI
           $!.extend ConnectionError
         end
         raise
+      rescue ::Excon::Error::Timeout
+        $!.extend TimeoutError
+        raise
       end
 
       private
@@ -58,6 +61,7 @@ module HTTPI
         opts[:user], opts[:password] = *@request.auth.credentials if @request.auth.basic?
         opts[:connect_timeout] = @request.open_timeout if @request.open_timeout
         opts[:read_timeout]    = @request.read_timeout if @request.read_timeout
+        opts[:write_timeout]   = @request.write_timeout if @request.write_timeout
         opts[:response_block]  = @request.on_body if @request.on_body
         opts[:proxy]           = @request.proxy if @request.proxy
 

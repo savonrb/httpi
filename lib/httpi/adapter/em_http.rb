@@ -29,6 +29,8 @@ module HTTPI
     # are supported by em-httprequest but not HTTPI.
     class EmHttpRequest < Base
 
+      class EmHttpTimeoutError < StandardError; end # Generic error for timeouts
+
       register :em_http, :deps => %w(em-synchrony em-synchrony/em-http em-http)
 
       def initialize(request)
@@ -48,6 +50,9 @@ module HTTPI
       # @see HTTPI.request
       def request(method)
         _request { |options| @client.send method, options }
+      rescue EmHttpTimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private
@@ -69,10 +74,11 @@ module HTTPI
       end
 
       def connection_options
-        options = {
-          :connect_timeout    => @request.open_timeout,
-          :inactivity_timeout => @request.read_timeout
-        }
+        options = {}
+
+        read_or_write_timeout = @request.read_timeout || @request.write_timeout
+        options[:inactivity_timeout] = read_or_write_timeout if read_or_write_timeout
+        options[:connect_timeout] = @request.open_timeout if @request.open_timeout
 
         options[:proxy] = proxy_options if @request.proxy
 
@@ -105,7 +111,7 @@ module HTTPI
       end
 
       def respond_with(http, start_time)
-        raise TimeoutError, "EM-HTTP-Request connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
+        raise EmHttpTimeoutError, "EM-HTTP-Request connection timed out: #{Time.now - start_time} sec" if http.response_header.status.zero?
 
         Response.new http.response_header.status,
           convert_headers(http.response_header), http.response

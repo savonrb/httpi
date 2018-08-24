@@ -30,6 +30,18 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.headers["Set-Cookie"]).to eq(cookies)
     end
 
+    it "it supports read timeout" do
+      request = HTTPI::Request.new(@server.url + "timeout")
+      request.read_timeout = 0.5 # seconds
+
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error { |error|
+          expect(error.message).to match(/Net::ReadTimeout/)
+          expect(error).to be_a(Net::HTTP::Persistent::Error)
+          expect(error).to be_a(HTTPI::TimeoutError)
+        }
+    end
+
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
       expect(response.body).to eq("get")
@@ -37,8 +49,8 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     it "executes POST requests" do
-      request = HTTPI::Request.new(url: @server.url, open_timeout: 1, read_timeout: 1, body: "<some>xml</some>")
-      
+      request = HTTPI::Request.new(url: @server.url, body: "<some>xml</some>")
+
       response = HTTPI.post(request, adapter)
       expect(response.body).to eq("post")
       expect(response.headers["Content-Type"]).to eq("text/plain")
@@ -68,6 +80,14 @@ describe HTTPI::Adapter::NetHTTP do
 
       response = HTTPI.get(request, adapter)
       expect(response.body).to eq("basic-auth")
+    end
+
+    it "does not support ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
 
     # it does not support digest authentication

@@ -9,6 +9,17 @@ module HTTPI
 
       register :net_http_persistent, :deps => %w(net/http/persistent)
 
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method)
+        super
+      rescue Net::HTTP::Persistent::Error => e
+        if !e.message.nil? && e.message =~ /Timeout/
+          $!.extend TimeoutError
+        end
+        raise
+      end
+
       private
 
       def create_client
@@ -32,6 +43,7 @@ module HTTPI
 
         @client.open_timeout = @request.open_timeout if @request.open_timeout
         @client.read_timeout = @request.read_timeout if @request.read_timeout
+        raise NotSupportedError, "Net::HTTP::Persistent does not support write_timeout" if @request.write_timeout
       end
 
       def thread_key
