@@ -31,8 +31,6 @@ describe HTTPI::Adapter::HTTPClient do
     end
 
     it "it supports read timeout" do
-      require "excon"
-
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
