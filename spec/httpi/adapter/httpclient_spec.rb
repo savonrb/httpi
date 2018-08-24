@@ -100,6 +100,20 @@ describe HTTPI::Adapter::HTTPClient do
       end
     end
 
+    describe "send_timeout" do
+      it "is not set unless specified" do
+        httpclient.expects(:send_timeout=).never
+        adapter.request(:get)
+      end
+
+      it "is set if specified" do
+        request.write_timeout = 30
+
+        httpclient.expects(:send_timeout=).with(30)
+        adapter.request(:get)
+      end
+    end
+
     describe "set_auth" do
       it "is set for HTTP basic auth" do
         request.auth.basic "username", "password"

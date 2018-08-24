@@ -118,8 +118,19 @@ begin
       end
 
       describe "receive_timeout" do
-        it "is passed as a connection option" do
+        it "is passed as a connection option (when read_timeout specified)" do
           request.read_timeout = 60
+
+          url = "http://example.com:80"
+          connection_options = { inactivity_timeout: 60 }
+
+          EventMachine::HttpRequest.expects(:new).with(url, connection_options)
+
+          adapter
+        end
+
+        it "is passed as a connection option (when write_timeout specified)" do
+          request.write_timeout = 60
 
           url = "http://example.com:80"
           connection_options = { inactivity_timeout: 60 }

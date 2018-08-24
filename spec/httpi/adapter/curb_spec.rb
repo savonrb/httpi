@@ -152,8 +152,15 @@ unless RUBY_PLATFORM =~ /java/
           adapter.request(:get)
         end
 
-        it "is set if specified" do
+        it "is set if specified read_timeout" do
           request.read_timeout = 30
+          curb.expects(:timeout_ms=).with(30_000)
+
+          adapter.request(:get)
+        end
+
+        it "is set if specified write_timeout" do
+          request.write_timeout = 30
           curb.expects(:timeout_ms=).with(30_000)
 
           adapter.request(:get)
