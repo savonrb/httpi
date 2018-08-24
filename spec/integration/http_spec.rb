@@ -31,8 +31,6 @@ describe HTTPI::Adapter::HTTP do
     end
 
     it "it supports read timeout" do
-      require "http"
-
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
