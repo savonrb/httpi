@@ -46,6 +46,8 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     it "it supports read timeout" do
+      require "net/http"
+
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
