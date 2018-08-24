@@ -42,15 +42,23 @@ describe HTTPI::Adapter::EmHttpRequest do
         expect(response.headers["Set-Cookie"]).to eq(cookies)
       end
 
-      it "it supports read timeout" do
-        request = HTTPI::Request.new(@server.url + "timeout")
-        request.read_timeout = 0.5 # seconds
+      if RUBY_PLATFORM =~ /java/
+        pending <<-MSG
+          It seems like JRuby is missing support for inactivity timeout! See related issues on GitHub:
+            - https://github.com/eventmachine/eventmachine/issues/155
+            - https://github.com/eventmachine/eventmachine/pull/312
+        MSG
+      else
+        it "it supports read timeout" do
+          request = HTTPI::Request.new(@server.url + "timeout")
+          request.read_timeout = 0.5 # seconds
 
-        expect { HTTPI.get(request, adapter) }
-          .to raise_error { |error|
-            expect(error).to be_a(HTTPI::Adapter::EmHttpRequest::EmHttpTimeoutError)
-            expect(error).to be_a(HTTPI::TimeoutError)
-          }
+          expect { HTTPI.get(request, adapter) }
+            .to raise_error { |error|
+              expect(error).to be_a(HTTPI::Adapter::EmHttpRequest::EmHttpTimeoutError)
+              expect(error).to be_a(HTTPI::TimeoutError)
+            }
+        end
       end
 
       it "executes GET requests" do
