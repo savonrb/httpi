@@ -86,11 +86,11 @@ module HTTPI
   DEFAULT_LOG_LEVEL = :debug
 
   class Error < StandardError; end
-  class TimeoutError < Error; end
   class NotSupportedError < Error; end
   class NotImplementedError < Error; end
 
   module ConnectionError; end
+  module TimeoutError; end
 
   class SSLError < Error
     def initialize(message = nil, original = $!)

@@ -31,6 +31,9 @@ module HTTPI
           $!.extend ConnectionError
         end
         raise
+      rescue ::Excon::Error::Timeout
+        $!.extend TimeoutError
+        raise
       end
 
       private

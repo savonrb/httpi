@@ -46,6 +46,9 @@ module HTTPI
       rescue Curl::Err::ConnectionFailedError  # connection refused
         $!.extend ConnectionError
         raise
+      rescue Curl::Err::TimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private
