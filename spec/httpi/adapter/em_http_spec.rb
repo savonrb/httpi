@@ -89,15 +89,12 @@ begin
         end
 
         it "sets host, port and authorization" do
-          url = 'http://example.com:80'
-
+          url = "http://example.com:80"
           connection_options = {
-            :connect_timeout    => nil,
-            :inactivity_timeout => nil,
-            :proxy              => {
-              :host          => 'proxy-host.com',
-              :port          => 443,
-              :authorization => ['username', 'password']
+            :proxy => {
+              :host => "proxy-host.com",
+              :port => 443,
+              :authorization => ["username", "password"]
             }
           }
 
@@ -111,8 +108,8 @@ begin
         it "is passed as a connection option" do
           request.open_timeout = 30
 
-          url = 'http://example.com:80'
-          connection_options = { :connect_timeout => 30, :inactivity_timeout => nil }
+          url = "http://example.com:80"
+          connection_options = { connect_timeout: 30 }
 
           EventMachine::HttpRequest.expects(:new).with(url, connection_options)
 
@@ -124,8 +121,8 @@ begin
         it "is passed as a connection option" do
           request.read_timeout = 60
 
-          url = 'http://example.com:80'
-          connection_options = { :connect_timeout => nil, :inactivity_timeout => 60 }
+          url = "http://example.com:80"
+          connection_options = { inactivity_timeout: 60 }
 
           EventMachine::HttpRequest.expects(:new).with(url, connection_options)
 

@@ -30,6 +30,15 @@ describe HTTPI::Adapter::NetHTTP do
       expect(response.headers["Set-Cookie"]).to eq(cookies)
     end
 
+    it "it supports read timeout" do
+      request = HTTPI::Request.new(@server.url + "timeout")
+      request.read_timeout = 0.5 # seconds
+
+      expect do
+        HTTPI.get(request, adapter)
+      end.to raise_exception(Net::ReadTimeout)
+    end
+
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
       expect(response.body).to eq("get")

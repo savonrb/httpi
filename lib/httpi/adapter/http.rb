@@ -73,6 +73,11 @@ module HTTPI
           client = client.via(@request.proxy.host, @request.proxy.port, @request.proxy.user, @request.proxy.password)
         end
 
+        timeouts = {}
+        timeouts[:connect] = @request.open_timeout if @request.open_timeout
+        timeouts[:read] = @request.read_timeout if @request.read_timeout
+        client = client.timeout(timeouts) if timeouts.any?
+
         client.headers(@request.headers)
       end
     end

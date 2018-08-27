@@ -146,29 +146,29 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
 
-      describe "timeout" do
+      describe "timeout_ms" do
         it "is not set unless it's specified" do
-          curb.expects(:timeout=).never
+          curb.expects(:timeout_ms=).never
           adapter.request(:get)
         end
 
         it "is set if specified" do
           request.read_timeout = 30
-          curb.expects(:timeout=).with(request.read_timeout)
+          curb.expects(:timeout_ms=).with(30_000)
 
           adapter.request(:get)
         end
       end
 
-      describe "connect_timeout" do
+      describe "connect_timeout_ms" do
         it "is not set unless it's specified" do
-          curb.expects(:connect_timeout=).never
+          curb.expects(:connect_timeout_ms=).never
           adapter.request(:get)
         end
 
         it "is set if specified" do
           request.open_timeout = 30
-          curb.expects(:connect_timeout=).with(30)
+          curb.expects(:connect_timeout_ms=).with(30_000)
 
           adapter.request(:get)
         end
