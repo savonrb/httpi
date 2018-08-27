@@ -155,6 +155,13 @@ module HTTPI
         @client.use_ssl = @request.ssl?
         @client.open_timeout = @request.open_timeout if @request.open_timeout
         @client.read_timeout = @request.read_timeout if @request.read_timeout
+        if @request.write_timeout
+          if @client.respond_to?(:write_timeout=) # Expected to appear in Ruby 2.6
+            @client.write_timeout = @request.write_timeout
+          else
+            raise NotSupportedError, "Net::HTTP supports write_timeout starting from Ruby 2.6"
+          end
+        end
       end
 
       def setup_ssl_auth

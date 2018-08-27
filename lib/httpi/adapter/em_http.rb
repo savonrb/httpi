@@ -71,7 +71,8 @@ module HTTPI
       def connection_options
         options = {}
 
-        options[:inactivity_timeout] = @request.read_timeout if @request.read_timeout
+        read_or_write_timeout = @request.read_timeout || @request.write_timeout
+        options[:inactivity_timeout] = read_or_write_timeout if read_or_write_timeout
         options[:connect_timeout] = @request.open_timeout if @request.open_timeout
 
         options[:proxy] = proxy_options if @request.proxy

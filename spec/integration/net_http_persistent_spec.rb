@@ -48,7 +48,7 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     it "executes POST requests" do
-      request = HTTPI::Request.new(url: @server.url, open_timeout: 1, read_timeout: 1, body: "<some>xml</some>")
+      request = HTTPI::Request.new(url: @server.url, body: "<some>xml</some>")
 
       response = HTTPI.post(request, adapter)
       expect(response.body).to eq("post")
@@ -79,6 +79,14 @@ describe HTTPI::Adapter::NetHTTP do
 
       response = HTTPI.get(request, adapter)
       expect(response.body).to eq("basic-auth")
+    end
+
+    it "does not support ntlm authentication" do
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
+
+      expect { HTTPI.get(request, adapter) }.
+        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
 
     # it does not support digest authentication
