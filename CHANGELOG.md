@@ -1,3 +1,10 @@
+### 2.4.4
+
+* Improvement: [#197](https://github.com/savonrb/httpi/pull/197) Add support for new write timeout option to all adapters
+* Fix: [#196](https://github.com/savonrb/httpi/pull/196) Fix httpi adapters support for read/open timeout
+* Improvement: [Remove references to broken site](https://github.com/savonrb/httpi/commit/345e5e2b1a4376a7be769f67088a431895de09ad)
+* Fix: [#190](https://github.com/savonrb/httpi/pull/190) Don't convert port to string on Excon adapter
+
 ### 2.4.3
 
 * Fix: [#171](https://github.com/savonrb/httpi/pull/171) bug with rubyntlm v0.6.0
