@@ -11,14 +11,21 @@ module HTTPI
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]
 
-      # Fix for
-      # httpi/auth/ssl.rb:13: warning: constant OpenSSL::SSL::SSLContext::METHODS is deprecated
-      ssl_context = OpenSSL::SSL::SSLContext
-      SSL_VERSIONS = if ssl_context.const_defined? :METHODS_MAP
-        ssl_context.const_get(:METHODS_MAP).keys
-      else
-        ssl_context::METHODS.reject { |method| method.match(/server|client/) }
-      end.sort.reverse
+      # A default set of possible SSL protocols httpi should try to have support for.
+      # Note: Not all adapters may support all listed versions.
+      SSL_VERSIONS = [:SSLv23, :SSLv2, :SSLv3, :TLSv1, :TLSv1_0, :TLSv1_1, :TLSv1_2]
+
+      # All supported OpenSSL protocols.
+      # Used in case of OpenSSL support unexpected protocol which is not listed in SSL_VERSIONS.
+      OPENSSL_ALL_VERSIONS = begin
+        ssl_context = OpenSSL::SSL::SSLContext
+        # Avoid "warning: constant OpenSSL::SSL::SSLContext::METHODS is deprecated" message
+        if ssl_context.const_defined? :METHODS_MAP
+          ssl_context.const_get(:METHODS_MAP).keys
+        else
+          ssl_context::METHODS.reject { |method| method.match(/server|client/) }
+        end
+      end
 
       # Returns whether SSL configuration is present.
       def present?
@@ -82,7 +89,7 @@ module HTTPI
 
       # Sets the SSL version number. Expects one of <tt>HTTPI::Auth::SSL::SSL_VERSIONS</tt>.
       def ssl_version=(version)
-        unless SSL_VERSIONS.include? version
+        unless SSL_VERSIONS.include?(version) || OPENSSL_ALL_VERSIONS.include?(version)
           raise ArgumentError, "Invalid SSL version #{version.inspect}\n" +
                                "Please specify one of #{SSL_VERSIONS.inspect}"
         end

@@ -251,15 +251,14 @@ unless RUBY_PLATFORM =~ /java/
         end
 
         context 'sets ssl_version' do
-          it 'defaults to nil when no ssl_version is specified' do
-            curb.expects(:ssl_version=).with(nil)
+          it 'defaults to 0 when no ssl_version is specified' do
+            curb.expects(:ssl_version=).with(0)
             adapter.request(:get)
           end
 
           it 'to 1 when ssl_version is specified as TLSv1' do
             request.auth.ssl.ssl_version = :TLSv1
             curb.expects(:ssl_version=).with(1)
-
             adapter.request(:get)
           end
 
@@ -267,14 +266,30 @@ unless RUBY_PLATFORM =~ /java/
             version = HTTPI::Auth::SSL::SSL_VERSIONS.select { |method| method.to_s.match(/SSLv2|SSLv23/) }.first
             request.auth.ssl.ssl_version = version
             curb.expects(:ssl_version=).with(2)
-
             adapter.request(:get)
           end
 
           it 'to 3 when ssl_version is specified as SSLv3' do
             request.auth.ssl.ssl_version = :SSLv3
             curb.expects(:ssl_version=).with(3)
+            adapter.request(:get)
+          end
 
+          it 'to 4 when ssl_version is specified as TLSv1_0' do
+            request.auth.ssl.ssl_version = :TLSv1_0
+            curb.expects(:ssl_version=).with(4)
+            adapter.request(:get)
+          end
+
+          it 'to 5 when ssl_version is specified as TLSv1_1' do
+            request.auth.ssl.ssl_version = :TLSv1_1
+            curb.expects(:ssl_version=).with(5)
+            adapter.request(:get)
+          end
+
+          it 'to 6 when ssl_version is specified as TLSv1_2' do
+            request.auth.ssl.ssl_version = :TLSv1_2
+            curb.expects(:ssl_version=).with(6)
             adapter.request(:get)
           end
         end

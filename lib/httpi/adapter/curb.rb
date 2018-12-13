@@ -121,12 +121,14 @@ module HTTPI
         end
 
         @client.ssl_version = case ssl.ssl_version
-          when :TLSv1_2 then 1
-          when :TLSv1_1 then 1
-          when :TLSv1   then 1
-          when :SSLv2   then 2
-          when :SSLv23  then 2
-          when :SSLv3   then 3
+          when :TLSv1_2 then ::Curl::CURL_SSLVERSION_TLSv1_2
+          when :TLSv1_1 then ::Curl::CURL_SSLVERSION_TLSv1_1
+          when :TLSv1_0 then ::Curl::CURL_SSLVERSION_TLSv1_0
+          when :TLSv1   then ::Curl::CURL_SSLVERSION_TLSv1
+          when :SSLv2   then ::Curl::CURL_SSLVERSION_SSLv2
+          when :SSLv23  then ::Curl::CURL_SSLVERSION_SSLv2
+          when :SSLv3   then ::Curl::CURL_SSLVERSION_SSLv3
+          else ::Curl::CURL_SSLVERSION_DEFAULT
         end
       end
 
