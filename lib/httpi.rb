@@ -154,7 +154,8 @@ module HTTPI
     # Executes an HTTP request for the given +method+.
     def request(method, request, adapter = nil, redirects = 0)
       adapter_class = load_adapter(adapter, request)
-
+      
+      Adapter.client_setup_block.call(adapter_class.client) if Adapter.client_setup_block
       yield adapter_class.client if block_given?
       log_request(method, request, Adapter.identify(adapter_class.class))
 
@@ -172,6 +173,10 @@ module HTTPI
     # Shortcut for setting the default adapter to use.
     def adapter=(adapter)
       Adapter.use = adapter
+    end
+
+    def adapter_client_setup=(block)
+      Adapter.client_setup_block = block
     end
 
     private
