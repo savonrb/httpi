@@ -33,6 +33,14 @@ describe HTTPI do
     end
   end
 
+  describe ".adapter_client_setup=" do
+    it "sets the adapter client setup block" do
+      block = proc { }
+      HTTPI.adapter_client_setup = block
+      expect(HTTPI::Adapter.client_setup_block).to eq(block)
+    end
+  end
+
   describe ".query_builder" do
     it "gets flat builder by default" do
       expect(client.query_builder).to eq(HTTPI::QueryBuilder::Flat)
@@ -280,6 +288,12 @@ describe HTTPI do
       request.expects(:url=).with(URI.parse(redirect_location))
 
       client.request(:custom, request, :httpclient)
+    end
+
+    it 'calls client setup block if one has been set' do
+      block = proc { |client| client.base_url = 'https://google.com'  }
+      HTTPI::Adapter.client_setup_block = block
+      client.request(:get, request, :httpclient) { |client| expect(client.base_url).to eq('https://google.com') }
     end
   end
 
