@@ -34,6 +34,8 @@ module HTTPI
         @adapter ||= default_adapter
       end
 
+      attr_accessor :client_setup_block
+
       def identify(adapter_class)
         ADAPTER_CLASS_MAP[adapter_class]
       end
