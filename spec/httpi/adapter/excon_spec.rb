@@ -23,6 +23,12 @@ begin
           )
         end
       end
+      describe "host, hostname" do
+        it "both are set" do
+          Excon.expects(:display_warning).never
+          expect(adapter.client.data).to include(host: 'example.com', hostname: 'example.com')
+        end
+      end
     end
   end
 end
