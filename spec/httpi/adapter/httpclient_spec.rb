@@ -178,6 +178,17 @@ describe HTTPI::Adapter::HTTPClient do
 
         adapter.request(:get)
       end
+
+      it 'raises error when min_version not nil' do
+        request.auth.ssl.min_version = :TLS1_2
+        expect{ adapter.request(:get) }.
+          to raise_error(HTTPI::NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead')
+      end
+      it 'raises error when max_version not nil' do
+        request.auth.ssl.max_version = :TLS1_2
+        expect{ adapter.request(:get) }.
+          to raise_error(HTTPI::NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead')
+      end
     end
 
     context "(for SSL client auth with a verify mode of :none with no certs provided)" do

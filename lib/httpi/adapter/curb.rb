@@ -128,6 +128,9 @@ module HTTPI
           when :SSLv23  then 2
           when :SSLv3   then 3
         end
+        if ssl.min_version || ssl.max_version
+          raise NotSupportedError, 'Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.'
+        end
       end
 
       def respond_with(client)

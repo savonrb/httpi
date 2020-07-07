@@ -182,6 +182,8 @@ module HTTPI
         end
 
         @client.ssl_version = ssl.ssl_version if ssl.ssl_version
+        @client.min_version = ssl.min_version if ssl.min_version
+        @client.max_version = ssl.max_version if ssl.max_version
       end
 
       def ssl_cert_store(ssl)

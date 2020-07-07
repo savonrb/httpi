@@ -129,6 +129,16 @@ describe HTTPI::Adapter::HTTPClient do
         expect(response.body).to eq("get")
       end
 
+      it "works with min_version/max_version" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.min_version = :TLS1_2
+        request.auth.ssl.max_version = :TLS1_2
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+
       it "works with client cert and key provided as file path" do
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
