@@ -78,6 +78,9 @@ module HTTPI
         end
 
         @client.ssl_config.ssl_version = ssl.ssl_version.to_s if ssl.ssl_version
+        if ssl.min_version || ssl.max_version
+          raise NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead'
+        end
       end
 
       def respond_with(response)

@@ -20,6 +20,9 @@ module HTTPI
         ssl_context::METHODS.reject { |method| method.match(/server|client/) }
       end.sort.reverse
 
+      # Returns OpenSSL::SSL::*_VERSION values for min_version and max_version
+      MIN_MAX_VERSIONS = OpenSSL::SSL.constants.select{|constant| constant =~/_VERSION$/}.map{|version| version.to_s.gsub(/_VERSION$/,'').to_sym}.reverse
+
       # Returns whether SSL configuration is present.
       def present?
         (verify_mode == :none) || (cert && cert_key) || ca_cert_file
@@ -88,6 +91,36 @@ module HTTPI
         end
 
         @ssl_version = version
+      end
+
+      # Returns the SSL min_version number. Defaults to <tt>nil</tt> (auto-negotiate).
+      def min_version
+        @min_version ||= nil
+      end
+
+      # Sets the SSL min_version number. Expects one of <tt>HTTPI::Auth::SSL::MIN_MAX_VERSIONS</tt>.
+      def min_version=(version)
+        unless MIN_MAX_VERSIONS.include? version
+          raise ArgumentError, "Invalid SSL min_version #{version.inspect}\n" +
+                               "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
+        end
+
+        @min_version = version
+      end
+
+      # Returns the SSL min_version number. Defaults to <tt>nil</tt> (auto-negotiate).
+      def max_version
+        @max_version ||= nil
+      end
+
+      # Sets the SSL min_version number. Expects one of <tt>HTTPI::Auth::SSL::MIN_MAX_VERSIONS</tt>.
+      def max_version=(version)
+        unless MIN_MAX_VERSIONS.include? version
+          raise ArgumentError, "Invalid SSL max_version #{version.inspect}\n" +
+                               "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
+        end
+
+        @max_version = version
       end
 
       # Returns an <tt>OpenSSL::X509::Certificate</tt> for the +cert_file+.

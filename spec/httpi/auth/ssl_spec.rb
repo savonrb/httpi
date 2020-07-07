@@ -4,6 +4,7 @@ require "httpi/auth/ssl"
 describe HTTPI::Auth::SSL do
   before(:all) do
     @ssl_versions = HTTPI::Auth::SSL::SSL_VERSIONS
+    @min_max_versions = HTTPI::Auth::SSL::MIN_MAX_VERSIONS
   end
 
   describe "VERIFY_MODES" do
@@ -155,6 +156,36 @@ describe HTTPI::Auth::SSL do
       expect { ssl.ssl_version = :ssl_fail }.
         to raise_error(ArgumentError, "Invalid SSL version :ssl_fail\n" +
                                       "Please specify one of #{@ssl_versions}")
+    end
+  end
+
+  describe "#min_version" do
+    subject { HTTPI::Auth::SSL.new }
+
+    it "returns the min_version" do
+      subject.min_version = @min_max_versions.first
+      expect(subject.min_version).to eq(@min_max_versions.first)
+    end
+
+    it 'raises ArgumentError if the version is unsupported' do
+      expect { ssl.min_version = :ssl_fail }.
+        to raise_error(ArgumentError, "Invalid SSL min_version :ssl_fail\n" +
+                                      "Please specify one of #{@min_max_versions}")
+    end
+  end
+
+  describe "#max_version" do
+    subject { HTTPI::Auth::SSL.new }
+
+    it "returns the SSL version" do
+      subject.max_version = @min_max_versions.first
+      expect(subject.max_version).to eq(@min_max_versions.first)
+    end
+
+    it 'raises ArgumentError if the version is unsupported' do
+      expect { ssl.max_version = :ssl_fail }.
+        to raise_error(ArgumentError, "Invalid SSL max_version :ssl_fail\n" +
+                                      "Please specify one of #{@min_max_versions}")
     end
   end
 
