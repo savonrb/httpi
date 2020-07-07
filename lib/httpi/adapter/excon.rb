@@ -41,6 +41,7 @@ module HTTPI
 
         opts = {
           :host => url.host,
+          :hostname => url.hostname,
           :path => url.path,
           :port => url.port,
           :query => url.query,
