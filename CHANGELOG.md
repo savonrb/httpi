@@ -1,3 +1,10 @@
+### 2.4.5
+
+* Improvement: [#209](https://github.com/savonrb/httpi/pull/209) Drop Travis CI support for Ruby < 2.3.0 and jruby.
+*     Feature: [#208](https://github.com/savonrb/httpi/pull/208) Add SSL min/max_version configuration for supporting adapters
+* Improvement: [#206](https://github.com/savonrb/httpi/pull/206) Support for net-http-persistent v3
+* Improvement: [#204](https://github.com/savonrb/httpi/pull/204) Avoid excon warning
+
 ### 2.4.4
 
 * Improvement: [#197](https://github.com/savonrb/httpi/pull/197) Add support for new write timeout option to all adapters
