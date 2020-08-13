@@ -12,7 +12,7 @@ module HTTPI
       private
 
       def create_client
-        if is_v3
+        if Gem::Version.new(Net::HTTP::Persistent::VERSION) >= Gem::Version.new('3.0.0')
           Net::HTTP::Persistent.new name: thread_key
         else
           Net::HTTP::Persistent.new thread_key
@@ -42,11 +42,6 @@ module HTTPI
       def thread_key
         @request.url.host.split(/\W/).reject{|p|p == ""}.join('-')
       end
-
-      def is_v3
-        Net::HTTP::Persistent::VERSION.start_with? "3."
-      end
-
     end
   end
 end
