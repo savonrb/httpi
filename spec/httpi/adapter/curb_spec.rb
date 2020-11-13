@@ -250,6 +250,13 @@ unless RUBY_PLATFORM =~ /java/
           request
         end
 
+        it 'sets ssl_cipher_list' do
+          request.auth.ssl.ciphers = ["AES128"]
+          curb.expects(:set).with(any_parameters).at_least(1)
+          curb.expects(:set).with(:ssl_cipher_list, anything)
+          adapter.request(:get)
+        end
+
         context 'sets ssl_version' do
           it 'defaults to nil when no ssl_version is specified' do
             curb.expects(:ssl_version=).with(nil)

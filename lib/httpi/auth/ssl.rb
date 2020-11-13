@@ -25,7 +25,7 @@ module HTTPI
 
       # Returns whether SSL configuration is present.
       def present?
-        (verify_mode == :none) || (cert && cert_key) || ca_cert_file
+        (verify_mode == :none) || (cert && cert_key) || ca_cert_file || ciphers
       rescue TypeError, Errno::ENOENT
         false
       end
@@ -47,6 +47,24 @@ module HTTPI
 
       # Certificate store holds trusted CA certificates used to verify peer certificates.
       attr_accessor :cert_store
+
+      # Accessor for the SSL ciphers list.
+      attr_reader :ciphers
+
+      # Sets the available symmetric algorithms for encryption and decryption.
+      # @see OpenSSL::SSL::SSLContext#ciphers
+      # @example
+      #   ssl.ciphers = "cipher1:cipher2:..."
+      #   ssl.ciphers = [name, ...]
+      #   ssl.ciphers = [[name, version, bits, alg_bits], ...]
+      def ciphers=(ciphers)
+        @ciphers =
+          if ciphers
+            context = OpenSSL::SSL::SSLContext.new
+            context.ciphers = ciphers
+            context.ciphers.map(&:first)
+          end
+      end
 
       # Returns the cert type to validate SSL certificates PEM|DER.
       def cert_type
