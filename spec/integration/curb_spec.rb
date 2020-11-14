@@ -123,6 +123,14 @@ describe HTTPI::Adapter::Curb do
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")
       end
+
+      it "works with verify_mode none" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.verify_mode = :none
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
     end
 
   end
