@@ -1,7 +1,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe HTTPI::Adapter::NetHTTP do
+describe HTTPI::Adapter::NetHTTPPersistent do
 
   subject(:adapter) { :net_http_persistent }
 
