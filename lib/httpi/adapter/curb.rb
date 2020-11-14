@@ -15,7 +15,6 @@ module HTTPI
       def initialize(request)
         @request = request
         @client = Curl::Easy.new
-        p Curl::VERSION
       end
 
       attr_reader :client
@@ -110,7 +109,7 @@ module HTTPI
             @client.ssl_verify_host = 0
           else
             @client.cacert = ssl.ca_cert_file if ssl.ca_cert_file
-            #@client.certtype = ssl.cert_type.to_s.upcase
+            @client.certtype = ssl.cert_type.to_s.upcase
           end
 
           # Send client-side certificate regardless of state of SSL verify mode
