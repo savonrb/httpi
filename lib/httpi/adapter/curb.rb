@@ -39,10 +39,10 @@ module HTTPI
         end
 
         do_request { |client| client.send(*arguments) }
-      rescue Curl::Err::SSLCACertificateError
-        raise SSLError
-      rescue Curl::Err::SSLPeerCertificateError
-        raise SSLError
+      #rescue Curl::Err::SSLCACertificateError
+      #  raise SSLError
+      #rescue Curl::Err::SSLPeerCertificateError
+      #  raise SSLError
       rescue Curl::Err::ConnectionFailedError  # connection refused
         $!.extend ConnectionError
         raise
