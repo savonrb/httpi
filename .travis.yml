@@ -1,5 +1,5 @@
 language: "ruby"
-script: "echo 'CipherString = DEFAULT@SECLEVEL=2' >> /etc/ssl/openssl.cnf && cat /etc/ssl/openssl.cnf && bundle exec rake ci"
+script: "bundle exec rake ci"
 rvm:
   - 2.5.8
   - 2.6.6
