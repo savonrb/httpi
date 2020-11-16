@@ -141,6 +141,15 @@ describe HTTPI::Adapter::HTTP do
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")
       end
+
+      it "works with ciphers" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
     end
   end
 

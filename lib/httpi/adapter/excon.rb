@@ -73,6 +73,7 @@ module HTTPI
           opts[:ssl_verify_peer] = false
         end
 
+        opts[:ciphers] = ssl.ciphers if ssl.ciphers
         opts[:ssl_version] = ssl.ssl_version if ssl.ssl_version
         opts[:ssl_min_version] = ssl.min_version if ssl.min_version
         opts[:ssl_max_version] = ssl.max_version if ssl.max_version

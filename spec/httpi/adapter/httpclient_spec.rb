@@ -141,6 +141,13 @@ describe HTTPI::Adapter::HTTPClient do
 
         adapter.request(:get)
       end
+
+      it 'should set the ciphers if specified' do
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
+        ssl_config.expects(:ciphers=).with(request.auth.ssl.ciphers)
+
+        adapter.request(:get)
+      end
     end
 
     context "(for SSL client auth)" do

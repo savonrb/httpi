@@ -1,7 +1,8 @@
 require "spec_helper"
 require "integration/support/server"
+require "net/http/persistent"
 
-describe HTTPI::Adapter::NetHTTP do
+describe HTTPI::Adapter::NetHTTPPersistent do
 
   subject(:adapter) { :net_http_persistent }
 
@@ -118,6 +119,17 @@ describe HTTPI::Adapter::NetHTTP do
       it "works when set up properly" do
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+
+      it "works with ciphers" do
+        skip("Requires net-http-persistent 3.x") unless Net::HTTP::Persistent::VERSION.start_with? "3."
+
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")

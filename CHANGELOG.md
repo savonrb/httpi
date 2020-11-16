@@ -1,3 +1,6 @@
+### Unreleased
+* Feature: [#214](https://github.com/savonrb/httpi/pull/214) Add SSL ciphers configuration
+
 ### 2.4.5
 
 * Improvement: [#209](https://github.com/savonrb/httpi/pull/209) Drop Travis CI support for Ruby < 2.3.0 and jruby.

@@ -189,6 +189,23 @@ describe HTTPI::Auth::SSL do
     end
   end
 
+  describe '#ciphers' do
+    subject { ssl.ciphers }
+    let(:ssl) { HTTPI::Auth::SSL.new }
+
+    context 'without ciphers' do
+      before { ssl.ciphers = nil }
+
+      it { is_expected.to eq(nil) }
+    end
+
+    context 'with ciphers' do
+      before { ssl.ciphers = OpenSSL::Cipher.ciphers }
+
+      it { is_expected.to be_any.and(all(be_an_instance_of(String))) }
+    end
+  end
+
   def ssl
     ssl = HTTPI::Auth::SSL.new
     ssl.cert_key_file = "spec/fixtures/client_key.pem"

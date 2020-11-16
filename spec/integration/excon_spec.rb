@@ -1,7 +1,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe HTTPI::Adapter::HTTPClient do
+describe HTTPI::Adapter::Excon do
 
   subject(:adapter) { :excon }
 
@@ -155,6 +155,15 @@ describe HTTPI::Adapter::HTTPClient do
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
         request.auth.ssl.cert = OpenSSL::X509::Certificate.new File.open("spec/fixtures/client_cert.pem").read
         request.auth.ssl.cert_key = OpenSSL::PKey.read File.open("spec/fixtures/client_key.pem").read
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+
+      it "works with ciphers" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
+        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")
