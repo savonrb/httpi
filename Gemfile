@@ -17,4 +17,4 @@ gem 'http',                             :require => false
 
 # coverage
 gem 'simplecov',                        :require => false
-gem 'coveralls',                        :require => false
+gem 'coveralls_reborn',                 :require => false
