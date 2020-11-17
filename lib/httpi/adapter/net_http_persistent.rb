@@ -9,6 +9,17 @@ module HTTPI
 
       register :net_http_persistent, :deps => %w(net/http/persistent)
 
+      # Executes arbitrary HTTP requests.
+      # @see HTTPI.request
+      def request(method)
+        super
+      rescue Net::HTTP::Persistent::Error => e
+        if !e.message.nil? && e.message =~ /Timeout/
+          $!.extend TimeoutError
+        end
+        raise
+      end
+
       private
 
       def create_client

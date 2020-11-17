@@ -32,13 +32,13 @@ module HTTPI
         unless ::HTTP::Request::METHODS.include? method
           raise NotSupportedError, "http.rb does not support custom HTTP methods"
         end
-        response = begin
-          @client.send(method, @request.url, :body => @request.body)
-        rescue OpenSSL::SSL::SSLError
-          raise SSLError
-        end
-
+        response = @client.send(method, @request.url, :body => @request.body)
         Response.new(response.code, response.headers.to_h, response.body.to_s)
+      rescue OpenSSL::SSL::SSLError
+        raise SSLError
+      rescue ::HTTP::TimeoutError
+        $!.extend TimeoutError
+        raise
       end
 
       private

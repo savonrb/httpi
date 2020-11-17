@@ -53,9 +53,11 @@ describe HTTPI::Adapter::EmHttpRequest do
           request = HTTPI::Request.new(@server.url + "timeout")
           request.read_timeout = 0.5 # seconds
 
-          expect do
-            HTTPI.get(request, adapter)
-          end.to raise_exception(HTTPI::TimeoutError)
+          expect { HTTPI.get(request, adapter) }
+            .to raise_error { |error|
+              expect(error).to be_a(HTTPI::Adapter::EmHttpRequest::EmHttpTimeoutError)
+              expect(error).to be_a(HTTPI::TimeoutError)
+            }
         end
       end
 

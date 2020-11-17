@@ -31,14 +31,14 @@ describe HTTPI::Adapter::HTTP do
     end
 
     it "it supports read timeout" do
-      require "http"
-
       request = HTTPI::Request.new(@server.url + "timeout")
       request.read_timeout = 0.5 # seconds
 
-      expect do
-        HTTPI.get(request, adapter)
-      end.to raise_exception(HTTP::TimeoutError)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error { |error|
+          expect(error).to be_a(HTTP::TimeoutError)
+          expect(error).to be_a(HTTPI::TimeoutError)
+        }
     end
 
 

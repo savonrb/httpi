@@ -34,14 +34,14 @@ describe HTTPI::Adapter::Curb do
       end
 
       it "it supports read timeout" do
-        require "curb"
-
         request = HTTPI::Request.new(@server.url + "timeout")
         request.read_timeout = 0.5 # seconds
 
-        expect do
-          HTTPI.get(request, adapter)
-        end.to raise_exception(Curl::Err::TimeoutError)
+        expect { HTTPI.get(request, adapter) }
+          .to raise_error { |error|
+            expect(error).to be_a(Curl::Err::TimeoutError)
+            expect(error).to be_a(HTTPI::TimeoutError)
+          }
       end
 
       it "executes GET requests" do
