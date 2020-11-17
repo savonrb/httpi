@@ -9,3 +9,5 @@ tmp
 Gemfile.lock
 .idea/*
 .rbx/
+.ruby-version
+.ruby-gemset
