@@ -19,10 +19,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'socksify'
 
   s.add_development_dependency 'rubyntlm', '~> 0.3.2'
-  s.add_development_dependency 'rake',     '~> 10.0'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec',    '~> 3.5'
   s.add_development_dependency 'mocha',    '~> 0.13'
-  s.add_development_dependency 'puma',     '~> 2.3.2'
+  s.add_development_dependency 'puma',     '>= 4.3.8'
   s.add_development_dependency 'webmock'
 
   s.files = `git ls-files`.split("\n")
