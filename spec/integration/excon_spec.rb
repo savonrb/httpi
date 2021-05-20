@@ -140,6 +140,8 @@ describe HTTPI::Adapter::Excon do
       end
 
       it "works with client cert and key provided as file path" do
+        Excon.defaults[:ssl_verify_peer] = false
+        OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] += ":DES-CBC3-SHA"
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
         request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
