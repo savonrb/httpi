@@ -18,6 +18,10 @@ jobs:
           - jruby
 
     steps:
+      - name: Install cURL Headers
+        run: curl https://curl.se/download/curl-$V.tar.gz | sudo tar xz -C /usr --strip-components=1 curl-$V/include
+        env:
+          V: 7.58.0
       - uses: actions/checkout@v2
       - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
