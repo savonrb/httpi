@@ -1,3 +1,7 @@
+### Unreleased
+
+* Improvement: [#225](https://github.com/savonrb/httpi/pull/225) Make rack and socksify dependencies optional.
+
 ### 2.5.0 (2021-10-05)
 
 * Feature: [#214](https://github.com/savonrb/httpi/pull/214) Add SSL ciphers configuration
