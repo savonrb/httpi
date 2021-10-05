@@ -1,5 +1,7 @@
-### Unreleased
+### 2.5.0 (2021-10-05)
+
 * Feature: [#214](https://github.com/savonrb/httpi/pull/214) Add SSL ciphers configuration
+* Improvement: [#227](https://github.com/savonrb/httpi/pull/227) Use GitHub Actions as CI. Require at least Ruby v2.3.
 
 ### 2.4.5
 
