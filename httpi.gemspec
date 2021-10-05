@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/savonrb/#{s.name}"
   s.summary     = "Common interface for Ruby's HTTP libraries"
   s.description = s.summary
-  s.required_ruby_version = '>= 1.9.2'
+
+  s.required_ruby_version = '>= 2.3'
 
   s.license = 'MIT'
 
@@ -19,10 +20,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'socksify'
 
   s.add_development_dependency 'rubyntlm', '~> 0.3.2'
-  s.add_development_dependency 'rake',     '~> 10.0'
+  s.add_development_dependency 'rake',     '~> 13.0'
   s.add_development_dependency 'rspec',    '~> 3.5'
   s.add_development_dependency 'mocha',    '~> 0.13'
-  s.add_development_dependency 'puma',     '~> 2.3.2'
+  s.add_development_dependency 'puma',     '~> 5.0'
   s.add_development_dependency 'webmock'
 
   s.files = `git ls-files`.split("\n")

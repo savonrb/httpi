@@ -2,7 +2,7 @@ require "spec_helper"
 require "httpi/adapter/em_http"
 require "httpi/request"
 
-begin
+unless RUBY_PLATFORM =~ /java/
   HTTPI::Adapter.load_adapter(:em_http)
 
   describe HTTPI::Adapter::EmHttpRequest do
@@ -176,11 +176,5 @@ begin
       message
     end
 
-  end
-rescue LoadError => e
-  if e.message =~ /fiber/
-    warn "LoadError: #{e.message} (EventMachine requires fibers)"
-  else
-    raise e
   end
 end
