@@ -4,8 +4,6 @@ require "httpi/adapter/base"
 require "httpi/response"
 require 'kconv'
 require 'socket'
-require "socksify"
-require 'socksify/http'
 
 module HTTPI
   module Adapter
