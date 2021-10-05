@@ -39,7 +39,7 @@ describe HTTPI::Adapter::NetHTTPPersistent do
 
       expect do
         HTTPI.get(request, adapter)
-      end.to raise_exception(Net::HTTP::Persistent::Error, /Net::ReadTimeout/)
+      end.to raise_exception(Net::ReadTimeout)
     end
 
     it "executes GET requests" do
@@ -111,6 +111,7 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       before :all do
         @server = IntegrationServer.run(:ssl => true)
       end
+
       after :all do
         @server.stop
       end
@@ -125,11 +126,9 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       end
 
       it "works with ciphers" do
-        skip("Requires net-http-persistent 3.x") unless Net::HTTP::Persistent::VERSION.start_with? "3."
-
         request = HTTPI::Request.new(@server.url)
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-        request.auth.ssl.ciphers = OpenSSL::Cipher.ciphers
+        request.auth.ssl.ciphers = OpenSSL::SSL::SSLContext.new.ciphers
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")

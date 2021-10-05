@@ -200,7 +200,7 @@ describe HTTPI::Auth::SSL do
     end
 
     context 'with ciphers' do
-      before { ssl.ciphers = OpenSSL::Cipher.ciphers }
+      before { ssl.ciphers = OpenSSL::SSL::SSLContext.new.ciphers }
 
       it { is_expected.to be_any.and(all(be_an_instance_of(String))) }
     end

@@ -4,7 +4,6 @@ require "puma/minissl"
 require "integration/support/application"
 
 class IntegrationServer
-
   def self.run(options = {})
     server = new(options)
     server.run
@@ -76,7 +75,7 @@ class IntegrationServer
 
     context.key         = IntegrationServer.ssl_key_file
     context.cert        = IntegrationServer.ssl_cert_file
-    context.verify_mode = Puma::MiniSSL::VERIFY_PEER
+    context.verify_mode = Puma::MiniSSL::VERIFY_NONE
 
     context
   end

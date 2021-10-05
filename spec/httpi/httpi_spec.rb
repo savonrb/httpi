@@ -6,11 +6,9 @@ require "excon"
 require "net/http/persistent"
 require "http"
 
-unless RUBY_VERSION < "1.9"
+unless RUBY_PLATFORM =~ /java/
   require "em-synchrony"
   require "em-http-request"
-end
-unless RUBY_PLATFORM =~ /java/
   require "curb"
 end
 
@@ -294,7 +292,7 @@ describe HTTPI do
       end
 
       HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
-        unless (adapter == :em_http && RUBY_VERSION =~ /1\.8/) || (adapter == :curb && RUBY_PLATFORM =~ /java/)
+        unless (adapter == :em_http || adapter == :curb) && RUBY_PLATFORM =~ /java/
           client_class = {
             :httpclient => lambda { HTTPClient },
             :curb       => lambda { Curl::Easy },

@@ -5,11 +5,7 @@ A common interface for Ruby's HTTP libraries.
 [Documentation](https://www.rubydoc.info/gems/httpi) |
 [Mailing list](https://groups.google.com/forum/#!forum/httpirb)
 
-[![Build Status](https://secure.travis-ci.org/savonrb/httpi.svg?branch=master)](http://travis-ci.org/savonrb/httpi)
-[![Gem Version](https://badge.fury.io/rb/httpi.svg)](http://badge.fury.io/rb/httpi)
-[![Code Climate](https://codeclimate.com/github/savonrb/httpi.svg)](https://codeclimate.com/github/savonrb/httpi)
-[![Coverage Status](https://coveralls.io/repos/savonrb/httpi/badge.svg?branch=master)](https://coveralls.io/r/savonrb/httpi)
-
+[![Development Status](https://github.com/savon/httpi/workflows/Development/badge.svg)](https://github.com/savon/httpi/actions?workflow=Development)
 
 ## Installation
 
@@ -27,7 +23,6 @@ gem 'httpi', '~> 2.1.0'
 
 
 ## Usage example
-
 
 ``` ruby
 require "httpi"
