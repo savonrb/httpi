@@ -5,7 +5,7 @@ A common interface for Ruby's HTTP libraries.
 [Documentation](https://www.rubydoc.info/gems/httpi) |
 [Mailing list](https://groups.google.com/forum/#!forum/httpirb)
 
-[![Development Status](https://github.com/savon/httpi/workflows/Development/badge.svg)](https://github.com/savon/httpi/actions?workflow=Development)
+[![Development](https://github.com/savonrb/httpi/actions/workflows/development.yml/badge.svg)](https://github.com/savonrb/httpi/actions/workflows/development.yml)
 
 ## Installation
 
