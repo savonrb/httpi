@@ -11,16 +11,11 @@ A common interface for Ruby's HTTP libraries.
 
 HTTPI is available through [Rubygems](https://rubygems.org/gems/httpi) and can be installed via:
 
-```
-$ gem install httpi
-```
+    $ gem install httpi
 
 or add it to your Gemfile like this:
 
-```
-gem 'httpi', '~> 2.1.0'
-```
-
+    gem 'httpi', '~> 2.1.0'
 
 ## Usage example
 
@@ -44,6 +39,20 @@ HTTPI.adapter = :httpclient
 HTTPI.request(:custom, request)
 ```
 
+### Rack Mock Adapter
+
+To use the Rack mock adapter, please add the `rack` gem to your gemfile.
+
+### SOCKS Proxy Support
+
+To use the the SOCKS proxy support, please add the `socksify` gem to your gemfile, and add the following code:
+
+``` ruby
+require 'socksify'
+require 'socksify/http'
+```
+
+to your project.
 
 ## Documentation
 
