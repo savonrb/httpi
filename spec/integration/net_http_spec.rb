@@ -93,11 +93,19 @@ describe HTTPI::Adapter::NetHTTP do
         end
       }
       let(:request_body) { nil }
-      let(:response) { HTTPI.request(http_method, request, adapter) }
+
+      subject(:response) { HTTPI.request(http_method, request, adapter) }
 
       shared_examples_for "any supported custom method" do
-        specify { response.body.should eq http_method.to_s }
-        specify { response.headers["Content-Type"].should eq("text/plain") }
+        describe '#body' do
+          subject(:body) {response.body}
+          it { is_expected.to be == http_method.to_s }
+        end
+
+        describe '#headers' do
+          subject(:headers) {response.headers}
+          it { is_expected.to include('content-type' => "text/plain")}
+        end
       end
 
       context "PATCH method" do
