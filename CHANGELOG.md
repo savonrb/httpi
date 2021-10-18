@@ -1,4 +1,4 @@
-### Unreleased
+### 3.0.0 (2021-10-19)
 
 * Improvement: [#225](https://github.com/savonrb/httpi/pull/225) Make rack and socksify dependencies optional.
 

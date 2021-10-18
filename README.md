@@ -15,7 +15,7 @@ HTTPI is available through [Rubygems](https://rubygems.org/gems/httpi) and can b
 
 or add it to your Gemfile like this:
 
-    gem 'httpi', '~> 2.1.0'
+    gem 'httpi', '~> 3.0.0'
 
 ## Usage example
 
