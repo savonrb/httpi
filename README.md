@@ -38,10 +38,6 @@ HTTPI.adapter = :httpclient
 HTTPI.request(:custom, request)
 ```
 
-### Rack Mock Adapter
-
-To use the Rack mock adapter, please add the `rack` gem to your gemfile.
-
 ### SOCKS Proxy Support
 
 To use the the SOCKS proxy support, please add the `socksify` gem to your gemfile, and add the following code:
