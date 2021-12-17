@@ -1,3 +1,7 @@
+### 3.0.1 (2021-12-17)
+
+* Fix: [#230](https://github.com/savonrb/httpi/pull/230) Make rack a runtime dependency.
+
 ### 3.0.0 (2021-10-19)
 
 * Improvement: [#225](https://github.com/savonrb/httpi/pull/225) Make rack and socksify dependencies optional.
