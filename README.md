@@ -2,7 +2,7 @@
 
 A common interface for Ruby's HTTP libraries.
 
-[Documentation](https://www.rubydoc.info/gems/httpi) |
+[Documentation](https://www.rubydoc.info/gems/httpi)
 
 [![Development](https://github.com/savonrb/httpi/actions/workflows/development.yml/badge.svg)](https://github.com/savonrb/httpi/actions/workflows/development.yml)
 
