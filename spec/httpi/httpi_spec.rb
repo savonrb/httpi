@@ -34,6 +34,10 @@ describe HTTPI do
   end
 
   describe ".adapter_client_setup=" do
+    after do
+      HTTPI.adapter_client_setup = nil
+    end
+
     it "sets the adapter client setup block" do
       block = proc { }
       HTTPI.adapter_client_setup = block
@@ -290,10 +294,16 @@ describe HTTPI do
       client.request(:custom, request, :httpclient)
     end
 
-    it 'calls client setup block if one has been set' do
-      block = proc { |client| client.base_url = 'https://google.com'  }
-      HTTPI::Adapter.client_setup_block = block
-      client.request(:get, request, :httpclient) { |client| expect(client.base_url).to eq('https://google.com') }
+    describe "client setup block present" do
+      around do |example|
+        HTTPI::Adapter.client_setup_block = proc { |client| client.base_url = 'https://google.com'  }
+        example.run
+        HTTPI::Adapter.client_setup_block = nil
+      end
+
+      it 'calls client setup block' do
+        client.request(:get, request, :httpclient) { |client| expect(client.base_url).to eq('https://google.com') }
+      end
     end
   end
 
