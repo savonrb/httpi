@@ -15,7 +15,7 @@ gem 'net-http-persistent', '~> 4.0',    :require => false
 gem 'http',                             :require => false
 
 # adapter extensions
-gem 'rack'
+gem 'rack', '< 3'
 gem 'socksify'
 
 # coverage

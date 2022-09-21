@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.license = 'MIT'
 
-  s.add_dependency 'rack'
+  s.add_dependency 'rack', '< 3'
 
   s.add_development_dependency 'rubyntlm', '~> 0.3.2'
   s.add_development_dependency 'rake',     '~> 13.0'
