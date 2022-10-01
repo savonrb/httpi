@@ -1,3 +1,7 @@
+### Unreleased
+
+* Improvement: [#237](https://github.com/savonrb/httpi/pull/237) Implemented `adapter_client_setup`.
+
 ### 3.0.1 (2021-12-17)
 
 * Fix: [#230](https://github.com/savonrb/httpi/pull/230) Make rack a runtime dependency.
