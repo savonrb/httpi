@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
                     'wiki_uri' => 'https://github.com/savonrb/httpi/wiki',
                     'documentation_uri' => 'https://www.rubydoc.info/gems/httpi' }
 
-  s.required_ruby_version = '>= 2.3'
+  s.required_ruby_version = '>= 3.0'
 
   s.license = 'MIT'
 
@@ -29,6 +29,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha',    '~> 0.13'
   s.add_development_dependency 'puma',     '~> 5.0'
   s.add_development_dependency 'webmock'
+
+  s.metadata["rubygems_mfa_required"] = "true"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = 'lib'
