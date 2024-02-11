@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.license = 'MIT'
 
-  s.add_dependency 'rack', '< 3'
+  s.add_dependency 'rack', '>= 2.0', '< 3.1'
   s.add_dependency 'nkf'
   s.add_dependency 'base64'
   s.add_dependency 'mutex_m'
@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',     '~> 13.0'
   s.add_development_dependency 'rspec',    '~> 3.5'
   s.add_development_dependency 'mocha',    '~> 0.13'
-  s.add_development_dependency 'puma',     '~> 5.0'
+  s.add_development_dependency 'puma',     '~> 6.0'
   s.add_development_dependency 'webmock'
 
   s.metadata["rubygems_mfa_required"] = "true"

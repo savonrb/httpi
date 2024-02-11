@@ -88,7 +88,7 @@ describe HTTPI::Response do
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        expect(response.headers).to eq({ "Content-Encoding" => "gzip" })
+        expect(response.headers).to eq Rack::Headers.new.merge({ "Content-Encoding" => "gzip" })
       end
     end
 
@@ -116,7 +116,7 @@ describe HTTPI::Response do
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        expect(response.headers).to eq({ "Content-Type" => "application/dime" })
+        expect(response.headers).to eq Rack::Headers.new.merge({ "Content-Type" => "application/dime" })
       end
     end
 

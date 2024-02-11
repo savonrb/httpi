@@ -34,7 +34,7 @@ jobs:
             experimental: true
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install dependencies
       run: sudo apt-get install libcurl4-openssl-dev

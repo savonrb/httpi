@@ -1,6 +1,6 @@
 ### Unreleased
 
-* Add your changes here.
+* `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `Rack::Headers` instead of `Rack::Utils::HeaderHash`
 
 ### 3.0.2 (2024-02-10)
 

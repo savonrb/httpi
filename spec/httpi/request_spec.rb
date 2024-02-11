@@ -92,11 +92,11 @@ describe HTTPI::Request do
         after { HTTPI.query_builder = :flat }
 
         it "lets you specify query parameter as Hash" do
-          expect(request.url.to_s).to eq("http://example.com?q[]=nested&q[]=query")
+          expect(request.url.to_s).to eq("http://example.com?q%5B%5D=nested&q%5B%5D=query")
         end
 
         it "getter return String for query parameter as Hash" do
-          expect(request.query).to eq("q[]=nested&q[]=query")
+          expect(request.query).to eq("q%5B%5D=nested&q%5B%5D=query")
         end
       end
     end
@@ -149,7 +149,7 @@ describe HTTPI::Request do
   describe "#headers" do
     it "lets you specify a Hash of HTTP request headers" do
       request.headers = { "Accept-Encoding" => "gzip" }
-      expect(request.headers).to eq({ "Accept-Encoding" => "gzip" })
+      expect(request.headers).to eq Rack::Headers.new.merge({ "Accept-Encoding" => "gzip" })
     end
 
     it "defaults to return an empty Hash" do
@@ -235,7 +235,7 @@ describe HTTPI::Request do
         end
         it "request body using a Hash with Array" do
           request.body = {:foo => :bar, :baz => [:foo, :tst]}
-          expect(request.body.split("&")).to match_array(["foo=bar", "baz[]=foo", "baz[]=tst"])
+          expect(request.body.split("&")).to match_array(["foo=bar", "baz%5B%5D=foo", "baz%5B%5D=tst"])
         end
       end
     end

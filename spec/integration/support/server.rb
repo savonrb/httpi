@@ -57,7 +57,7 @@ class IntegrationServer
   private
 
   def events
-    Puma::Events.new($stdout, $stderr)
+    Puma::Events.new
   end
 
   def add_tcp_listener
