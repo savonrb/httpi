@@ -2,6 +2,10 @@
 
 * Improvement: [#237](https://github.com/savonrb/httpi/pull/237) Implemented `adapter_client_setup`.
 
+### 3.0.2 (2024-02-10)
+
+* Add support for ruby 3.1, 3.2, 3.3. Drop support for ruby 2.7 and below.
+
 ### 3.0.1 (2021-12-17)
 
 * Fix: [#230](https://github.com/savonrb/httpi/pull/230) Make rack a runtime dependency.
