@@ -1,10 +1,12 @@
 ### Unreleased
 
-* Improvement: [#237](https://github.com/savonrb/httpi/pull/237) Implemented `adapter_client_setup`.
+* Add your changes here.
 
 ### 3.0.2 (2024-02-10)
 
+* Improvement: [#237](https://github.com/savonrb/httpi/pull/237) Implemented `adapter_client_setup`.
 * Add support for ruby 3.1, 3.2, 3.3. Drop support for ruby 2.7 and below.
+* Pin to rack version < 3, HTTPI is not tested with rack 3 yet.
 
 ### 3.0.1 (2021-12-17)
 

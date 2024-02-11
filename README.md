@@ -36,6 +36,17 @@ HTTPI.adapter = :httpclient
 
 # and execute arbitary requests
 HTTPI.request(:custom, request)
+
+# add a client setup block that will be called before each request
+HTTPI.adapter = :httpclient
+HTTPI.adapter_client_setup = proc do |x|
+  x.ssl_config.set_default_paths
+  x.force_basic_auth = true
+end
+# ...
+HTTPI.get(request) do |x|
+  x.force_basic_auth = false
+end
 ```
 
 ### SOCKS Proxy Support
