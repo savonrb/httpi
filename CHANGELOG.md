@@ -1,6 +1,13 @@
 ### Unreleased
 
-* `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `Rack::Headers` instead of `Rack::Utils::HeaderHash`
+* Add your changelog entry here
+
+### 4.0.0
+
+HTTPI is officially in maintenance mode. Our emphasis will now be on bugs, security fixes, and compatibility with the wider ecosystem. See [this issue](https://github.com/savonrb/httpi/issues/238) for details.
+
+* Adds support for rack 3.0.
+* POTENTIAL BREAKING CHANGE: `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `Rack::Headers` instead of `Rack::Utils::HeaderHash`. This change is motivated by an upcoming change to rack 3.1.
 
 ### 3.0.2 (2024-02-10)
 

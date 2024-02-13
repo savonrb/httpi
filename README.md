@@ -1,6 +1,6 @@
 # HTTPI
 
-A common interface for Ruby's HTTP libraries.
+A common interface for Ruby's HTTP libraries. This project is now in maintenance mode. For new projects, we recommend [faraday](https://github.com/lostisland/faraday).
 
 [Documentation](https://www.rubydoc.info/gems/httpi)
 
@@ -14,7 +14,7 @@ HTTPI is available through [Rubygems](https://rubygems.org/gems/httpi) and can b
 
 or add it to your Gemfile like this:
 
-    gem 'httpi', '~> 3.0.0'
+    gem 'httpi', '~> 4.0.0'
 
 ## Usage example
 
