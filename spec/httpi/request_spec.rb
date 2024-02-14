@@ -149,7 +149,7 @@ describe HTTPI::Request do
   describe "#headers" do
     it "lets you specify a Hash of HTTP request headers" do
       request.headers = { "Accept-Encoding" => "gzip" }
-      expect(request.headers).to eq Rack::Headers.new.merge({ "Accept-Encoding" => "gzip" })
+      expect(request.headers).to eq HTTPI::Utils::Headers.new.merge({ "Accept-Encoding" => "gzip" })
     end
 
     it "defaults to return an empty Hash" do

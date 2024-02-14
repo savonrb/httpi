@@ -64,12 +64,12 @@ module HTTPI
 
     # Returns a Hash of HTTP headers. Defaults to return an empty Hash.
     def headers
-      @headers ||= Rack::Headers.new
+      @headers ||= HTTPI::Utils::Headers.new
     end
 
     # Sets the Hash of HTTP headers.
     def headers=(headers)
-      @headers = Rack::Headers.new.merge(headers)
+      @headers = HTTPI::Utils::Headers.new.merge(headers)
     end
 
     # Adds a header information to accept gzipped content.
