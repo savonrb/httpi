@@ -8,6 +8,4 @@ In order to restore the old behavior, see the README section "SOCKS Proxy Suppor
 
 ## From 3.x to 4.x
 
-BREAKING CHANGE: `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `Rack::Headers` instead of `Rack::Utils::HeaderHash`. You may need to adjust any code that explicitly depends on the type of the return value of these methods.
-
-This change was made to address a deprecation warning for a pending API change in the upcoming [rack](https://github.com/rack/rack) 3.1.
+POTENTIAL BREAKING CHANGE: `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `HTTPI::Utils::Headers` instead of `Rack::Utils::HeaderHash`. This change will prevent HTTPI from breaking or changing its public API whenever rack rearranges its classes. If you were relying on the `Rack::Utils::HeaderHash` implementation, you will need to update your code to use `HTTPI::Utils::Headers` instead.

@@ -2,12 +2,16 @@
 
 * Add your changelog entry here
 
-### 4.0.0
+### 4.0.1 (2024-02-16)
 
 HTTPI is officially in maintenance mode. Our emphasis will now be on bugs, security fixes, and compatibility with the wider ecosystem. See [this issue](https://github.com/savonrb/httpi/issues/238) for details.
 
 * Adds support for rack 3.0.
-* POTENTIAL BREAKING CHANGE: `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `Rack::Headers` instead of `Rack::Utils::HeaderHash`. This change is motivated by an upcoming change to rack 3.1.
+* POTENTIAL BREAKING CHANGE: `HTTPI::Request#headers` and `HTTPI::Response#headers` now return `HTTPI::Utils::Headers` instead of `Rack::Utils::HeaderHash`. This change will prevent HTTPI from breaking or changing its public API whenever rack rearranges its classes. If you were relying on the `Rack::Utils::HeaderHash` implementation, you will need to update your code to use `HTTPI::Utils::Headers` instead.
+
+### 4.0.0 (yanked)
+
+Yanked due to a bug when used with rack 2.
 
 ### 3.0.2 (2024-02-10)
 
