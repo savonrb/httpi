@@ -20,7 +20,7 @@ module HTTPI
     # Initializer expects an HTTP response +code+, +headers+ and +body+.
     def initialize(code, headers, body)
       self.code = code.to_i
-      self.headers = Rack::Headers.new.merge(headers)
+      self.headers = HTTPI::Utils::Headers.new.merge(headers)
       self.raw_body = body
     end
 

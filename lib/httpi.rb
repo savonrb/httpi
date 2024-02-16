@@ -3,6 +3,7 @@ require "httpi/version"
 require "httpi/logger"
 require "httpi/request"
 require "httpi/query_builder"
+require "httpi/utils"
 
 require "httpi/adapter/httpclient"
 require "httpi/adapter/curb"
