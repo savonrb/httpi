@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'base64'
   s.add_dependency 'mutex_m'
 
-  s.add_development_dependency 'rubyntlm', '~> 0.3.2'
+  s.add_development_dependency 'rubyntlm', '~> 0.6.4'
   s.add_development_dependency 'rake',     '~> 13.0'
   s.add_development_dependency 'rspec',    '~> 3.5'
   s.add_development_dependency 'mocha',    '~> 0.13'
