@@ -215,8 +215,7 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
-  # TODO: ntlm_openssl3 https://github.com/WinRb/rubyntlm/issues/57
-  xit "supports NTLM authentication" do
+  it "supports NTLM authentication" do
     request = HTTPI::Request.new(@server.url + "ntlm-auth")
 
     request.auth.ntlm("tester", "vReqSoafRe5O")

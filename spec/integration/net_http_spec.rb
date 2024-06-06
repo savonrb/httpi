@@ -138,8 +138,7 @@ describe HTTPI::Adapter::NetHTTP do
         to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
     end
 
-    # TODO: ntlm_openssl3 https://github.com/WinRb/rubyntlm/issues/57
-    xit "supports ntlm authentication" do
+    it "supports ntlm authentication" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
@@ -167,8 +166,7 @@ describe HTTPI::Adapter::NetHTTP do
       HTTPI::Adapter::NetHTTP.any_instance.unstub(:check_net_ntlm_version!)
     end
 
-    # TODO: ntlm_openssl3 https://github.com/WinRb/rubyntlm/issues/57
-    xit "does check ntlm when ntlm authentication is requested" do
+    it "does check ntlm when ntlm authentication is requested" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
@@ -185,8 +183,7 @@ describe HTTPI::Adapter::NetHTTP do
       HTTPI::Adapter::NetHTTP.any_instance.unstub(:ntlm_version)
     end
 
-    # TODO: ntlm_openssl3 https://github.com/WinRb/rubyntlm/issues/57
-    xit "does not crash when authenticate header is missing (on second request)" do
+    it "does not crash when authenticate header is missing (on second request)" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
