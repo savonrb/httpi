@@ -2,6 +2,10 @@
 
 * Add your changelog entry here
 
+### 4.0.2 (2024-06-13)
+
+* Don't change http header casing by @pcai in https://github.com/savonrb/httpi/pull/249
+
 ### 4.0.1 (2024-02-16)
 
 HTTPI is officially in maintenance mode. Our emphasis will now be on bugs, security fixes, and compatibility with the wider ecosystem. See [this issue](https://github.com/savonrb/httpi/issues/238) for details.
