@@ -118,6 +118,10 @@ describe HTTPI::Response do
       it "returns the HTTP response headers" do
         expect(response.headers).to eq HTTPI::Utils::Headers.new.merge({ "Content-Type" => "application/dime" })
       end
+
+      it "preserves casing" do
+        expect(response.headers.keys).to eq ["Content-Type"]
+      end
     end
 
     describe "#body" do
