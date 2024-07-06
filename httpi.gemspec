@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.license = 'MIT'
 
-  s.add_dependency 'rack', '>= 2.0', '< 3.1'
+  s.add_dependency 'rack', '>= 2.0', '< 4'
   s.add_dependency 'nkf'
   s.add_dependency 'base64'
   s.add_dependency 'mutex_m'
