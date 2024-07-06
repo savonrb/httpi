@@ -78,19 +78,10 @@ class IntegrationServer
     end
 
     map "/digest-auth" do
-      unprotected_app = lambda { |env|
+      # Rack::Auth::Digest is removed in Rack 3.1
+      run lambda { |env|
         IntegrationServer.respond_with "digest-auth"
       }
-
-      realm = 'digest-realm'
-      app = Rack::Auth::Digest::MD5.new(unprotected_app) do |username|
-        username == 'admin' ? Digest::MD5.hexdigest("admin:#{realm}:secret") : nil
-      end
-      app.realm = realm
-      app.opaque = 'this-should-be-secret'
-      app.passwords_hashed = true
-
-      run app
     end
 
   end

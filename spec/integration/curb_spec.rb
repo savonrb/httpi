@@ -82,7 +82,8 @@ describe HTTPI::Adapter::Curb do
         expect(response.body).to eq("basic-auth")
       end
 
-      it "supports digest authentication" do
+      # Rack::Auth::Digest is removed in Rack 3.1
+      xit "supports digest authentication" do
         request = HTTPI::Request.new(@server.url + "digest-auth")
         request.auth.digest("admin", "secret")
 
