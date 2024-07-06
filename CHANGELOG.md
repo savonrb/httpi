@@ -2,6 +2,10 @@
 
 * Add your changelog entry here
 
+### 4.0.3 (2024-07-06)
+
+* Allow use with rack 3.1
+
 ### 4.0.2 (2024-06-13)
 
 * Don't change http header casing by @pcai in https://github.com/savonrb/httpi/pull/249
