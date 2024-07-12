@@ -35,6 +35,6 @@ Gem::Specification.new do |s|
 
   s.metadata["rubygems_mfa_required"] = "true"
 
-  s.files = `git ls-files`.split("\n")
+  s.files = Dir["lib/**/*"] + %w[CHANGELOG.md LICENSE README.md UPDATING.md]
   s.require_path = 'lib'
 end
