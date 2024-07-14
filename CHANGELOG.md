@@ -2,6 +2,10 @@
 
 * Add your changelog entry here
 
+### 4.0.4 (2024-07-14)
+
+* gemspec: Exclude spec files from published gem by @ChristopherBert in https://github.com/savonrb/httpi/pull/252
+
 ### 4.0.3 (2024-07-06)
 
 * Allow use with rack 3.1
