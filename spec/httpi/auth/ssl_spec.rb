@@ -93,7 +93,7 @@ describe HTTPI::Auth::SSL do
 
     it "returns the explicitly given key if set" do
       ssl = HTTPI::Auth::SSL.new
-      key = OpenSSL::PKey::RSA.new
+      key = OpenSSL::PKey::RSA.new(2048)
       ssl.cert_key = key
       expect(ssl.cert_key).to eq(key)
     end
