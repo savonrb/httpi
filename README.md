@@ -4,7 +4,7 @@ A common interface for Ruby's HTTP libraries. This project is now in [maintenanc
 
 [Documentation](https://www.rubydoc.info/gems/httpi)
 
-[![Development](https://github.com/savonrb/httpi/actions/workflows/development.yml/badge.svg)](https://github.com/savonrb/httpi/actions/workflows/development.yml)
+[![CI](https://github.com/savonrb/httpi/actions/workflows/ci.yml/badge.svg)](https://github.com/savonrb/httpi/actions/workflows/ci.yml)
 
 ## Installation
 
