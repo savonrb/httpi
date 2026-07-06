@@ -1,0 +1,15 @@
+# HTTPI::Response::SuccessfulResponseCodes and ::RedirectResponseCodes are public
+# constants named in CamelCase since the 1.x line. They are referenced as e.g.
+# HTTPI::Response::RedirectResponseCodes (see lib/httpi.rb). Renaming them to
+# SCREAMING_SNAKE_CASE would break any caller that references them, so the naming
+# cop is disabled for this one file rather than changing the API.
+#
+# QueryBuilder.stringify_hash_values sits under a `private` keyword that has no
+# effect on `def self.` methods, so the method is effectively public today.
+# Making it truly private would be a visibility change on a shipped method, so the
+# cop is disabled here rather than risking a backward-incompatible change.
+ignore:
+  - "lib/httpi/response.rb":
+      - Naming/ConstantName
+  - "lib/httpi/query_builder.rb":
+      - Lint/IneffectiveAccessModifier
