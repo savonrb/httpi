@@ -51,15 +51,14 @@ class IntegrationServer
 
     map "/ntlm-auth" do
       run lambda { |env|
-        resp = [401, {"WWW-Authenticate" => "NTLM\r\nNegotiate"}, []]
+        resp = [401, {"WWW-Authenticate" => "NTLM\nNegotiate"}, []]
         # head request 1: challenge & response (from actual server)
         if env["HTTP_AUTHORIZATION"] =~ /(NTLM|Negotiate) TlRMTVNTUAABAAAAB4IIAA/
           resp = [401, {
             "Content-Type" => "text/html; charset=us-ascii",
             "Server" => "Microsoft-HTTPAPI/2.0",
             "WWW-Authenticate" => "#{$1} TlRMTVNTUAACAAAAEAAQADgAAAAFgooCj/AvDazHhQsAAAAAAAAAAGAAYABIAAAABgLwIwAAAA9OAFQATABNAFQARQBTAFQAAgAQAE4AVABMAE0AVABFAFMAVAABABAATgBUAEwATQBUAEUAUwBUAAQAEABuAHQAbABtAHQAZQBzAHQAAwAQAG4AdABsAG0AdABlAHMAdAAHAAgAfzQp037nzQEAAAAA",
-            "Date" => "Mon, 31 Dec 2012 17:46:55 GMT",
-            "Content-Length" => "341"
+            "Date" => "Mon, 31 Dec 2012 17:46:55 GMT"
             }, []]
         elsif env["HTTP_AUTHORIZATION"] =~ /(NTLM|Negotiate) (.+)/
           # request 2: serve content
@@ -67,10 +66,9 @@ class IntegrationServer
         else 
           resp = [401, {
             "Content-Type" => "text/html; charset=us-ascii",
-            "WWW-Authenticate" => "NTLM\r\nNegotiate",
+            "WWW-Authenticate" => "NTLM\nNegotiate",
             "Server" => "Microsoft-HTTPAPI/2.0",
-            "Date" => "Mon, 31 Dec 2012 17:46:55 GMT",
-            "Content-Length" => "341"
+            "Date" => "Mon, 31 Dec 2012 17:46:55 GMT"
             }, []]
         end
         resp
