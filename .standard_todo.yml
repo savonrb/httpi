@@ -1,0 +1,337 @@
+# Auto generated files with errors to ignore.
+# Remove from this list as you refactor files.
+---
+ignore:
+- Gemfile:
+  - Style/StringLiterals
+  - Layout/ExtraSpacing
+  - Style/HashSyntax
+  - Style/TernaryParentheses
+- Rakefile:
+  - Style/HashSyntax
+- httpi.gemspec:
+  - Style/StringLiterals
+  - Layout/ExtraSpacing
+  - Layout/SpaceInsideHashLiteralBraces
+- lib/httpi.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/ClassCheck
+  - Style/SafeNavigation
+  - Layout/TrailingWhitespace
+  - Style/StringLiterals
+  - Style/HashSyntax
+- lib/httpi/adapter.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Layout/SpaceInsideHashLiteralBraces
+  - Style/HashSyntax
+  - Lint/ReturnInVoidContext
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/TrailingWhitespace
+  - Layout/IndentationWidth
+  - Layout/RescueEnsureAlignment
+  - Style/RedundantBegin
+- lib/httpi/adapter/base.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+- lib/httpi/adapter/curb.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/StringLiterals
+  - Layout/CaseIndentation
+  - Layout/ExtraSpacing
+  - Performance/RedundantSplitRegexpArgument
+  - Style/RedundantRegexpArgument
+  - Style/SafeNavigation
+  - Style/ClassCheck
+- lib/httpi/adapter/em_http.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Layout/HashAlignment
+- lib/httpi/adapter/excon.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Layout/ExtraSpacing
+- lib/httpi/adapter/http.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/NonNilCheck
+  - Layout/ExtraSpacing
+- lib/httpi/adapter/httpclient.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/StringLiterals
+  - Style/ConditionalAssignment
+- lib/httpi/adapter/net_http.rb:
+  - Style/StringLiterals
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/ClassEqualityComparison
+  - Layout/LineContinuationSpacing
+  - Style/MultilineIfThen
+  - Layout/EmptyLinesAroundAccessModifier
+  - Layout/EmptyLinesAroundMethodBody
+  - Layout/TrailingWhitespace
+  - Layout/IndentationWidth
+  - Style/RedundantBegin
+  - Layout/RescueEnsureAlignment
+  - Layout/EmptyLinesAroundExceptionHandlingKeywords
+  - Style/ConditionalAssignment
+  - Layout/SpaceAroundOperators
+  - Style/SafeNavigation
+  - Layout/SpaceAfterComma
+  - Layout/SpaceBeforeComma
+  - Layout/ArgumentAlignment
+  - Style/ClassCheck
+- lib/httpi/adapter/net_http_persistent.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/StringLiterals
+  - Layout/SpaceInsideBlockBraces
+  - Layout/SpaceBeforeBlockBraces
+  - Layout/SpaceAroundBlockParameters
+- lib/httpi/adapter/rack.rb:
+  - Style/StringLiterals
+  - Layout/EmptyLinesAroundModuleBody
+  - Style/HashSyntax
+  - Style/PercentLiteralDelimiters
+  - Style/RedundantSelf
+  - Layout/EmptyLines
+  - Layout/ExtraSpacing
+  - Style/Semicolon
+  - Performance/StringReplacement
+  - Style/StringLiteralsInInterpolation
+  - Layout/ArgumentAlignment
+  - Layout/SpaceInsideHashLiteralBraces
+  - Layout/TrailingEmptyLines
+- lib/httpi/auth/config.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+- lib/httpi/auth/ssl.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Layout/SpaceInsideBlockBraces
+  - Layout/SpaceBeforeBlockBraces
+  - Layout/SpaceAroundOperators
+  - Layout/SpaceAfterComma
+  - Style/StringLiterals
+  - Style/LineEndConcatenation
+  - Layout/MultilineOperationIndentation
+  - Layout/CaseIndentation
+  - Layout/ExtraSpacing
+- lib/httpi/cookie.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+- lib/httpi/cookie_store.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+- lib/httpi/dime.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Style/StringLiterals
+  - Layout/ArgumentAlignment
+  - Layout/EmptyLinesAroundClassBody
+  - Layout/ExtraSpacing
+  - Layout/CommentIndentation
+  - Lint/RedundantStringCoercion
+- lib/httpi/logger.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/SafeNavigation
+- lib/httpi/query_builder.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/ConditionalAssignment
+  - Style/ClassCheck
+- lib/httpi/request.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Style/ClassCheck
+  - Style/StringLiterals
+  - Style/RedundantSelf
+  - Style/MultilineIfThen
+  - Performance/RegexpMatch
+- lib/httpi/response.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+  - Lint/AssignmentInCondition
+  - Style/SafeNavigation
+- lib/httpi/utils.rb:
+  - Layout/TrailingWhitespace
+  - Style/RedundantReturn
+  - Style/RedundantSelf
+  - Style/SuperArguments
+  - Style/SuperWithArgsParentheses
+  - Style/RedundantAssignment
+  - Layout/EmptyLinesAroundMethodBody
+  - Layout/EmptyLinesAroundAccessModifier
+  - Layout/IndentationWidth
+  - Layout/IndentationConsistency
+  - Style/TrivialAccessors
+- lib/httpi/version.rb:
+  - Style/StringLiterals
+- spec/httpi/adapter/base_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/ExtraSpacing
+  - Layout/DotPosition
+- spec/httpi/adapter/curb_spec.rb:
+  - Performance/RegexpMatch
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/ExtraSpacing
+  - Style/HashSyntax
+  - Style/StringLiterals
+  - Layout/DotPosition
+  - Performance/Detect
+  - Layout/SpaceBeforeBlockBraces
+- spec/httpi/adapter/em_http_spec.rb:
+  - Performance/RegexpMatch
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/DotPosition
+  - Style/HashSyntax
+  - Layout/SpaceInsideHashLiteralBraces
+  - Style/PercentLiteralDelimiters
+  - Layout/SpaceInsidePercentLiteralDelimiters
+  - Style/StringLiterals
+- spec/httpi/adapter/excon_spec.rb:
+  - Style/StringLiterals
+- spec/httpi/adapter/httpclient_spec.rb:
+  - Layout/ExtraSpacing
+  - Style/HashSyntax
+  - Style/StringLiterals
+  - Layout/SpaceBeforeBlockBraces
+  - Layout/DotPosition
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/adapter/rack_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Style/StringLiterals
+  - Layout/ExtraSpacing
+  - Layout/DotPosition
+  - Layout/TrailingEmptyLines
+- spec/httpi/adapter_spec.rb:
+  - Layout/ExtraSpacing
+  - Style/PercentLiteralDelimiters
+  - Style/HashSyntax
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/auth/config_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/auth/ssl_spec.rb:
+  - Layout/DotPosition
+  - Style/LineEndConcatenation
+  - Style/StringLiterals
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/cookie_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/SpaceInsideHashLiteralBraces
+- spec/httpi/cookie_store_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/ExtraSpacing
+- spec/httpi/error_spec.rb:
+  - Performance/RegexpMatch
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/httpi_spec.rb:
+  - Performance/RegexpMatch
+  - Style/StringLiterals
+  - Layout/SpaceInsideBlockBraces
+  - Layout/ExtraSpacing
+  - Style/UnlessLogicalOperators
+  - Style/HashSyntax
+  - Layout/HashAlignment
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/request_spec.rb:
+  - Style/HashSyntax
+  - Layout/SpaceInsideHashLiteralBraces
+  - Style/StringLiterals
+  - Layout/SpaceAroundOperators
+  - Layout/ExtraSpacing
+  - Layout/EmptyLinesAroundBlockBody
+- spec/httpi/response_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/SpaceInsideHashLiteralBraces
+- spec/integration/curb_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+- spec/integration/em_http_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+- spec/integration/excon_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/DotPosition
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+  - Style/FileRead
+- spec/integration/http_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/EmptyLines
+  - Layout/DotPosition
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+- spec/integration/httpclient_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+- spec/integration/net_http_persistent_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Layout/DotPosition
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+  - Layout/SpaceAroundOperators
+  - Layout/SpaceAfterComma
+- spec/integration/net_http_spec.rb:
+  - Layout/EmptyLinesAroundBlockBody
+  - Style/StringLiterals
+  - Layout/SpaceInsideBlockBraces
+  - Layout/DotPosition
+  - Layout/IndentationConsistency
+  - Layout/CommentIndentation
+  - Performance/RegexpMatch
+  - Style/HashSyntax
+  - Layout/SpaceAroundOperators
+  - Layout/SpaceAfterComma
+- spec/integration/support/application.rb:
+  - Style/StringLiterals
+  - Layout/EmptyLinesAroundClassBody
+  - Layout/SpaceInsideHashLiteralBraces
+  - Layout/EmptyLinesAroundBlockBody
+  - Style/HashSyntax
+  - Lint/UselessAssignment
+  - Lint/Void
+  - Style/ConditionalAssignment
+  - Layout/FirstHashElementIndentation
+  - Performance/RegexpMatch
+  - Layout/TrailingWhitespace
+- spec/integration/support/server.rb:
+  - Style/SingleLineMethods
+  - Style/Semicolon
+  - Layout/ExtraSpacing
+  - Layout/TrailingWhitespace
+  - Layout/EmptyLineBetweenDefs
+  - Layout/EmptyLinesAroundClassBody
+- spec/spec_helper.rb:
+  - Style/StringLiterals
+  - Performance/RegexpMatch
+- spec/support/error_helper.rb:
+  - Layout/EmptyLinesAroundModuleBody
+  - Layout/EmptyLinesAroundClassBody
+- spec/support/fixture.rb:
+  - Layout/EmptyLinesAroundClassBody
+- spec/support/matchers.rb:
+  - Layout/SpaceInsideHashLiteralBraces
+  - Style/HashSyntax
+  - Style/EachWithObject
+  - Layout/EmptyLinesAroundBlockBody
