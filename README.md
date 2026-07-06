@@ -1,6 +1,6 @@
 # HTTPI
 
-A common interface for Ruby's HTTP libraries. This project is now in maintenance mode. For new projects, we recommend [faraday](https://github.com/lostisland/faraday).
+A common interface for Ruby's HTTP libraries. This project is now in [maintenance mode](https://github.com/savonrb/httpi/issues/238): it receives bug fixes, security updates, and ecosystem-compatibility changes, but no new features. For new projects, we recommend [faraday](https://github.com/lostisland/faraday).
 
 [Documentation](https://www.rubydoc.info/gems/httpi)
 
