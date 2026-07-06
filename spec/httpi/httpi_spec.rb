@@ -325,7 +325,7 @@ describe HTTPI do
             :em_http    => lambda { EventMachine::HttpConnection },
             :rack       => lambda { Rack::MockRequest },
             :excon      => lambda { Excon::Connection },
-            :http       => lambda { ::HTTP::Client }
+            :http       => lambda { defined?(::HTTP::Session) ? ::HTTP::Session : ::HTTP::Client }
           }
 
           context "using #{adapter}" do
