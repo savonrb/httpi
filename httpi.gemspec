@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "Common interface for Ruby's HTTP libraries"
   s.description = s.summary
   s.metadata    = { 'bug_tracker_uri' => 'https://github.com/savonrb/httpi/issues',
-                    'changelog_uri' => 'https://github.com/savonrb/httpi/blob/master/CHANGELOG.md',
+                    'changelog_uri' => 'https://github.com/savonrb/httpi/blob/main/CHANGELOG.md',
                     'source_code_uri' => s.homepage,
                     'wiki_uri' => 'https://github.com/savonrb/httpi/wiki',
                     'documentation_uri' => 'https://www.rubydoc.info/gems/httpi' }
