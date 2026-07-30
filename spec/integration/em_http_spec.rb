@@ -3,10 +3,7 @@ require "integration/support/server"
 
 describe HTTPI::Adapter::EmHttpRequest do
 
-  # em_http is not supported on java
-  unless RUBY_PLATFORM =~ /java/
-    require "em-synchrony"
-
+  if EM_HTTP_AVAILABLE
     subject(:adapter) { :em_http }
 
     around :each do |example|
