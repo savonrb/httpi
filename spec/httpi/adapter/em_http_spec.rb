@@ -2,7 +2,7 @@ require "spec_helper"
 require "httpi/adapter/em_http"
 require "httpi/request"
 
-unless RUBY_PLATFORM =~ /java/
+if EM_HTTP_AVAILABLE
   HTTPI::Adapter.load_adapter(:em_http)
 
   describe HTTPI::Adapter::EmHttpRequest do

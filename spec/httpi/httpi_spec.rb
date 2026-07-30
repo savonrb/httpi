@@ -7,8 +7,6 @@ require "net/http/persistent"
 require "http"
 
 unless RUBY_PLATFORM =~ /java/
-  require "em-synchrony"
-  require "em-http-request"
   require "curb"
 end
 
@@ -316,7 +314,10 @@ describe HTTPI do
       end
 
       HTTPI::Adapter::ADAPTERS.each do |adapter, opts|
-        unless (adapter == :em_http || adapter == :curb) && RUBY_PLATFORM =~ /java/
+        skip_adapter = (adapter == :curb && RUBY_PLATFORM =~ /java/) ||
+          (adapter == :em_http && !EM_HTTP_AVAILABLE)
+
+        unless skip_adapter
           client_class = {
             :httpclient => lambda { HTTPClient },
             :curb       => lambda { Curl::Easy },
