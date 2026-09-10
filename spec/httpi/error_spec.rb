@@ -14,7 +14,7 @@ describe HTTPI do
     end
   end
 
-  unless RUBY_PLATFORM =~ /java/
+  unless RUBY_PLATFORM.match?(/java/)
     context "with :curb" do
       it "tags Curl::Err::ConnectionFailedError with HTTPI::ConnectionError" do
         expect_error(Curl::Err::ConnectionFailedError, "Curl::Err::ConnectionFailedError").to be_tagged_with(HTTPI::ConnectionError)
@@ -39,5 +39,4 @@ describe HTTPI do
   def request(adapter)
     HTTPI.get("http://example.com", adapter) { |client| yield client }
   end
-
 end

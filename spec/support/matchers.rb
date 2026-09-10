@@ -1,5 +1,5 @@
 RSpec::Matchers.define :match_response do |options|
-  defaults = { :code => 200, :headers => { "Accept-encoding" => "utf-8" }, :body => "" }
+  defaults = {code: 200, headers: {"Accept-encoding" => "utf-8"}, body: ""}
   response = defaults.merge options
 
   match do |actual|
@@ -10,10 +10,8 @@ RSpec::Matchers.define :match_response do |options|
   end
 
   def downcase(hash)
-    hash.inject({}) do |memo, (key, value)|
+    hash.each_with_object({}) do |(key, value), memo|
       memo[key.downcase] = value.downcase
-      memo
     end
   end
-
 end

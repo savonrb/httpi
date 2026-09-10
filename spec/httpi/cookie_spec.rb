@@ -2,12 +2,11 @@ require "spec_helper"
 require "httpi"
 
 describe HTTPI::Cookie do
-
   let(:cookie) { HTTPI::Cookie.new("token=choc-choc-chip; Path=/; HttpOnly") }
 
   describe ".list_from_headers" do
     it "returns a list of cookies from a Hash of headers" do
-      headers = { "Set-Cookie" => "token=strawberry; Path=/; HttpOnly" }
+      headers = {"Set-Cookie" => "token=strawberry; Path=/; HttpOnly"}
       cookies = HTTPI::Cookie.list_from_headers(headers)
 
       expect(cookies.size).to eq(1)
@@ -15,7 +14,7 @@ describe HTTPI::Cookie do
     end
 
     it "handles multiple cookies" do
-      headers = { "Set-Cookie" => ["user=chucknorris; Path=/; HttpOnly", "token=strawberry; Path=/; HttpOnly"] }
+      headers = {"Set-Cookie" => ["user=chucknorris; Path=/; HttpOnly", "token=strawberry; Path=/; HttpOnly"]}
       cookies = HTTPI::Cookie.list_from_headers(headers)
       expect(cookies.size).to eq(2)
     end
@@ -32,5 +31,4 @@ describe HTTPI::Cookie do
       expect(cookie.name_and_value).to eq("token=choc-choc-chip")
     end
   end
-
 end

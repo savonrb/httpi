@@ -6,12 +6,10 @@ require "httpi/dime"
 require "httpi/cookie"
 
 module HTTPI
-
   # = HTTPI::Response
   #
   # Represents an HTTP response and contains various response details.
   class Response
-
     # Range of HTTP response codes considered to be successful.
     SuccessfulResponseCodes = 200..299
     # HTTP response codes considered to be a redirect.
@@ -79,12 +77,12 @@ module HTTPI
 
     # Returns the gzip decoded response body.
     def decoded_gzip_body
-      unless gzip = Zlib::GzipReader.new(StringIO.new(raw_body))
+      unless (gzip = Zlib::GzipReader.new(StringIO.new(raw_body)))
         raise ArgumentError, "Unable to create Zlib::GzipReader"
       end
       gzip.read
     ensure
-      gzip.close if gzip
+      gzip&.close
     end
 
     # Returns the DIME decoded response body.
@@ -93,6 +91,5 @@ module HTTPI
       self.attachments = dime.binary_records
       dime.xml_records.first.data
     end
-
   end
 end

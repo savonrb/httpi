@@ -6,10 +6,10 @@ require "integration/support/server"
 HTTPI::Adapter.load_adapter(:httpclient)
 
 describe HTTPI::Adapter::HTTPClient do
-  let(:adapter)    { HTTPI::Adapter::HTTPClient.new(request) }
+  let(:adapter) { HTTPI::Adapter::HTTPClient.new(request) }
   let(:httpclient) { HTTPClient.any_instance }
   let(:ssl_config) { HTTPClient::SSLConfig.any_instance }
-  let(:request)    { HTTPI::Request.new("http://example.com") }
+  let(:request) { HTTPI::Request.new("http://example.com") }
 
   before :all do
     @server = IntegrationServer.run
@@ -22,7 +22,7 @@ describe HTTPI::Adapter::HTTPClient do
   describe "#request(:get)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:get)
-      expect(adapter.request(:get)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:get)).to match_response(body: Fixture.xml)
     end
   end
 
@@ -31,14 +31,14 @@ describe HTTPI::Adapter::HTTPClient do
       request.body = Fixture.xml
       httpclient_expects(:post)
 
-      expect(adapter.request(:post)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:post)).to match_response(body: Fixture.xml)
     end
   end
 
   describe "#request(:head)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:head)
-      expect(adapter.request(:head)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:head)).to match_response(body: Fixture.xml)
     end
   end
 
@@ -47,21 +47,21 @@ describe HTTPI::Adapter::HTTPClient do
       request.body = Fixture.xml
       httpclient_expects(:put)
 
-      expect(adapter.request(:put)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:put)).to match_response(body: Fixture.xml)
     end
   end
 
   describe "#request(:delete)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:delete)
-      expect(adapter.request(:delete)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:delete)).to match_response(body: Fixture.xml)
     end
   end
 
   describe "#request(:custom)" do
     it "returns a valid HTTPI::Response" do
       httpclient_expects(:custom)
-      expect(adapter.request(:custom)).to match_response(:body => Fixture.xml)
+      expect(adapter.request(:custom)).to match_response(body: Fixture.xml)
     end
   end
 
@@ -135,14 +135,14 @@ describe HTTPI::Adapter::HTTPClient do
         request.ssl = true
       end
 
-      it 'should set the ssl_version if specified' do
+      it "should set the ssl_version if specified" do
         request.auth.ssl.ssl_version = :SSLv3
-        ssl_config.expects(:ssl_version=).with('SSLv3')
+        ssl_config.expects(:ssl_version=).with("SSLv3")
 
         adapter.request(:get)
       end
 
-      it 'should set the ciphers if specified' do
+      it "should set the ciphers if specified" do
         request.auth.ssl.ciphers = OpenSSL::SSL::SSLContext.new.ciphers
         ssl_config.expects(:ciphers=).with(request.auth.ssl.ciphers)
 
@@ -179,22 +179,22 @@ describe HTTPI::Adapter::HTTPClient do
         adapter.request(:get)
       end
 
-      it 'should set the ssl_version if specified' do
+      it "should set the ssl_version if specified" do
         request.auth.ssl.ssl_version = :SSLv3
-        ssl_config.expects(:ssl_version=).with('SSLv3')
+        ssl_config.expects(:ssl_version=).with("SSLv3")
 
         adapter.request(:get)
       end
 
-      it 'raises error when min_version not nil' do
+      it "raises error when min_version not nil" do
         request.auth.ssl.min_version = :TLS1_2
-        expect{ adapter.request(:get) }.
-          to raise_error(HTTPI::NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead')
+        expect { adapter.request(:get) }
+          .to raise_error(HTTPI::NotSupportedError, "Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead")
       end
-      it 'raises error when max_version not nil' do
+      it "raises error when max_version not nil" do
         request.auth.ssl.max_version = :TLS1_2
-        expect{ adapter.request(:get) }.
-          to raise_error(HTTPI::NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead')
+        expect { adapter.request(:get) }
+          .to raise_error(HTTPI::NotSupportedError, "Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead")
       end
     end
 
@@ -224,9 +224,9 @@ describe HTTPI::Adapter::HTTPClient do
   end
 
   def httpclient_expects(method)
-    httpclient.expects(:request).
-      with(method, request.url, nil, request.body, request.headers).
-      returns(http_message)
+    httpclient.expects(:request)
+      .with(method, request.url, nil, request.body, request.headers)
+      .returns(http_message)
   end
 
   def http_message(body = Fixture.xml)
@@ -234,5 +234,4 @@ describe HTTPI::Adapter::HTTPClient do
     message.header.set "Accept-encoding", "utf-8"
     message
   end
-
 end

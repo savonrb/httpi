@@ -2,13 +2,11 @@ require "httpi/adapter"
 
 module HTTPI
   module Adapter
-
     # HTTPI::Adapter::Base
     #
     # Allows you to build your own adapter by implementing all public instance methods.
     # Register your adapter by calling the base class' .register method.
     class Base
-
       # Registers an adapter.
       def self.register(name, options = {})
         deps = options.fetch(:deps, [])
@@ -28,7 +26,6 @@ module HTTPI
       def request(method)
         raise NotImplementedError, "Adapters need to implement a #request method"
       end
-
     end
   end
 end

@@ -2,9 +2,8 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::Curb do
-
   # curb is not supported on jruby
-  unless RUBY_PLATFORM =~ /java/
+  unless RUBY_PLATFORM.match?(/java/)
 
     subject(:adapter) { :curb }
 
@@ -101,12 +100,11 @@ describe HTTPI::Adapter::Curb do
         expect(res).to eq("post")
         expect(response.body).to eq("")
       end
-
     end
 
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
 
       after :all do

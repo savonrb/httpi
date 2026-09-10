@@ -3,7 +3,6 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
-
     # An HTTPI adapter for `EventMachine::HttpRequest`. Due to limitations of
     # the em-httprequest library, not all features are supported. In particular,
     #
@@ -28,8 +27,7 @@ module HTTPI
     #
     # are supported by em-httprequest but not HTTPI.
     class EmHttpRequest < Base
-
-      register :em_http, :deps => %w(em-synchrony em-synchrony/em-http em-http)
+      register :em_http, deps: %w[em-synchrony em-synchrony/em-http em-http]
 
       def initialize(request)
         @request = request
@@ -82,17 +80,17 @@ module HTTPI
 
       def client_options
         {
-          :query => @request.url.query,
-          :head  => @request.headers.to_hash,
-          :body  => @request.body
+          query: @request.url.query,
+          head: @request.headers.to_hash,
+          body: @request.body
         }
       end
 
       def proxy_options
         {
-          :host          => @request.proxy.host,
-          :port          => @request.proxy.port,
-          :authorization => [@request.proxy.user, @request.proxy.password]
+          host: @request.proxy.host,
+          port: @request.proxy.port,
+          authorization: [@request.proxy.user, @request.proxy.password]
         }
       end
 
@@ -134,6 +132,5 @@ module HTTPI
         result
       end
     end
-
   end
 end

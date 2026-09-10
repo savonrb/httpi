@@ -1,5 +1,4 @@
 module HTTPI
-
   # = HTTPI::Adapter
   #
   # Manages the adapter classes. Currently supports:
@@ -9,21 +8,22 @@ module HTTPI
   # * em_http
   # * net/http
   module Adapter
-
     ADAPTERS = {}
     ADAPTER_CLASS_MAP = {}
 
     LOAD_ORDER = [:httpclient, :curb, :em_http, :excon, :http, :net_http, :net_http_persistent]
 
     class << self
-
       def register(name, adapter_class, deps)
-        ADAPTERS[name] = { :class => adapter_class, :deps => deps }
+        ADAPTERS[name] = {class: adapter_class, deps: deps}
         ADAPTER_CLASS_MAP[adapter_class] = name
       end
 
       def use=(adapter)
-        return @adapter = nil if adapter.nil?
+        if adapter.nil?
+          @adapter = nil
+          return
+        end
 
         validate_adapter! adapter
         load_adapter adapter
@@ -62,15 +62,12 @@ module HTTPI
 
       def default_adapter
         LOAD_ORDER.each do |adapter|
-          begin
-            load_adapter adapter
-            return adapter
-          rescue LoadError
-            next
-          end
+          load_adapter adapter
+          return adapter
+        rescue LoadError
+          next
         end
       end
-
     end
   end
 end

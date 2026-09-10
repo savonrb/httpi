@@ -1,5 +1,4 @@
 module HTTPI
-
   # = HTTPI::CookieStore
   #
   # Stores a unique list of cookies for future requests.
@@ -13,7 +12,6 @@ module HTTPI
   #   # Fetch the names and values for the "Cookie" header
   #   cookie_store.fetch  # => "token=choc-choc-chip"
   class CookieStore
-
     def initialize
       @cookies = {}
     end
@@ -29,6 +27,5 @@ module HTTPI
     def fetch
       @cookies.values.join(";") unless @cookies.empty?
     end
-
   end
 end

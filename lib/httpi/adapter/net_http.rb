@@ -2,19 +2,17 @@ require "uri"
 
 require "httpi/adapter/base"
 require "httpi/response"
-require 'kconv'
-require 'socket'
+require "kconv"
+require "socket"
 
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::NetHTTP
     #
     # Adapter for the Net::HTTP client.
     # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/
     class NetHTTP < Base
-
-      register :net_http, :deps => %w(net/https)
+      register :net_http, deps: %w[net/https]
       def initialize(request)
         check_net_ntlm_version! if request.auth.ntlm?
         @request = request
@@ -28,14 +26,14 @@ module HTTPI
       def request(method)
         # Determine if Net::HTTP supports the method using reflection
         unless Net::HTTP.const_defined?(:"#{method.to_s.capitalize}") &&
-            Net::HTTP.const_get(:"#{method.to_s.capitalize}").class == Class
+            Net::HTTP.const_get(:"#{method.to_s.capitalize}").instance_of?(Class)
 
-          raise NotSupportedError, "Net::HTTP does not support "\
+          raise NotSupportedError, "Net::HTTP does not support " \
             "#{method.to_s.upcase}"
         end
         do_request(method) do |http, http_request|
           http_request.body = @request.body
-          if @request.on_body then
+          if @request.on_body
             perform(http, http_request) do |res|
               res.read_body do |seg|
                 @request.on_body.call(seg)
@@ -53,19 +51,18 @@ module HTTPI
       end
 
       private
+
       def ntlm_version
         Net::NTLM::VERSION::STRING
       end
 
       def check_net_ntlm_version!
-        begin
-          require 'net/ntlm'
-          require 'net/ntlm/version' unless Net::NTLM.const_defined?(:VERSION, false)
-          unless ntlm_version >= '0.3.2'
-            raise ArgumentError, 'Invalid version of rubyntlm. Please use v0.3.2+.'
-          end
-        rescue LoadError
+        require "net/ntlm"
+        require "net/ntlm/version" unless Net::NTLM.const_defined?(:VERSION, false)
+        unless ntlm_version >= "0.3.2"
+          raise ArgumentError, "Invalid version of rubyntlm. Please use v0.3.2+."
         end
+      rescue LoadError
       end
 
       def perform(http, http_request, &block)
@@ -74,10 +71,10 @@ module HTTPI
 
       def create_client
         proxy_url = @request.proxy || URI("")
-        if URI(proxy_url).scheme == 'socks'
-          proxy =Net::HTTP.SOCKSProxy(proxy_url.host, proxy_url.port)
+        proxy = if URI(proxy_url).scheme == "socks"
+          Net::HTTP.SOCKSProxy(proxy_url.host, proxy_url.port)
         else
-          proxy = Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
+          Net::HTTP::Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
         end
         proxy.new(@request.url.host, @request.url.port)
       end
@@ -98,24 +95,24 @@ module HTTPI
 
       def negotiate_ntlm_auth(http, &requester)
         unless Net.const_defined?(:NTLM)
-          raise NotSupportedError, 'Net::NTLM is not available. Install via gem install rubyntlm.'
+          raise NotSupportedError, "Net::NTLM is not available. Install via gem install rubyntlm."
         end
 
         # first figure out if we should use NTLM or Negotiate
         nego_auth_response = respond_with(requester.call(http, request_client(:head)))
-        if nego_auth_response.headers['www-authenticate'] && nego_auth_response.headers['www-authenticate'].include?('Negotiate')
-          auth_method = 'Negotiate'
-        elsif nego_auth_response.headers['www-authenticate'] && nego_auth_response.headers['www-authenticate'].include?('NTLM')
-          auth_method = 'NTLM'
+        if nego_auth_response.headers["www-authenticate"]&.include?("Negotiate")
+          auth_method = "Negotiate"
+        elsif nego_auth_response.headers["www-authenticate"]&.include?("NTLM")
+          auth_method = "NTLM"
         else
-          auth_method = 'NTLM'
-          HTTPI.logger.debug 'Server does not support NTLM/Negotiate. Trying NTLM anyway'
+          auth_method = "NTLM"
+          HTTPI.logger.debug "Server does not support NTLM/Negotiate. Trying NTLM anyway"
         end
 
         # initiate a request is to authenticate (exchange secret and auth) using the method determined above...
         ntlm_message_type1 = Net::NTLM::Message::Type1.new
-        %w(workstation domain).each do |a|
-          ntlm_message_type1.send("#{a}=",'')
+        %w[workstation domain].each do |a|
+          ntlm_message_type1.send("#{a}=", "")
           ntlm_message_type1.enable(a.to_sym)
         end
 
@@ -134,14 +131,14 @@ module HTTPI
           message_builder[:password] = @request.auth.ntlm[1]
 
           # we need to provide a domain in the packet if an only if it was provided by the user in the auth request
-          if @request.auth.ntlm[2]
-            message_builder[:domain] = @request.auth.ntlm[2].upcase
+          message_builder[:domain] = if @request.auth.ntlm[2]
+            @request.auth.ntlm[2].upcase
           else
-            message_builder[:domain] = ''
+            ""
           end
 
-          ntlm_response = ntlm_message.response(message_builder ,
-                                                 {:ntlmv2 => true})
+          ntlm_response = ntlm_message.response(message_builder,
+            {ntlmv2: true})
           # Finally add header of Authorization
           @request.headers["Authorization"] = "#{auth_method} #{ntlm_response.encode64}"
         end
@@ -212,10 +209,9 @@ module HTTPI
         headers.each do |key, value|
           headers[key] = value[0] if value.size <= 1
         end
-        body = (response.body.kind_of?(Net::ReadAdapter) ? "" : response.body)
+        body = (response.body.is_a?(Net::ReadAdapter) ? "" : response.body)
         Response.new response.code, headers, body
       end
-
     end
   end
 end

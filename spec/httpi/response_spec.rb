@@ -2,7 +2,6 @@ require "spec_helper"
 require "httpi/response"
 
 describe HTTPI::Response do
-
   context "normal" do
     let(:response) { HTTPI::Response.new 200, {}, Fixture.xml }
 
@@ -43,7 +42,7 @@ describe HTTPI::Response do
   end
 
   context "with cookies" do
-    let(:response) { HTTPI::Response.new 200, { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }, "" }
+    let(:response) { HTTPI::Response.new 200, {"Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly"}, "" }
 
     describe "#cookies" do
       it "returns a list of cookies" do
@@ -64,7 +63,7 @@ describe HTTPI::Response do
   end
 
   context "multipart" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Type" => "multipart/related" }, "multipart" }
+    let(:response) { HTTPI::Response.new 200, {"Content-Type" => "multipart/related"}, "multipart" }
 
     describe "#multipart" do
       it "returns true" do
@@ -84,11 +83,11 @@ describe HTTPI::Response do
   end
 
   context "gzipped" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Encoding" => "gzip" }, Fixture.gzip }
+    let(:response) { HTTPI::Response.new 200, {"Content-Encoding" => "gzip"}, Fixture.gzip }
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        expect(response.headers).to eq HTTPI::Utils::Headers.new.merge({ "Content-Encoding" => "gzip" })
+        expect(response.headers).to eq HTTPI::Utils::Headers.new.merge({"Content-Encoding" => "gzip"})
       end
     end
 
@@ -112,11 +111,11 @@ describe HTTPI::Response do
   end
 
   context "DIME" do
-    let(:response) { HTTPI::Response.new 200, { "Content-Type" => "application/dime" }, Fixture.dime }
+    let(:response) { HTTPI::Response.new 200, {"Content-Type" => "application/dime"}, Fixture.dime }
 
     describe "#headers" do
       it "returns the HTTP response headers" do
-        expect(response.headers).to eq HTTPI::Utils::Headers.new.merge({ "Content-Type" => "application/dime" })
+        expect(response.headers).to eq HTTPI::Utils::Headers.new.merge({"Content-Type" => "application/dime"})
       end
 
       it "preserves casing" do
@@ -142,5 +141,4 @@ describe HTTPI::Response do
       end
     end
   end
-
 end

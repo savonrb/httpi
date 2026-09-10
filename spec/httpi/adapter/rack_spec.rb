@@ -2,12 +2,11 @@ require "spec_helper"
 require "integration/support/application"
 
 describe HTTPI::Adapter::NetHTTP do
-
   subject(:adapter) { :rack }
 
   context "http requests" do
     before :all do
-      @app = 'app'
+      @app = "app"
       @url = "http://#{@app}/"
 
       HTTPI::Adapter::Rack.mount @app, IntegrationServer::Application
@@ -52,9 +51,8 @@ describe HTTPI::Adapter::NetHTTP do
     end
 
     describe "settings:" do
-
       let(:request) { HTTPI::Request.new("http://#{@app}") }
-      let(:client)  { HTTPI::Adapter::Rack.new(request) }
+      let(:client) { HTTPI::Adapter::Rack.new(request) }
 
       describe "proxy" do
         before do
@@ -64,8 +62,8 @@ describe HTTPI::Adapter::NetHTTP do
         end
 
         it "is not supported" do
-          expect { client.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support proxying")
+          expect { client.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support proxying")
         end
       end
 
@@ -77,8 +75,8 @@ describe HTTPI::Adapter::NetHTTP do
         end
 
         it "is not supported" do
-          expect { client.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support response streaming")
+          expect { client.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support response streaming")
         end
       end
 
@@ -98,12 +96,10 @@ describe HTTPI::Adapter::NetHTTP do
         end
 
         it "is not supported" do
-          expect { client.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support SSL client auth")
+          expect { client.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "Rack adapter does not support SSL client auth")
         end
       end
     end
-
   end
-
 end

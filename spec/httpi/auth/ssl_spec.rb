@@ -57,8 +57,8 @@ describe HTTPI::Auth::SSL do
     end
 
     it "raises an ArgumentError if the given mode is not supported" do
-      expect { ssl.verify_mode = :invalid }.
-        to raise_error(ArgumentError, "Invalid SSL verify mode :invalid\n" +
+      expect { ssl.verify_mode = :invalid }
+        .to raise_error(ArgumentError, "Invalid SSL verify mode :invalid\n" \
                                       "Please specify one of [:none, :peer, :fail_if_no_peer_cert, :client_once]")
     end
   end
@@ -152,9 +152,9 @@ describe HTTPI::Auth::SSL do
       expect(subject.ssl_version).to eq(@ssl_versions.first)
     end
 
-    it 'raises ArgumentError if the version is unsupported' do
-      expect { ssl.ssl_version = :ssl_fail }.
-        to raise_error(ArgumentError, "Invalid SSL version :ssl_fail\n" +
+    it "raises ArgumentError if the version is unsupported" do
+      expect { ssl.ssl_version = :ssl_fail }
+        .to raise_error(ArgumentError, "Invalid SSL version :ssl_fail\n" \
                                       "Please specify one of #{@ssl_versions}")
     end
   end
@@ -167,9 +167,9 @@ describe HTTPI::Auth::SSL do
       expect(subject.min_version).to eq(@min_max_versions.first)
     end
 
-    it 'raises ArgumentError if the version is unsupported' do
-      expect { ssl.min_version = :ssl_fail }.
-        to raise_error(ArgumentError, "Invalid SSL min_version :ssl_fail\n" +
+    it "raises ArgumentError if the version is unsupported" do
+      expect { ssl.min_version = :ssl_fail }
+        .to raise_error(ArgumentError, "Invalid SSL min_version :ssl_fail\n" \
                                       "Please specify one of #{@min_max_versions}")
     end
   end
@@ -182,24 +182,24 @@ describe HTTPI::Auth::SSL do
       expect(subject.max_version).to eq(@min_max_versions.first)
     end
 
-    it 'raises ArgumentError if the version is unsupported' do
-      expect { ssl.max_version = :ssl_fail }.
-        to raise_error(ArgumentError, "Invalid SSL max_version :ssl_fail\n" +
+    it "raises ArgumentError if the version is unsupported" do
+      expect { ssl.max_version = :ssl_fail }
+        .to raise_error(ArgumentError, "Invalid SSL max_version :ssl_fail\n" \
                                       "Please specify one of #{@min_max_versions}")
     end
   end
 
-  describe '#ciphers' do
+  describe "#ciphers" do
     subject { ssl.ciphers }
     let(:ssl) { HTTPI::Auth::SSL.new }
 
-    context 'without ciphers' do
+    context "without ciphers" do
       before { ssl.ciphers = nil }
 
       it { is_expected.to eq(nil) }
     end
 
-    context 'with ciphers' do
+    context "with ciphers" do
       before { ssl.ciphers = OpenSSL::SSL::SSLContext.new.ciphers }
 
       it { is_expected.to be_any.and(all(be_an_instance_of(String))) }
@@ -212,5 +212,4 @@ describe HTTPI::Auth::SSL do
     ssl.cert_file = "spec/fixtures/client_cert.pem"
     ssl
   end
-
 end

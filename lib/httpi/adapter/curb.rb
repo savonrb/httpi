@@ -3,14 +3,12 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::Curb
     #
     # Adapter for the Curb client.
     # http://rubygems.org/gems/curb
     class Curb < Base
-
-      register :curb, :deps => %w(curb)
+      register :curb, deps: %w[curb]
 
       def initialize(request)
         @request = request
@@ -98,7 +96,7 @@ module HTTPI
         # The curl man page (http://curl.haxx.se/docs/manpage.html) says that
         # you have to specify a fake username when using Negotiate auth, and
         # they use ':' in their example.
-        @client.username = ':'
+        @client.username = ":"
       end
 
       def setup_ssl_auth
@@ -116,21 +114,21 @@ module HTTPI
           @client.cert_key = ssl.cert_key_file
           @client.cert = ssl.cert_file
           @client.certpassword = ssl.cert_key_password
-          @client.set(:ssl_cipher_list, ssl.ciphers.join(':')) if ssl.ciphers
+          @client.set(:ssl_cipher_list, ssl.ciphers.join(":")) if ssl.ciphers
 
           @client.ssl_verify_peer = ssl.verify_mode == :peer
         end
 
         @client.ssl_version = case ssl.ssl_version
-          when :TLSv1_2 then 1
-          when :TLSv1_1 then 1
-          when :TLSv1   then 1
-          when :SSLv2   then 2
-          when :SSLv23  then 2
-          when :SSLv3   then 3
+        when :TLSv1_2 then 1
+        when :TLSv1_1 then 1
+        when :TLSv1 then 1
+        when :SSLv2 then 2
+        when :SSLv23 then 2
+        when :SSLv3 then 3
         end
         if ssl.min_version || ssl.max_version
-          raise NotSupportedError, 'Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.'
+          raise NotSupportedError, "Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead."
         end
       end
 
@@ -145,15 +143,15 @@ module HTTPI
         status, headers = nil, {}
         return [status, headers] unless header_string
 
-        header_string.split(/\r\n/).each do |header|
-          if header =~ %r|^HTTP/1.[01] \d\d\d (.*)|
+        header_string.split("\r\n").each do |header|
+          if header =~ %r{^HTTP/1.[01] \d\d\d (.*)}
             status = $1
           else
-            parts = header.split(':', 2)
+            parts = header.split(":", 2)
             unless parts.empty?
-              parts[1].strip! unless parts[1].nil?
+              parts[1]&.strip!
               if headers.has_key?(parts[0])
-                headers[parts[0]] = [headers[parts[0]]] unless headers[parts[0]].kind_of? Array
+                headers[parts[0]] = [headers[parts[0]]] unless headers[parts[0]].is_a? Array
                 headers[parts[0]] << parts[1]
               else
                 headers[parts[0]] = parts[1]
@@ -164,7 +162,6 @@ module HTTPI
 
         [status, headers]
       end
-
     end
   end
 end

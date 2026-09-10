@@ -2,12 +2,10 @@ require "openssl"
 
 module HTTPI
   module Auth
-
     # = HTTPI::Auth::SSL
     #
     # Provides SSL client authentication.
     class SSL
-
       VERIFY_MODES = [:none, :peer, :fail_if_no_peer_cert, :client_once]
       CERT_TYPES = [:pem, :der]
 
@@ -21,7 +19,7 @@ module HTTPI
       end.sort.reverse
 
       # Returns OpenSSL::SSL::*_VERSION values for min_version and max_version
-      MIN_MAX_VERSIONS = OpenSSL::SSL.constants.select{|constant| constant =~/_VERSION$/}.map{|version| version.to_s.gsub(/_VERSION$/,'').to_sym}.reverse
+      MIN_MAX_VERSIONS = OpenSSL::SSL.constants.select { |constant| constant =~ /_VERSION$/ }.map { |version| version.to_s.gsub(/_VERSION$/, "").to_sym }.reverse
 
       # Returns whether SSL configuration is present.
       def present?
@@ -74,8 +72,8 @@ module HTTPI
       # Sets the cert type to validate SSL certificates PEM|DER.
       def cert_type=(type)
         unless CERT_TYPES.include? type
-          raise ArgumentError, "Invalid SSL cert type #{type.inspect}\n" +
-                               "Please specify one of #{CERT_TYPES.inspect}"
+          raise ArgumentError, "Invalid SSL cert type #{type.inspect}\n" \
+            "Please specify one of #{CERT_TYPES.inspect}"
         end
 
         @cert_type = type
@@ -89,8 +87,8 @@ module HTTPI
       # Sets the SSL verify mode. Expects one of <tt>HTTPI::Auth::SSL::VERIFY_MODES</tt>.
       def verify_mode=(mode)
         unless VERIFY_MODES.include? mode
-          raise ArgumentError, "Invalid SSL verify mode #{mode.inspect}\n" +
-                               "Please specify one of #{VERIFY_MODES.inspect}"
+          raise ArgumentError, "Invalid SSL verify mode #{mode.inspect}\n" \
+            "Please specify one of #{VERIFY_MODES.inspect}"
         end
 
         @verify_mode = mode
@@ -104,8 +102,8 @@ module HTTPI
       # Sets the SSL version number. Expects one of <tt>HTTPI::Auth::SSL::SSL_VERSIONS</tt>.
       def ssl_version=(version)
         unless SSL_VERSIONS.include? version
-          raise ArgumentError, "Invalid SSL version #{version.inspect}\n" +
-                               "Please specify one of #{SSL_VERSIONS.inspect}"
+          raise ArgumentError, "Invalid SSL version #{version.inspect}\n" \
+            "Please specify one of #{SSL_VERSIONS.inspect}"
         end
 
         @ssl_version = version
@@ -119,8 +117,8 @@ module HTTPI
       # Sets the SSL min_version number. Expects one of <tt>HTTPI::Auth::SSL::MIN_MAX_VERSIONS</tt>.
       def min_version=(version)
         unless MIN_MAX_VERSIONS.include? version
-          raise ArgumentError, "Invalid SSL min_version #{version.inspect}\n" +
-                               "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
+          raise ArgumentError, "Invalid SSL min_version #{version.inspect}\n" \
+            "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
         end
 
         @min_version = version
@@ -134,8 +132,8 @@ module HTTPI
       # Sets the SSL min_version number. Expects one of <tt>HTTPI::Auth::SSL::MIN_MAX_VERSIONS</tt>.
       def max_version=(version)
         unless MIN_MAX_VERSIONS.include? version
-          raise ArgumentError, "Invalid SSL max_version #{version.inspect}\n" +
-                               "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
+          raise ArgumentError, "Invalid SSL max_version #{version.inspect}\n" \
+            "Please specify one of #{MIN_MAX_VERSIONS.inspect}"
         end
 
         @max_version = version
@@ -168,13 +166,12 @@ module HTTPI
       # Returns the SSL verify mode as a <tt>OpenSSL::SSL::VERIFY_*</tt> constant.
       def openssl_verify_mode
         case verify_mode
-          when :none                 then OpenSSL::SSL::VERIFY_NONE
-          when :peer                 then OpenSSL::SSL::VERIFY_PEER
-          when :fail_if_no_peer_cert then OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT
-          when :client_once          then OpenSSL::SSL::VERIFY_CLIENT_ONCE
+        when :none then OpenSSL::SSL::VERIFY_NONE
+        when :peer then OpenSSL::SSL::VERIFY_PEER
+        when :fail_if_no_peer_cert then OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT
+        when :client_once then OpenSSL::SSL::VERIFY_CLIENT_ONCE
         end
       end
-
     end
   end
 end

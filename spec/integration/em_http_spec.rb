@@ -2,7 +2,6 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::EmHttpRequest do
-
   if EM_HTTP_AVAILABLE
     subject(:adapter) { :em_http }
 
@@ -16,7 +15,7 @@ describe HTTPI::Adapter::EmHttpRequest do
     context "http requests" do
       before :all do
         # for some reason, these specs don't work with "localhost". [dh, 2012-12-15]
-        @server = IntegrationServer.run(:host => "127.0.0.1")
+        @server = IntegrationServer.run(host: "127.0.0.1")
       end
 
       after :all do
@@ -39,7 +38,7 @@ describe HTTPI::Adapter::EmHttpRequest do
         expect(response.headers["Set-Cookie"]).to eq(cookies)
       end
 
-      if RUBY_PLATFORM =~ /java/
+      if RUBY_PLATFORM.match?(/java/)
         pending <<-MSG
           It seems like JRuby is missing support for inactivity timeout! See related issues on GitHub:
             - https://github.com/eventmachine/eventmachine/issues/155

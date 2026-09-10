@@ -1,6 +1,5 @@
 class Fixture
   class << self
-
     def xml
       @xml ||= load :xml
     end
@@ -22,6 +21,5 @@ class Fixture
     def load(fixture, type = :xml)
       File.read File.expand_path("../../fixtures/#{fixture}.#{type}", __FILE__)
     end
-
   end
 end

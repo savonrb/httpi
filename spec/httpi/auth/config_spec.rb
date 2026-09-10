@@ -159,5 +159,4 @@ describe HTTPI::Auth::Config do
       expect(auth).to be_ntlm
     end
   end
-
 end

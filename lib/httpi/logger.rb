@@ -1,9 +1,7 @@
 require "logger"
 
 module HTTPI
-
   class << self
-
     # Sets whether to log HTTP requests.
     attr_writer :log
 
@@ -47,7 +45,7 @@ module HTTPI
     end
 
     def request_ssl_info(request)
-      if request.auth && request.auth.ssl
+      if request.auth&.ssl
         "#{request.auth.ssl.ssl_version}/#{request.auth.ssl.verify_mode}"
       end
     end

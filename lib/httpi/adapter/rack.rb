@@ -1,10 +1,9 @@
-require 'base64'
-require 'httpi/adapter/base'
-require 'httpi/response'
+require "base64"
+require "httpi/adapter/base"
+require "httpi/response"
 
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::Rack
     #
     # Adapter for Rack::MockRequest.
@@ -16,7 +15,7 @@ module HTTPI
     #   HTTPI::Adapter::Rack.mount 'application', RackApplication
     #   HTTPI.get("http://application/path", :rack)
     class Rack < Base
-      register :rack, :deps => %w(rack/mock)
+      register :rack, deps: %w[rack/mock]
 
       attr_reader :client
 
@@ -29,27 +28,26 @@ module HTTPI
       # Attaches Rack endpoint at specified host.
       # Endpoint will be acessible at {http://host/ http://host/} url.
       def self.mount(host, application)
-        self.mounted_apps[host] = application
+        mounted_apps[host] = application
       end
 
       # Removes Rack endpoint.
       def self.unmount(host)
-        self.mounted_apps.delete(host)
+        mounted_apps.delete(host)
       end
 
       def initialize(request)
         @app = self.class.mounted_apps[request.url.host]
 
-
         if @app.nil?
-          message  = "Application '#{request.url.host}' not mounted: ";
+          message = "Application '#{request.url.host}' not mounted: "
           message += "use `HTTPI::Adapter::Rack.mount('#{request.url.host}', RackApplicationClass)`"
 
           raise message
         end
 
         @request = request
-        @client  = ::Rack::MockRequest.new(@app)
+        @client = ::Rack::MockRequest.new(@app)
       end
 
       # Executes arbitrary HTTP requests.
@@ -68,9 +66,9 @@ module HTTPI
 
         if @request.auth.http?
           if @request.auth.basic?
-            basic_auth = @request.auth.basic.join(':')
-            encoded = Base64.encode64(basic_auth).gsub('\n', '')
-            @request.headers['Authorization'] = "Basic #{encoded}"
+            basic_auth = @request.auth.basic.join(":")
+            encoded = Base64.encode64(basic_auth).gsub('\n', "")
+            @request.headers["Authorization"] = "Basic #{encoded}"
           else
             raise NotSupportedError, "Rack adapter does not support HTTP #{@request.auth.type} auth"
           end
@@ -86,11 +84,11 @@ module HTTPI
 
         env = {}
         @request.headers.each do |header, value|
-          env["HTTP_#{header.gsub('-', '_').upcase}"] = value
+          env["HTTP_#{header.tr("-", "_").upcase}"] = value
         end
 
         response = @client.request(method.to_s.upcase, @request.url.to_s,
-              { :fatal => true, :input => @request.body.to_s }.merge(env))
+          {fatal: true, input: @request.body.to_s}.merge(env))
 
         Response.new(response.status, response.headers, response.body)
       end

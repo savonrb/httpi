@@ -1,8 +1,6 @@
 module HTTPI
   module QueryBuilder
-
     class Flat
-
       # Returns a +query+ string given a +Hash+.
       # Example:
       #
@@ -11,11 +9,9 @@ module HTTPI
       def self.build(query)
         Rack::Utils.build_query(query)
       end
-
     end
 
     class Nested
-
       # Returns a +query+ string given a +Hash+.
       # Example:
       #
@@ -31,17 +27,15 @@ module HTTPI
       # Changes Hash values into Strings
       def self.stringify_hash_values(query)
         query.each do |param, value|
-          if value.kind_of?(Hash)
-            query[param] = stringify_hash_values(value)
-          elsif value.kind_of?(Array)
-            query[param] = value.map(&:to_s)
+          query[param] = if value.is_a?(Hash)
+            stringify_hash_values(value)
+          elsif value.is_a?(Array)
+            value.map(&:to_s)
           else
-            query[param] = value.to_s
+            value.to_s
           end
         end
       end
-
     end
-
   end
 end
