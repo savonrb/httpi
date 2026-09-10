@@ -43,15 +43,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Audit workflows
-        uses: zizmorcore/zizmor-action@6fc4b006235f201fdab3722e17240ab420d580e5 # v0.6.1
+        uses: zizmorcore/zizmor-action@70fb788f84895a7701f5643d103d587e460b5c99 # v0.6.3
         with:
           advanced-security: false # fail the build on findings instead of uploading SARIF
 
   lint:
     runs-on: ubuntu-latest
-    # standardrb --fix is deferred. The suite has known offenses,
-    # so this job is advisory until they are cleared.
-    continue-on-error: true
+    # standardrb offenses are cleared, so lint is blocking rather than advisory.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -73,7 +71,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['3.0', 3.1, 3.2, 3.3, 3.4, truffleruby, jruby, head, truffleruby-head, jruby-head]
+        ruby: ['3.0', 3.1, 3.2, 3.3, 3.4, '4.0', truffleruby, jruby, head, truffleruby-head, jruby-head]
     # Head and alternative-runtime builds surface upstream regressions early and
     # should not block. curb (libcurl bindings) is MRI-only, so its integration
     # specs are skipped automatically on truffleruby/jruby.
@@ -98,3 +96,4 @@ jobs:
         with:
           file: coverage/.resultset.json
           format: simplecov
+
