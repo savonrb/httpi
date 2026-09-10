@@ -11,7 +11,7 @@ describe HTTPI::Request do
     end
 
     it "accepts a Hash of accessors to set" do
-      request = HTTPI::Request.new :url => "http://example.com", :open_timeout => 30, :query => { key: "value" }
+      request = HTTPI::Request.new url: "http://example.com", open_timeout: 30, query: {key: "value"}
       expect(request.url).to eq(URI("http://example.com?key=value"))
       expect(request.open_timeout).to eq(30)
       expect(request.query).to eq("key=value")
@@ -35,12 +35,12 @@ describe HTTPI::Request do
 
     it "uses username and password as basic authentication if present in the URL" do
       request.url = "http://username:password@example.com"
-      expect(request.auth.basic).to eq(['username', 'password'])
+      expect(request.auth.basic).to eq(["username", "password"])
     end
 
     it "uses a blank password if only username is specified in the URL" do
       request.url = "http://username@example.com"
-      expect(request.auth.basic).to eq(['username', ''])
+      expect(request.auth.basic).to eq(["username", ""])
     end
   end
 
@@ -71,7 +71,7 @@ describe HTTPI::Request do
       context "with flat query builder" do
         before do
           request.url = "http://example.com"
-          request.query = {:q => ["nested", "query"]}
+          request.query = {q: ["nested", "query"]}
         end
 
         it "lets you specify query parameter as Hash" do
@@ -87,7 +87,7 @@ describe HTTPI::Request do
           HTTPI.query_builder = :nested
 
           request.url = "http://example.com"
-          request.query = {:q => ["nested", "query"]}
+          request.query = {q: ["nested", "query"]}
         end
         after { HTTPI.query_builder = :flat }
 
@@ -108,8 +108,8 @@ describe HTTPI::Request do
       expect(request.proxy).to eq(URI("http://proxy.example.com"))
     end
 
-    it 'also accepts the socks URL to use as a String' do
-      request.proxy ="socks://socks.example.com"
+    it "also accepts the socks URL to use as a String" do
+      request.proxy = "socks://socks.example.com"
       expect(request.proxy).to eq(URI("socks://socks.example.com"))
     end
 
@@ -148,8 +148,8 @@ describe HTTPI::Request do
 
   describe "#headers" do
     it "lets you specify a Hash of HTTP request headers" do
-      request.headers = { "Accept-Encoding" => "gzip" }
-      expect(request.headers).to eq HTTPI::Utils::Headers.new.merge({ "Accept-Encoding" => "gzip" })
+      request.headers = {"Accept-Encoding" => "gzip"}
+      expect(request.headers).to eq HTTPI::Utils::Headers.new.merge({"Accept-Encoding" => "gzip"})
     end
 
     it "defaults to return an empty Hash" do
@@ -198,7 +198,7 @@ describe HTTPI::Request do
     end
 
     def response_with_cookie(cookie)
-      HTTPI::Response.new(200, { "Set-Cookie" => "#{cookie}; Path=/; HttpOnly" }, "")
+      HTTPI::Response.new(200, {"Set-Cookie" => "#{cookie}; Path=/; HttpOnly"}, "")
     end
   end
 
@@ -211,30 +211,30 @@ describe HTTPI::Request do
     end
     context "with flat query builder" do
       it "lets you specify the HTTP request body using a Hash" do
-        request.body = {:foo => :bar, :baz => :foo}
+        request.body = {foo: :bar, baz: :foo}
         expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
       end
     end
     context "with query parameter as Hash" do
       context "with flat query builder" do
         it "request body using a Hash" do
-          request.body = {:foo => :bar, :baz => :foo}
+          request.body = {foo: :bar, baz: :foo}
           expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
         end
         it "request body using a Hash with Array" do
-          request.body = {:foo => :bar, :baz => [:foo, :tst]}
+          request.body = {foo: :bar, baz: [:foo, :tst]}
           expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo", "baz=tst"])
         end
       end
       context "with nested query builder" do
         before { HTTPI.query_builder = :nested }
-        after  { HTTPI.query_builder = :flat }
+        after { HTTPI.query_builder = :flat }
         it "request body using a Hash" do
-          request.body = {:foo => :bar, :baz => :foo}
+          request.body = {foo: :bar, baz: :foo}
           expect(request.body.split("&")).to match_array(["foo=bar", "baz=foo"])
         end
         it "request body using a Hash with Array" do
-          request.body = {:foo => :bar, :baz => [:foo, :tst]}
+          request.body = {foo: :bar, baz: [:foo, :tst]}
           expect(request.body.split("&")).to match_array(["foo=bar", "baz%5B%5D=foo", "baz%5B%5D=tst"])
         end
       end
@@ -276,15 +276,14 @@ describe HTTPI::Request do
     end
   end
 
-  describe '#follow_redirect?' do
-    it 'returns true when follow_redirect is set to true' do
+  describe "#follow_redirect?" do
+    it "returns true when follow_redirect is set to true" do
       request.follow_redirect = true
       expect(request.follow_redirect?).to be_truthy
     end
 
-    it 'returns false by default' do
+    it "returns false by default" do
       expect(request.follow_redirect?).to be_falsey
     end
   end
-
 end

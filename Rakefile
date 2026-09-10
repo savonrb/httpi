@@ -15,4 +15,4 @@ RSpec::Core::RakeTask.new "ci" do |t|
   t.pattern = "spec/{httpi,integration}/**/*_spec.rb"
 end
 
-task :default => :spec
+task default: :spec

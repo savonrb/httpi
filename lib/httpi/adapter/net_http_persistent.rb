@@ -1,18 +1,16 @@
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::NetHTTPPersistent
     #
     # Adapter for the Net::HTTP::Persistent client.
     # http://docs.seattlerb.org/net-http-persistent/Net/HTTP/Persistent.html
     class NetHTTPPersistent < NetHTTP
-
-      register :net_http_persistent, :deps => %w(net/http/persistent)
+      register :net_http_persistent, deps: %w[net/http/persistent]
 
       private
 
       def create_client
-        if Gem::Version.new(Net::HTTP::Persistent::VERSION) >= Gem::Version.new('3.0.0')
+        if Gem::Version.new(Net::HTTP::Persistent::VERSION) >= Gem::Version.new("3.0.0")
           Net::HTTP::Persistent.new name: thread_key
         else
           Net::HTTP::Persistent.new thread_key
@@ -40,7 +38,7 @@ module HTTPI
       end
 
       def thread_key
-        @request.url.host.split(/\W/).reject{|p|p == ""}.join('-')
+        @request.url.host.split(/\W/).reject { |p| p == "" }.join("-")
       end
     end
   end

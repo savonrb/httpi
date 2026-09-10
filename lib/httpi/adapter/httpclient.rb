@@ -3,14 +3,12 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::HTTPClient
     #
     # Adapter for the HTTPClient client.
     # http://rubygems.org/gems/httpclient
     class HTTPClient < Base
-
-      register :httpclient, :deps => %w(httpclient)
+      register :httpclient, deps: %w[httpclient]
 
       def initialize(request)
         @request = request
@@ -80,22 +78,21 @@ module HTTPI
 
         @client.ssl_config.ssl_version = ssl.ssl_version.to_s if ssl.ssl_version
         if ssl.min_version || ssl.max_version
-          raise NotSupportedError, 'Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead'
+          raise NotSupportedError, "Httpclient adapter does not support #min_version or #max_version. Please, use #ssl_version instead"
         end
       end
 
       def respond_with(response)
         headers = {}
         response.header.all.each do |(header, value)|
-          if headers.key?(header)
-            headers[header] = Array(headers[header]) << value
+          headers[header] = if headers.key?(header)
+            Array(headers[header]) << value
           else
-            headers[header] = value
+            value
           end
         end
         Response.new response.code, headers, response.content
       end
-
     end
   end
 end

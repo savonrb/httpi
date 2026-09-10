@@ -2,7 +2,6 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::HTTP do
-
   subject(:adapter) { :http }
 
   context "http requests" do
@@ -40,7 +39,6 @@ describe HTTPI::Adapter::HTTP do
         HTTPI.get(request, adapter)
       end.to raise_exception(HTTP::TimeoutError)
     end
-
 
     it "executes GET requests" do
       response = HTTPI.get(@server.url, adapter)
@@ -84,16 +82,16 @@ describe HTTPI::Adapter::HTTP do
       request = HTTPI::Request.new(@server.url + "digest-auth")
       request.auth.digest("admin", "secret")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
     end
 
     it "does not support ntlm authentication" do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /does not support NTLM digest authentication/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /does not support NTLM digest authentication/)
     end
 
     it "supports chunked response" do
@@ -109,12 +107,12 @@ describe HTTPI::Adapter::HTTP do
     end
   end
 
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_PLATFORM.match?(/java/)
     pending "Puma Server complains: SSL not supported on JRuby"
   else
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
       after :all do
         @server.stop
@@ -152,5 +150,4 @@ describe HTTPI::Adapter::HTTP do
       end
     end
   end
-
 end

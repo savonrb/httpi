@@ -3,7 +3,6 @@ require "integration/support/server"
 require "net/http/persistent"
 
 describe HTTPI::Adapter::NetHTTPPersistent do
-
   subject(:adapter) { :net_http_persistent }
 
   context "http requests" do
@@ -86,8 +85,8 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
 
     # it does not support digest authentication
@@ -104,12 +103,12 @@ describe HTTPI::Adapter::NetHTTPPersistent do
     end
   end
 
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_PLATFORM.match?(/java/)
     pending "Puma Server complains: SSL not supported on JRuby"
   else
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
 
       after :all do
@@ -151,13 +150,13 @@ describe HTTPI::Adapter::NetHTTPPersistent do
   # NTLM=external via the command line, e.g.:
   #   $ NTLM=external bundle exec rspec
   #
-  if ENV["NTLM"]=="external"
+  if ENV["NTLM"] == "external"
     context "http request via NTLM" do
       it "works with NTLM connections" do
         user = "tester"
         pass = "vReqSoafRe5O"
         request = HTTPI::Request.new("http://ntlmtest/")
-        request.auth.ntlm(user,pass)
+        request.auth.ntlm(user, pass)
         response = HTTPI.get(request, adapter)
         expect(response.code).to eq(200)
         expect(response.body).to match(/iis-8\.png/)
@@ -167,5 +166,4 @@ describe HTTPI::Adapter::NetHTTPPersistent do
       end
     end
   end
-
 end

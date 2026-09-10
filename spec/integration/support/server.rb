@@ -10,9 +10,17 @@ class IntegrationServer
     server
   end
 
-  def self.ssl_ca_file;   integration_fixture("ca_all.pem")  end
-  def self.ssl_key_file;  integration_fixture("server.key")  end
-  def self.ssl_cert_file; integration_fixture("server.cert") end
+  def self.ssl_ca_file
+    integration_fixture("ca_all.pem")
+  end
+
+  def self.ssl_key_file
+    integration_fixture("server.key")
+  end
+
+  def self.ssl_cert_file
+    integration_fixture("server.cert")
+  end
 
   def self.integration_fixture(file)
     file = File.expand_path("../../fixtures/#{file}", __FILE__)
@@ -21,10 +29,10 @@ class IntegrationServer
   end
 
   def initialize(options = {})
-    @app  = Application
+    @app = Application
     @host = options.fetch(:host, "localhost")
     @port = options.fetch(:port, 17172)
-    @ssl  = options.fetch(:ssl, false)
+    @ssl = options.fetch(:ssl, false)
 
     @server = Puma::Server.new(app, events)
 
@@ -73,11 +81,10 @@ class IntegrationServer
   def ssl_context
     context = Puma::MiniSSL::Context.new
 
-    context.key         = IntegrationServer.ssl_key_file
-    context.cert        = IntegrationServer.ssl_cert_file
+    context.key = IntegrationServer.ssl_key_file
+    context.cert = IntegrationServer.ssl_cert_file
     context.verify_mode = Puma::MiniSSL::VERIFY_NONE
 
     context
   end
-
 end

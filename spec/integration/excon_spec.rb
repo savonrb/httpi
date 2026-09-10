@@ -2,7 +2,6 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::Excon do
-
   subject(:adapter) { :excon }
 
   context "http requests" do
@@ -83,8 +82,8 @@ describe HTTPI::Adapter::Excon do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /does not support NTLM authentication/)
     end
 
     it "supports disabling verify mode" do
@@ -106,12 +105,12 @@ describe HTTPI::Adapter::Excon do
     end
   end
 
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_PLATFORM.match?(/java/)
     pending "Puma Server complains: SSL not supported on JRuby"
   else
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
       after :all do
         @server.stop
@@ -153,8 +152,8 @@ describe HTTPI::Adapter::Excon do
         request = HTTPI::Request.new(@server.url)
 
         request.auth.ssl.ca_cert_file = IntegrationServer.ssl_ca_file
-        request.auth.ssl.cert = OpenSSL::X509::Certificate.new File.open("spec/fixtures/client_cert.pem").read
-        request.auth.ssl.cert_key = OpenSSL::PKey.read File.open("spec/fixtures/client_key.pem").read
+        request.auth.ssl.cert = OpenSSL::X509::Certificate.new File.read("spec/fixtures/client_cert.pem")
+        request.auth.ssl.cert_key = OpenSSL::PKey.read File.read("spec/fixtures/client_key.pem")
 
         response = HTTPI.get(request, adapter)
         expect(response.body).to eq("get")
@@ -170,5 +169,4 @@ describe HTTPI::Adapter::Excon do
       end
     end
   end
-
 end

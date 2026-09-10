@@ -81,7 +81,6 @@ require "httpi/adapter/http"
 #     http.follow_redirect_count = 3  # HTTPClient example
 #   end
 module HTTPI
-
   REQUEST_METHODS = [:get, :post, :head, :put, :delete]
 
   DEFAULT_LOG_LEVEL = :debug
@@ -102,7 +101,6 @@ module HTTPI
   end
 
   class << self
-
     def query_builder
       @query_builder ||= HTTPI::QueryBuilder::Flat
     end
@@ -124,7 +122,7 @@ module HTTPI
 
     # Executes an HTTP GET request.
     def get(request, adapter = nil, &block)
-      request = Request.new(request) if request.kind_of? String
+      request = Request.new(request) if request.is_a? String
       request(:get, request, adapter, &block)
     end
 
@@ -136,7 +134,7 @@ module HTTPI
 
     # Executes an HTTP HEAD request.
     def head(request, adapter = nil, &block)
-      request = Request.new(request) if request.kind_of? String
+      request = Request.new(request) if request.is_a? String
       request(:head, request, adapter, &block)
     end
 
@@ -148,22 +146,22 @@ module HTTPI
 
     # Executes an HTTP DELETE request.
     def delete(request, adapter = nil, &block)
-      request = Request.new(request) if request.kind_of? String
+      request = Request.new(request) if request.is_a? String
       request(:delete, request, adapter, &block)
     end
 
     # Executes an HTTP request for the given +method+.
     def request(method, request, adapter = nil, redirects = 0)
       adapter_class = load_adapter(adapter, request)
-      
-      Adapter.client_setup_block.call(adapter_class.client) if Adapter.client_setup_block
+
+      Adapter.client_setup_block&.call(adapter_class.client)
       yield adapter_class.client if block_given?
       log_request(method, request, Adapter.identify(adapter_class.class))
 
       response = adapter_class.request(method)
 
       if response && HTTPI::Response::RedirectResponseCodes.member?(response.code) && request.follow_redirect? && redirects < request.redirect_limit
-        request.url = URI.join(request.url, response.headers['location'])
+        request.url = URI.join(request.url, response.headers["location"])
         log("Following redirect: '#{request.url}'.")
         return request(method, request, adapter, redirects + 1)
       end
@@ -183,13 +181,12 @@ module HTTPI
     private
 
     def request_and_adapter_from(args)
-      return args if args[0].kind_of? Request
-      [Request.new(:url => args[0], :body => args[1]), args[2]]
+      return args if args[0].is_a? Request
+      [Request.new(url: args[0], body: args[1]), args[2]]
     end
 
     def load_adapter(adapter, request)
       Adapter.load(adapter).new(request)
     end
-
   end
 end

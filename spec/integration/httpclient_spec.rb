@@ -2,7 +2,6 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::HTTPClient do
-
   subject(:adapter) { :httpclient }
 
   context "http requests" do
@@ -100,12 +99,12 @@ describe HTTPI::Adapter::HTTPClient do
     end
   end
 
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_PLATFORM.match?(/java/)
     pending "Puma Server complains: SSL not supported on JRuby"
   else
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
       after :all do
         @server.stop
@@ -133,5 +132,4 @@ describe HTTPI::Adapter::HTTPClient do
       end
     end
   end
-
 end

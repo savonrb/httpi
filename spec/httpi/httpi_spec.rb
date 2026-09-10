@@ -6,7 +6,7 @@ require "excon"
 require "net/http/persistent"
 require "http"
 
-unless RUBY_PLATFORM =~ /java/
+unless RUBY_PLATFORM.match?(/java/)
   require "curb"
 end
 
@@ -17,11 +17,11 @@ describe HTTPI do
   let(:net_http_persistent) { HTTPI::Adapter.load(:net_http_persistent) }
 
   before(:all) do
-    HTTPI::Adapter::Rack.mount('example.com', IntegrationServer::Application)
+    HTTPI::Adapter::Rack.mount("example.com", IntegrationServer::Application)
   end
 
   after(:all) do
-    HTTPI::Adapter::Rack.unmount('example.com')
+    HTTPI::Adapter::Rack.unmount("example.com")
   end
 
   describe ".adapter=" do
@@ -37,7 +37,7 @@ describe HTTPI do
     end
 
     it "sets the adapter client setup block" do
-      block = proc { }
+      block = proc {}
       HTTPI.adapter_client_setup = block
       expect(HTTPI::Adapter.client_setup_block).to eq(block)
     end
@@ -231,7 +231,7 @@ describe HTTPI do
   end
 
   describe ".request" do
-    let(:request) { HTTPI::Request.new('http://example.com/foo/') }
+    let(:request) { HTTPI::Request.new("http://example.com/foo/") }
 
     it "allows custom HTTP methods" do
       httpclient.any_instance.expects(:request).with(:custom)
@@ -239,12 +239,12 @@ describe HTTPI do
       client.request(:custom, request, :httpclient)
     end
 
-    it 'follows redirects' do
+    it "follows redirects" do
       request.follow_redirect = true
-      redirect_location = 'http://foo.bar'
+      redirect_location = "http://foo.bar"
 
-      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
-      response = HTTPI::Response.new(200, {}, 'success')
+      redirect = HTTPI::Response.new(302, {"location" => redirect_location}, "Moved")
+      response = HTTPI::Response.new(200, {}, "success")
 
       httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
       request.expects(:url=).with(URI.parse(redirect_location))
@@ -252,39 +252,39 @@ describe HTTPI do
       client.request(:custom, request, :httpclient)
     end
 
-    it 'follows redirects with absolute path' do
+    it "follows redirects with absolute path" do
       request.follow_redirect = true
-      redirect_location = '/bar/foo'
+      redirect_location = "/bar/foo"
 
-      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
-      response = HTTPI::Response.new(200, {}, 'success')
+      redirect = HTTPI::Response.new(302, {"location" => redirect_location}, "Moved")
+      response = HTTPI::Response.new(200, {}, "success")
 
       httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
-      request.expects(:url=).with(URI.parse('http://example.com/bar/foo'))
+      request.expects(:url=).with(URI.parse("http://example.com/bar/foo"))
 
       client.request(:custom, request, :httpclient)
     end
 
-    it 'follows redirects with relative path' do
+    it "follows redirects with relative path" do
       request.follow_redirect = true
-      redirect_location = 'bar/foo'
+      redirect_location = "bar/foo"
 
-      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
-      response = HTTPI::Response.new(200, {}, 'success')
+      redirect = HTTPI::Response.new(302, {"location" => redirect_location}, "Moved")
+      response = HTTPI::Response.new(200, {}, "success")
 
       httpclient.any_instance.expects(:request).twice.with(:custom).returns(redirect, response)
-      request.expects(:url=).with(URI.parse('http://example.com/foo/bar/foo'))
+      request.expects(:url=).with(URI.parse("http://example.com/foo/bar/foo"))
 
       client.request(:custom, request, :httpclient)
     end
 
-    it 'follows redirects at maximum of the redirect limit' do
+    it "follows redirects at maximum of the redirect limit" do
       request.follow_redirect = true
       request.redirect_limit = 2
-      redirect_location = 'http://foo.bar'
+      redirect_location = "http://foo.bar"
 
-      redirect = HTTPI::Response.new(302, {'location' => redirect_location}, 'Moved')
-      response = HTTPI::Response.new(200, {}, 'success')
+      redirect = HTTPI::Response.new(302, {"location" => redirect_location}, "Moved")
+      response = HTTPI::Response.new(200, {}, "success")
 
       httpclient.any_instance.expects(:request).times(2).with(:custom).returns(redirect, response)
       request.expects(:url=).with(URI.parse(redirect_location))
@@ -294,13 +294,13 @@ describe HTTPI do
 
     describe "client setup block present" do
       around do |example|
-        HTTPI::Adapter.client_setup_block = proc { |client| client.base_url = 'https://google.com'  }
+        HTTPI::Adapter.client_setup_block = proc { |client| client.base_url = "https://google.com" }
         example.run
         HTTPI::Adapter.client_setup_block = nil
       end
 
-      it 'calls client setup block' do
-        client.request(:get, request, :httpclient) { |client| expect(client.base_url).to eq('https://google.com') }
+      it "calls client setup block" do
+        client.request(:get, request, :httpclient) { |client| expect(client.base_url).to eq("https://google.com") }
       end
     end
   end
@@ -319,14 +319,14 @@ describe HTTPI do
 
         unless skip_adapter
           client_class = {
-            :httpclient => lambda { HTTPClient },
-            :curb       => lambda { Curl::Easy },
-            :net_http   => lambda { Net::HTTP },
-            :net_http_persistent => lambda { Net::HTTP::Persistent },
-            :em_http    => lambda { EventMachine::HttpConnection },
-            :rack       => lambda { Rack::MockRequest },
-            :excon      => lambda { Excon::Connection },
-            :http       => lambda { defined?(::HTTP::Session) ? ::HTTP::Session : ::HTTP::Client }
+            httpclient: lambda { HTTPClient },
+            curb: lambda { Curl::Easy },
+            net_http: lambda { Net::HTTP },
+            net_http_persistent: lambda { Net::HTTP::Persistent },
+            em_http: lambda { EventMachine::HttpConnection },
+            rack: lambda { Rack::MockRequest },
+            excon: lambda { Excon::Connection },
+            http: lambda { defined?(::HTTP::Session) ? ::HTTP::Session : ::HTTP::Client }
           }
 
           context "using #{adapter}" do
@@ -379,5 +379,4 @@ describe HTTPI do
       end
     end
   end
-
 end

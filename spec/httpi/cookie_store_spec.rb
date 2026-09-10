@@ -2,8 +2,7 @@ require "spec_helper"
 require "httpi"
 
 describe HTTPI::CookieStore do
-
-  let(:user_cookie)  { some_cookie(:user, "chucknorris") }
+  let(:user_cookie) { some_cookie(:user, "chucknorris") }
   let(:token_cookie) { some_cookie(:token, "strawberry") }
 
   it "stores a set of cookies" do
@@ -22,5 +21,4 @@ describe HTTPI::CookieStore do
   def some_cookie(name, value)
     HTTPI::Cookie.new("#{name}=#{value}; Path=/; HttpOnly")
   end
-
 end

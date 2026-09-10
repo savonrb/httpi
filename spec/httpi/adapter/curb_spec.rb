@@ -5,7 +5,7 @@ require "httpi/request"
 require "integration/support/server"
 
 # curb does not run on jruby
-unless RUBY_PLATFORM =~ /java/
+unless RUBY_PLATFORM.match?(/java/)
   HTTPI::Adapter.load_adapter(:curb)
 
   describe "NTLM authentication" do
@@ -27,9 +27,8 @@ unless RUBY_PLATFORM =~ /java/
   end
 
   describe HTTPI::Adapter::Curb do
-
     let(:adapter) { HTTPI::Adapter::Curb.new(request) }
-    let(:curb)    { Curl::Easy.any_instance }
+    let(:curb) { Curl::Easy.any_instance }
     let(:request) { HTTPI::Request.new("http://example.com") }
 
     describe "#request(:get)" do
@@ -41,7 +40,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        expect(adapter.request(:get)).to match_response(:body => Fixture.xml)
+        expect(adapter.request(:get)).to match_response(body: Fixture.xml)
       end
     end
 
@@ -54,7 +53,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        expect(adapter.request(:post)).to match_response(:body => Fixture.xml)
+        expect(adapter.request(:post)).to match_response(body: Fixture.xml)
       end
     end
 
@@ -76,7 +75,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        expect(adapter.request(:head)).to match_response(:body => Fixture.xml)
+        expect(adapter.request(:head)).to match_response(body: Fixture.xml)
       end
     end
 
@@ -89,15 +88,15 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        expect(adapter.request(:put)).to match_response(:body => Fixture.xml)
+        expect(adapter.request(:put)).to match_response(body: Fixture.xml)
       end
     end
 
     describe "#request(:put)" do
       it "sends the body in the request" do
-        curb.expects(:http_put).with('xml=hi&name=123')
+        curb.expects(:http_put).with("xml=hi&name=123")
 
-        request.body = 'xml=hi&name=123'
+        request.body = "xml=hi&name=123"
         adapter.request(:put)
       end
     end
@@ -111,14 +110,14 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       it "returns a valid HTTPI::Response" do
-        expect(adapter.request(:delete)).to match_response(:body => "")
+        expect(adapter.request(:delete)).to match_response(body: "")
       end
     end
 
     describe "#request(:custom)" do
       it "raises a NotSupportedError" do
-        expect { adapter.request(:custom) }.
-          to raise_error(HTTPI::NotSupportedError, "Curb does not support custom HTTP methods")
+        expect { adapter.request(:custom) }
+          .to raise_error(HTTPI::NotSupportedError, "Curb does not support custom HTTP methods")
       end
     end
 
@@ -250,50 +249,50 @@ unless RUBY_PLATFORM =~ /java/
           request
         end
 
-        it 'sets ssl_cipher_list' do
+        it "sets ssl_cipher_list" do
           request.auth.ssl.ciphers = ["AES128"]
           curb.expects(:set).with(any_parameters).at_least(1)
           curb.expects(:set).with(:ssl_cipher_list, anything)
           adapter.request(:get)
         end
 
-        context 'sets ssl_version' do
-          it 'defaults to nil when no ssl_version is specified' do
+        context "sets ssl_version" do
+          it "defaults to nil when no ssl_version is specified" do
             curb.expects(:ssl_version=).with(nil)
             adapter.request(:get)
           end
 
-          it 'to 1 when ssl_version is specified as TLSv1' do
+          it "to 1 when ssl_version is specified as TLSv1" do
             request.auth.ssl.ssl_version = :TLSv1
             curb.expects(:ssl_version=).with(1)
 
             adapter.request(:get)
           end
 
-          it 'to 2 when ssl_version is specified as SSLv2/SSLv23' do
-            version = HTTPI::Auth::SSL::SSL_VERSIONS.select { |method| method.to_s.match(/SSLv2|SSLv23/) }.first
+          it "to 2 when ssl_version is specified as SSLv2/SSLv23" do
+            version = HTTPI::Auth::SSL::SSL_VERSIONS.find { |method| method.to_s.match(/SSLv2|SSLv23/) }
             request.auth.ssl.ssl_version = version
             curb.expects(:ssl_version=).with(2)
 
             adapter.request(:get)
           end
 
-          it 'to 3 when ssl_version is specified as SSLv3' do
+          it "to 3 when ssl_version is specified as SSLv3" do
             request.auth.ssl.ssl_version = :SSLv3
             curb.expects(:ssl_version=).with(3)
 
             adapter.request(:get)
           end
         end
-        it 'raises error when min_version not nil' do
+        it "raises error when min_version not nil" do
           request.auth.ssl.min_version = :TLS1_2
-          expect{ adapter.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, 'Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.')
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.")
         end
-        it 'raises error when max_version not nil' do
+        it "raises error when max_version not nil" do
           request.auth.ssl.max_version = :TLS1_2
-          expect{ adapter.request(:get) }.
-            to raise_error(HTTPI::NotSupportedError, 'Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.')
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "Curb adapter does not support #min_version or #max_version. Please, use #ssl_version instead.")
         end
       end
 
@@ -302,7 +301,7 @@ unless RUBY_PLATFORM =~ /java/
           request = HTTPI::Request.new("http://example.com")
           request.auth.ssl.cert_key_file = "spec/fixtures/client_key.pem"
           request.auth.ssl.cert_file = "spec/fixtures/client_cert.pem"
-          request.auth.ssl.cert_key_password = 'example'
+          request.auth.ssl.cert_key_password = "example"
           request
         end
 
@@ -334,8 +333,8 @@ unless RUBY_PLATFORM =~ /java/
         end
 
         it "raise if an invalid cert type was set" do
-          expect { request.auth.ssl.cert_type = :invalid }.
-            to raise_error(ArgumentError, "Invalid SSL cert type :invalid\nPlease specify one of [:pem, :der]")
+          expect { request.auth.ssl.cert_type = :invalid }
+            .to raise_error(ArgumentError, "Invalid SSL cert type :invalid\nPlease specify one of [:pem, :der]")
         end
 
         it "sets the cacert if specified" do
@@ -346,6 +345,5 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
     end
-
   end
 end

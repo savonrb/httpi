@@ -2,13 +2,11 @@ require "httpi/auth/ssl"
 
 module HTTPI
   module Auth
-
     # = HTTPI::Auth::Config
     #
     # Manages HTTP and SSL auth configuration. Currently supports HTTP basic/digest,
     # Negotiate/SPNEGO, and SSL client authentication.
     class Config
-
       # Supported authentication types.
       TYPES = [:basic, :digest, :gssnegotiate, :ssl, :ntlm]
 
@@ -83,7 +81,6 @@ module HTTPI
 
       # Accessor for the authentication type in use.
       attr_accessor :type
-
     end
   end
 end

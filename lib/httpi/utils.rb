@@ -1,6 +1,6 @@
 # mostly verbatim from: https://github.com/rack/rack/blob/main/lib/rack/headers.rb
-# Because this is part of httpi's public API, its better not to load an external 
-# library for it. 
+# Because this is part of httpi's public API, its better not to load an external
+# library for it.
 module HTTPI
   module Utils
     # A case-insensitive Hash that preserves the original case of a
@@ -9,9 +9,9 @@ module HTTPI
     class Headers < Hash
       def self.[](headers)
         if headers.is_a?(Headers) && !headers.frozen?
-          return headers
+          headers
         else
-          return self.new(headers)
+          new(headers)
         end
       end
 
@@ -46,20 +46,19 @@ module HTTPI
       end
 
       def [](k)
-        super(k) || super(@names[k.downcase])
+        super || super(@names[k.downcase])
       end
 
       def []=(k, v)
         canonical = k.downcase.freeze
         delete k if @names[canonical] && @names[canonical] != k # .delete is expensive, don't invoke it unless necessary
         @names[canonical] = k
-        super k, v
+        super
       end
 
       def delete(k)
         canonical = k.downcase
-        result = super @names.delete(canonical)
-        result
+        super(@names.delete(canonical))
       end
 
       def include?(k)
@@ -87,9 +86,8 @@ module HTTPI
       end
 
       protected
-        def names
-          @names
-        end
+
+      attr_reader :names
     end
   end
 end

@@ -3,14 +3,12 @@ require "httpi/response"
 
 module HTTPI
   module Adapter
-
     # = HTTPI::Adapter::HTTP
     #
     # Adapter for the http.rb client.
     # https://github.com/httprb/http.rb
     class HTTP < Base
-
-      register :http, :deps => %w(http)
+      register :http, deps: %w[http]
 
       def initialize(request)
         if request.auth.digest?
@@ -33,7 +31,7 @@ module HTTPI
           raise NotSupportedError, "http.rb does not support custom HTTP methods"
         end
         response = begin
-          @client.send(method, @request.url, :body => @request.body)
+          @client.send(method, @request.url, body: @request.body)
         rescue OpenSSL::SSL::SSLError
           raise SSLError
         end
@@ -49,30 +47,30 @@ module HTTPI
 
           context.options = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options]
 
-          if @request.auth.ssl.ca_cert_file != nil
+          if !@request.auth.ssl.ca_cert_file.nil?
             context.ca_file = @request.auth.ssl.ca_cert_file
           else
             context.cert_store = OpenSSL::SSL::SSLContext::DEFAULT_CERT_STORE
           end
 
-          context.cert        = @request.auth.ssl.cert
-          context.key         = @request.auth.ssl.cert_key
-          context.ssl_version = @request.auth.ssl.ssl_version if @request.auth.ssl.ssl_version != nil
-          context.min_version = @request.auth.ssl.min_version if @request.auth.ssl.min_version != nil
-          context.max_version = @request.auth.ssl.max_version if @request.auth.ssl.max_version != nil
+          context.cert = @request.auth.ssl.cert
+          context.key = @request.auth.ssl.cert_key
+          context.ssl_version = @request.auth.ssl.ssl_version if !@request.auth.ssl.ssl_version.nil?
+          context.min_version = @request.auth.ssl.min_version if !@request.auth.ssl.min_version.nil?
+          context.max_version = @request.auth.ssl.max_version if !@request.auth.ssl.max_version.nil?
           context.verify_mode = @request.auth.ssl.openssl_verify_mode
-          context.ciphers     = @request.auth.ssl.ciphers if @request.auth.ssl.ciphers
+          context.ciphers = @request.auth.ssl.ciphers if @request.auth.ssl.ciphers
 
-          client = ::HTTP::Client.new(:ssl_context => context)
+          client = ::HTTP::Client.new(ssl_context: context)
         else
           client = ::HTTP
         end
 
         if @request.auth.basic?
-          client = client.basic_auth(:user => @request.auth.credentials[0], :pass => @request.auth.credentials[1])
+          client = client.basic_auth(user: @request.auth.credentials[0], pass: @request.auth.credentials[1])
         end
 
-        if @request.proxy != nil
+        if !@request.proxy.nil?
           client = client.via(@request.proxy.host, @request.proxy.port, @request.proxy.user, @request.proxy.password)
         end
 

@@ -2,7 +2,6 @@ require "spec_helper"
 require "integration/support/server"
 
 describe HTTPI::Adapter::NetHTTP do
-
   subject(:adapter) { :net_http }
 
   context "http requests" do
@@ -97,14 +96,14 @@ describe HTTPI::Adapter::NetHTTP do
       subject(:response) { HTTPI.request(http_method, request, adapter) }
 
       shared_examples_for "any supported custom method" do
-        describe '#body' do
-          subject(:body) {response.body}
+        describe "#body" do
+          subject(:body) { response.body }
           it { is_expected.to be == http_method.to_s }
         end
 
-        describe '#headers' do
-          subject(:headers) {response.headers}
-          it { is_expected.to include('content-type' => "text/plain")}
+        describe "#headers" do
+          subject(:headers) { response.headers }
+          it { is_expected.to include("content-type" => "text/plain") }
         end
       end
 
@@ -134,8 +133,8 @@ describe HTTPI::Adapter::NetHTTP do
       request = HTTPI::Request.new(@server.url + "digest-auth")
       request.auth.digest("admin", "secret")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /does not support HTTP digest authentication/)
     end
 
     it "supports ntlm authentication" do
@@ -152,17 +151,17 @@ describe HTTPI::Adapter::NetHTTP do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("testing", "failures")
 
-      expect { HTTPI.get(request, adapter) }.
-        to raise_error(HTTPI::NotSupportedError, /Net::NTLM is not available/)
+      expect { HTTPI.get(request, adapter) }
+        .to raise_error(HTTPI::NotSupportedError, /Net::NTLM is not available/)
     end
 
     it "does not require ntlm when ntlm authenication is not requested" do
       HTTPI::Adapter::NetHTTP.any_instance.stubs(:check_net_ntlm_version!).raises(RuntimeError)
-        request = HTTPI::Request.new(@server.url)
-        expect(request.auth.ntlm?).to be false
+      request = HTTPI::Request.new(@server.url)
+      expect(request.auth.ntlm?).to be false
 
-        # make sure a request doesn't call ntlm check if we don't ask for it.
-        expect { HTTPI.get(request, adapter) }.not_to raise_error
+      # make sure a request doesn't call ntlm check if we don't ask for it.
+      expect { HTTPI.get(request, adapter) }.not_to raise_error
       HTTPI::Adapter::NetHTTP.any_instance.unstub(:check_net_ntlm_version!)
     end
 
@@ -175,10 +174,10 @@ describe HTTPI::Adapter::NetHTTP do
       # the check should also verify that the version of ntlm is supported and still fail if it isn't
       HTTPI::Adapter::NetHTTP.any_instance.stubs(:ntlm_version).returns("0.1.1")
 
-        request = HTTPI::Request.new(@server.url + "ntlm-auth")
-        request.auth.ntlm("tester", "vReqSoafRe5O")
+      request = HTTPI::Request.new(@server.url + "ntlm-auth")
+      request.auth.ntlm("tester", "vReqSoafRe5O")
 
-        expect { HTTPI.get(request, adapter) }.to raise_error(ArgumentError, /Invalid version/)
+      expect { HTTPI.get(request, adapter) }.to raise_error(ArgumentError, /Invalid version/)
 
       HTTPI::Adapter::NetHTTP.any_instance.unstub(:ntlm_version)
     end
@@ -187,11 +186,11 @@ describe HTTPI::Adapter::NetHTTP do
       request = HTTPI::Request.new(@server.url + "ntlm-auth")
       request.auth.ntlm("tester", "vReqSoafRe5O")
 
-      expect { HTTPI.get(request, adapter) }.
-        to_not raise_error
+      expect { HTTPI.get(request, adapter) }
+        .to_not raise_error
 
-      expect { HTTPI.get(request, adapter) }.
-        to_not raise_error
+      expect { HTTPI.get(request, adapter) }
+        .to_not raise_error
     end
 
     it "supports chunked response" do
@@ -206,12 +205,12 @@ describe HTTPI::Adapter::NetHTTP do
     end
   end
 
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_PLATFORM.match?(/java/)
     pending "Puma Server complains: SSL not supported on JRuby"
   else
     context "https requests" do
       before :all do
-        @server = IntegrationServer.run(:ssl => true)
+        @server = IntegrationServer.run(ssl: true)
       end
       after :all do
         @server.stop
@@ -262,13 +261,13 @@ describe HTTPI::Adapter::NetHTTP do
   # NTLM=external via the command line, e.g.:
   #   $ NTLM=external bundle exec rspec
   #
-  if ENV["NTLM"]=="external"
+  if ENV["NTLM"] == "external"
     context "http request via NTLM" do
       it "works with NTLM connections" do
         user = "tester"
         pass = "vReqSoafRe5O"
         request = HTTPI::Request.new("http://ntlmtest/")
-        request.auth.ntlm(user,pass)
+        request.auth.ntlm(user, pass)
         response = HTTPI.get(request, adapter)
         expect(response.code).to eq(200)
         expect(response.body).to match(/iis-8\.png/)
@@ -278,5 +277,4 @@ describe HTTPI::Adapter::NetHTTP do
       end
     end
   end
-
 end

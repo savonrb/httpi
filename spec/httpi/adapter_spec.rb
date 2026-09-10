@@ -6,13 +6,13 @@ describe HTTPI::Adapter do
 
   describe ".register" do
     it "registers a new adapter" do
-      name  = :custom
+      name = :custom
       klass = Class.new
-      deps  = %w(some_dependency)
+      deps = %w[some_dependency]
 
       adapter.register(name, klass, deps)
 
-      expect(HTTPI::Adapter::ADAPTERS[:custom]).to include(:class => klass, :deps => deps)
+      expect(HTTPI::Adapter::ADAPTERS[:custom]).to include(class: klass, deps: deps)
       expect(HTTPI::Adapter::ADAPTER_CLASS_MAP[klass]).to be(name)
     end
   end
@@ -64,5 +64,4 @@ describe HTTPI::Adapter do
       end
     end
   end
-
 end

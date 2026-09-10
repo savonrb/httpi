@@ -4,20 +4,18 @@ require "httpi/auth/config"
 require "rack/utils"
 
 module HTTPI
-
   # = HTTPI::Request
   #
   # Represents an HTTP request and contains various methods for customizing that request.
   class Request
-
     # Available attribute writers.
     ATTRIBUTES = [:url, :proxy, :headers, :body, :open_timeout, :read_timeout, :write_timeout, :follow_redirect, :redirect_limit, :query]
 
     # Accepts a Hash of +args+ to mass assign attributes and authentication credentials.
     def initialize(args = {})
-      if args.kind_of? String
+      if args.is_a? String
         self.url = args
-      elsif args.kind_of?(Hash) && !args.empty?
+      elsif args.is_a?(Hash) && !args.empty?
         mass_assign args
       end
     end
@@ -25,7 +23,7 @@ module HTTPI
     # Sets the +url+ to access. Raises an +ArgumentError+ unless the +url+ is valid.
     def url=(url)
       @url = normalize_url! url
-      auth.basic @url.user, @url.password || '' if @url.user
+      auth.basic @url.user, @url.password || "" if @url.user
     end
 
     # Returns the +url+ to access.
@@ -33,17 +31,17 @@ module HTTPI
 
     # Sets the +query+ from +url+. Raises an +ArgumentError+ unless the +url+ is valid.
     def query=(query)
-      raise ArgumentError, "Invalid URL: #{self.url}" unless self.url.respond_to?(:query)
-      if query.kind_of?(Hash)
+      raise ArgumentError, "Invalid URL: #{url}" unless url.respond_to?(:query)
+      if query.is_a?(Hash)
         query = build_query_from_hash(query)
       end
       query = query.to_s unless query.is_a?(String)
-      self.url.query = query
+      url.query = query
     end
 
     # Returns the +query+ from +url+.
     def query
-      self.url.query if self.url.respond_to?(:query)
+      url.query if url.respond_to?(:query)
     end
 
     # Sets the +proxy+ to use. Raises an +ArgumentError+ unless the +proxy+ is valid.
@@ -95,14 +93,14 @@ module HTTPI
 
     # Sets a body request given a String or a Hash.
     def body=(params)
-      @body = params.kind_of?(Hash) ? build_query_from_hash(params) : params
+      @body = params.is_a?(Hash) ? build_query_from_hash(params) : params
     end
 
     # Sets the block to be called while processing the response. The block
     # accepts a single parameter - the chunked response body.
     def on_body(&block)
       @on_body ||= nil
-      if block_given? then
+      if block_given?
         @on_body = block
       end
       @on_body
@@ -146,14 +144,13 @@ module HTTPI
 
     # Expects a +url+, validates its validity and returns a +URI+ object.
     def normalize_url!(url)
-      raise ArgumentError, "Invalid URL: #{url}" unless url.to_s =~ /^http|socks/
-      url.kind_of?(URI) ? url : URI(url)
+      raise ArgumentError, "Invalid URL: #{url}" unless /^http|socks/.match?(url.to_s)
+      url.is_a?(URI) ? url : URI(url)
     end
 
     # Returns a +query+ string given a +Hash+
     def build_query_from_hash(query)
       HTTPI.query_builder.build(query)
     end
-
   end
 end
