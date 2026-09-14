@@ -80,7 +80,7 @@ class IntegrationServer
 
       realm = "digest-realm"
       app = IntegrationServer::DigestAuth.new(unprotected_app) do |username|
-        (username == "admin" ? Digest::MD5.hexdigest("admin:#{realm}:secret") : nil)
+        (username == "admin") ? Digest::MD5.hexdigest("admin:#{realm}:secret") : nil
       end
       app.realm = realm
       app.opaque = "this-should-be-secret"
