@@ -78,24 +78,24 @@ class IntegrationServer
       end
 
       def initialize
-        super()
+        super
 
         yield self if block_given?
       end
 
       def [](k)
-        super k.to_s
+        super(k.to_s)
       end
 
       def []=(k, v)
-        super k.to_s, v.to_s
+        super(k.to_s, v.to_s)
       end
 
       UNQUOTED = ["nc", "stale"].freeze
 
       def to_s
         map do |k, v|
-          "#{k}=#{UNQUOTED.include?(k) ? v.to_s : quote(v)}"
+          "#{k}=#{(UNQUOTED.include?(k) ? v.to_s : quote(v))}"
         end.join(", ")
       end
 
@@ -126,6 +126,10 @@ class IntegrationServer
       end
 
       def respond_to?(sym, *)
+        super || params.key?(sym.to_s)
+      end
+
+      def respond_to_missing?(sym, *)
         super || params.key?(sym.to_s)
       end
 
@@ -210,7 +214,7 @@ class IntegrationServer
     end
 
     def valid_qop?(auth)
-      QOP == auth.qop
+      auth.qop == QOP
     end
 
     def valid_opaque?(auth)
