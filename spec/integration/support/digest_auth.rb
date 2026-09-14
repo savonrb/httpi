@@ -95,7 +95,7 @@ class IntegrationServer
 
       def to_s
         map do |k, v|
-          "#{k}=#{(UNQUOTED.include?(k) ? v.to_s : quote(v))}"
+          "#{k}=#{(UNQUOTED.include?(k)) ? v.to_s : quote(v)}"
         end.join(", ")
       end
 
