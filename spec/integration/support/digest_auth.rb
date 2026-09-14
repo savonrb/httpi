@@ -68,7 +68,7 @@ class IntegrationServer
       end
 
       def self.dequote(str) # From WEBrick::HTTPUtils
-        ret = /\A"(.*)"\Z/ =~ str ? $1 : str.dup
+        ret = (/\A"(.*)"\Z/ =~ str) ? $1 : str.dup
         ret.gsub!(/\\(.)/, "\\1")
         ret
       end
@@ -95,7 +95,7 @@ class IntegrationServer
 
       def to_s
         map do |k, v|
-          "#{k}=#{(UNQUOTED.include?(k)) ? v.to_s : quote(v)}"
+          "#{k}=#{UNQUOTED.include?(k) ? v.to_s : quote(v)}"
         end.join(", ")
       end
 
