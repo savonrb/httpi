@@ -68,13 +68,13 @@ class IntegrationServer
       end
 
       def self.dequote(str) # From WEBrick::HTTPUtils
-        ret = (/\A"(.*)"\Z/ =~ str) ? $1 : str.dup
+        ret = /\A"(.*)"\Z/ =~ str ? $1 : str.dup
         ret.gsub!(/\\(.)/, "\\1")
         ret
       end
 
       def self.split_header_value(str)
-        str.scan(/\w+\=(?:"[^\"]+"|[^,]+)/n)
+        str.scan(/\w+=(?:"[^"]+"|[^,]+)/n)
       end
 
       def initialize
@@ -100,7 +100,7 @@ class IntegrationServer
       end
 
       def quote(str) # From WEBrick::HTTPUtils
-        '"' + str.gsub(/[\\"]/o, "\\\\\\1") + '"'
+        "\"#{str.gsub(/["\\]/o, "\\\\\\1")}\""
       end
     end
 
@@ -227,6 +227,7 @@ class IntegrationServer
     end
 
     def md5(data)
+      # codeql[rb/weak-sensitive-data-hashing]: MD5 is mandated by RFC 2617 for HTTP Digest auth; this middleware only exists for the integration tests.
       ::Digest::MD5.hexdigest(data)
     end
 
