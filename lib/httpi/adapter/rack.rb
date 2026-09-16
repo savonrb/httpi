@@ -88,11 +88,12 @@ module HTTPI
           # added as a prefix.  For all other headers, add the prefix "HTTP_"
           # https://github.com/rack/rack/blob/main/SPEC.rdoc#label-HTTP_+Headers
           normalized = header.tr("-", "_").upcase
-          key = if normalized == "CONTENT_TYPE" || normalized == "CONTENT_LENGTH"
-                  normalized
-                else
-                  "HTTP_#{normalized}"
-                end
+
+          if normalized == "CONTENT_TYPE" || normalized == "CONTENT_LENGTH"
+            key = normalized
+          else
+            key = "HTTP_#{normalized}"
+          end
 
           env[key] = value
         end
