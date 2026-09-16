@@ -89,10 +89,10 @@ module HTTPI
           # https://github.com/rack/rack/blob/main/SPEC.rdoc#label-HTTP_+Headers
           normalized = header.tr("-", "_").upcase
           key = if normalized == "CONTENT_TYPE" || normalized == "CONTENT_LENGTH"
-                  normalized
-                else
-                  "HTTP_#{normalized}"
-                end
+            normalized
+          else
+            "HTTP_#{normalized}"
+          end
 
           env[key] = value
         end
