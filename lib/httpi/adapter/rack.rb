@@ -84,7 +84,17 @@ module HTTPI
 
         env = {}
         @request.headers.each do |header, value|
-          env["HTTP_#{header.tr("-", "_").upcase}"] = value
+          # The headers CONTENT_TYPE and CONTENT_LENGTH should not have "HTTP_"
+          # added as a prefix.  For all other headers, add the prefix "HTTP_"
+          # https://github.com/rack/rack/blob/main/SPEC.rdoc#label-HTTP_+Headers
+          normalized = header.tr("-", "_").upcase
+          key = if normalized == "CONTENT_TYPE" || normalized == "CONTENT_LENGTH"
+            normalized
+          else
+            "HTTP_#{normalized}"
+          end
+
+          env[key] = value
         end
 
         response = @client.request(method.to_s.upcase, @request.url.to_s,
