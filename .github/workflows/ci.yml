@@ -19,7 +19,7 @@ jobs:
         # curb (in the Gemfile) builds a native extension against libcurl, so
         # bundler-cache's bundle install needs the dev headers.
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
-      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      - uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
@@ -59,7 +59,7 @@ jobs:
         # curb (in the Gemfile) builds a native extension against libcurl, so
         # bundler-cache's bundle install needs the dev headers.
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
-      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      - uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
@@ -85,7 +85,7 @@ jobs:
         # curb's integration specs need the libcurl development headers.
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # bundle installs and caches dependencies
