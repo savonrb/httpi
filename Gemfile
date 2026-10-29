@@ -29,6 +29,10 @@ end
 gem "excon", ((RUBY_VERSION >= "3.1") ? ">= 1.5.0" : "~> 0.71"), require: false, platforms: [:ruby, :jruby]
 gem "net-http-persistent", "~> 4.0", require: false
 gem "http", require: false
+# llhttp-ffi 0.5.1 (http.rb's parser on JRuby) lets its FFI callbacks be
+# garbage collected, so responses randomly fail with "couldn't read response
+# headers". Fixed upstream in bryanp/llhttp#39 but not yet released.
+gem "llhttp-ffi", git: "https://github.com/bryanp/llhttp.git", ref: "56efa13010f257af1efd62ab203ac6bcc118c278", glob: "ffi/*.gemspec", platforms: :jruby
 
 # adapter extensions
 gem "rack"
