@@ -2,6 +2,11 @@
 
 * Add your changelog entry here
 
+### 4.0.5 (2026-10-29)
+
+* Add `logger` as a direct dependency, so the gem works on Ruby 4.0, which no longer ships `logger` (#276)
+* Fix the Rack adapter to send Content-Type and Content-Length without the `HTTP_` prefix, as the Rack SPEC requires
+
 ### 4.0.4 (2024-07-14)
 
 * gemspec: Exclude spec files from published gem by @ChristopherBert in https://github.com/savonrb/httpi/pull/252
