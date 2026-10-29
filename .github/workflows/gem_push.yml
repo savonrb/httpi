@@ -17,6 +17,10 @@ jobs:
         with:
           ruby-version: "3"
           bundler-cache: false
+      - name: Install libcurl
+        # curb (in the Gemfile) builds a native extension against libcurl, so
+        # bundle install needs the dev headers.
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
       - name: Install dependencies
         run: bundle install
       - uses: rubygems/release-gem@7f9650160c1a4e7989fdc9855807bdbd421d8b6b # v1.4.1
