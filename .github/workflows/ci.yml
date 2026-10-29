@@ -89,6 +89,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # bundle installs and caches dependencies
+      - name: Build llhttp-ffi extension
+        # Bundler skips native extensions of git-sourced gems on JRuby, so
+        # compile the pinned llhttp-ffi (see Gemfile) ourselves.
+        if: startsWith(matrix.ruby, 'jruby')
+        run: bundle exec rake -C "$(bundle info --path llhttp-ffi)/ext"
       - name: Run tests
         run: bundle exec rake ci --trace
       - name: Upload coverage to Coveralls
