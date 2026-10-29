@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rack", ">= 2.0", "< 4"
   s.add_dependency "nkf"
   s.add_dependency "base64"
+  s.add_dependency "logger"
   s.add_dependency "mutex_m"
 
   s.add_development_dependency "rubyntlm", "~> 0.6.4"
