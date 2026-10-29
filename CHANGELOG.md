@@ -2,6 +2,10 @@
 
 * Add your changelog entry here
 
+### 4.0.6 (2026-10-29)
+
+* Republish the 4.0.5 changes as 4.0.6. The 4.0.5 gem never reached RubyGems, as its push workflow failed before the push step. The 4.0.5 tag is protected, so a new version carries the same gem code.
+
 ### 4.0.5 (2026-10-29)
 
 * Add `logger` as a direct dependency, so the gem works on Ruby 4.0, which no longer ships `logger` (#276)
