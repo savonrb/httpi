@@ -69,7 +69,8 @@ jobs:
   test:
     name: "Ruby ${{ matrix.ruby }}"
     # Ruby 3.0 and 3.1 have no prebuilt binaries for newer Ubuntu images.
-    runs-on: ${{ (matrix.ruby == '3.0' || matrix.ruby == '3.1') && 'ubuntu-24.04' || 'ubuntu-latest' }}
+    # TruffleRuby's curb specs fail with the libcurl of ubuntu-26.04 (#281).
+    runs-on: ${{ (matrix.ruby == '3.0' || matrix.ruby == '3.1' || matrix.ruby == 'truffleruby' || matrix.ruby == 'truffleruby-head') && 'ubuntu-24.04' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
