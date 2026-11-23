@@ -6,8 +6,8 @@ Security fixes are released for the latest 4.x release.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 4.1.x   | :white_check_mark: |
+| < 4.1   | :x:                |
 
 If you are on an older release, upgrade to the latest 4.x before reporting.
 
