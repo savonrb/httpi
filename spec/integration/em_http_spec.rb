@@ -100,5 +100,29 @@ describe HTTPI::Adapter::EmHttpRequest do
 
     # it does not support ssl authentication
 
+    context "https requests" do
+      before :all do
+        @server = IntegrationServer.run(host: "127.0.0.1", ssl: true)
+      end
+
+      after :all do
+        @server.stop
+      end
+
+      it "refuses the request because it cannot verify the certificate" do
+        request = HTTPI::Request.new(@server.url)
+
+        expect { HTTPI.get(request, adapter) }
+          .to raise_error(HTTPI::NotSupportedError, /cannot verify TLS certificates/)
+      end
+
+      it "sends the request unverified when verify_mode is :none" do
+        request = HTTPI::Request.new(@server.url)
+        request.auth.ssl.verify_mode = :none
+
+        response = HTTPI.get(request, adapter)
+        expect(response.body).to eq("get")
+      end
+    end
   end
 end

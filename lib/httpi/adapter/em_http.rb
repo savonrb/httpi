@@ -6,8 +6,8 @@ module HTTPI
     # An HTTPI adapter for `EventMachine::HttpRequest`. Due to limitations of
     # the em-httprequest library, not all features are supported. In particular,
     #
+    # * TLS certificate verification (HTTPS requires verify_mode :none),
     # * CA files,
-    # * certificate verification modes other than "none" and "peer,"
     # * NTLM authentication,
     # * digest authentication, and
     # * password-protected certificate keys
@@ -26,10 +26,33 @@ module HTTPI
     # * multi-request
     #
     # are supported by em-httprequest but not HTTPI.
+    #
+    # @deprecated em-http-request and eventmachine are no longer maintained.
+    #   Use another adapter, such as +:net_http+.
     class EmHttpRequest < Base
       register :em_http, deps: %w[em-synchrony em-synchrony/em-http em-http]
 
+      DEPRECATION_WARNING = "The em_http adapter is deprecated. " \
+        "em-http-request and eventmachine are no longer maintained, and eventmachine " \
+        "does not build on Ruby 4.1. Use another adapter, such as :net_http."
+
+      TLS_VERIFICATION_ERROR = "EM-HTTP-Request cannot verify TLS certificates. " \
+        "Use another adapter, or set verify_mode to :none to skip verification"
+
+      # Prints the deprecation warning once per process, so an application that
+      # sends many requests is told without its logs being flooded.
+      #
+      # @return [void]
+      # @api private
+      def self.warn_deprecation
+        return if @deprecation_warned
+
+        @deprecation_warned = true
+        warn DEPRECATION_WARNING
+      end
+
       def initialize(request)
+        self.class.warn_deprecation
         @request = request
         @client = EventMachine::HttpRequest.new build_request_url(request.url), connection_options
       end
@@ -54,9 +77,11 @@ module HTTPI
         options = client_options
         setup_http_auth(options) if @request.auth.http?
 
-        if @request.auth.ssl?
+        if unsupported_ssl_options?
           raise NotSupportedError, "EM-HTTP-Request does not support SSL client auth"
         end
+
+        raise NotSupportedError, TLS_VERIFICATION_ERROR if unverifiable_https?
 
         if @request.on_body
           raise NotSupportedError, "EM-HTTP-Request does not support response streaming"
@@ -74,8 +99,35 @@ module HTTPI
         options[:connect_timeout] = @request.open_timeout if @request.open_timeout
 
         options[:proxy] = proxy_options if @request.proxy
+        options[:tls] = {verify_peer: false} if @request.ssl?
 
         options
+      end
+
+      # Checks for ssl settings this adapter cannot apply. A +verify_mode+ of
+      # +:none+ is the only one it honors, so anything else must raise instead
+      # of being ignored. A client certificate that cannot be read still counts
+      # as configured.
+      #
+      # @return [Boolean] true when the request sets an unsupported ssl option
+      def unsupported_ssl_options?
+        return false unless @request.auth.ssl?
+
+        ssl = @request.auth.ssl
+        !!(ssl.verify_mode != :none || ssl.ca_cert_file || ssl.ciphers || (ssl.cert && ssl.cert_key))
+      rescue TypeError, Errno::ENOENT
+        true
+      end
+
+      # Checks whether an HTTPS request expects certificate verification.
+      # em-http-request cannot verify certificates reliably: it raises from
+      # inside reactor callbacks and checks the hostname against a proxy
+      # instead of the target. The adapter refuses these requests rather than
+      # send them unverified.
+      #
+      # @return [Boolean] true for HTTPS unless verify_mode is +:none+
+      def unverifiable_https?
+        @request.ssl? && @request.auth.ssl.verify_mode != :none
       end
 
       def client_options

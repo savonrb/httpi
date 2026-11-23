@@ -164,6 +164,88 @@ if EM_HTTP_AVAILABLE
             .to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
         end
       end
+
+      context "(for HTTPS requests)" do
+        let(:request) { HTTPI::Request.new("https://example.com") }
+        let(:verification_error) do
+          "EM-HTTP-Request cannot verify TLS certificates. " \
+            "Use another adapter, or set verify_mode to :none to skip verification"
+        end
+
+        it "refuses to send the request with the default verify_mode" do
+          em_http.expects(:get).never
+
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, verification_error)
+        end
+
+        it "refuses to send the request when verify_mode is explicitly :peer" do
+          request.auth.ssl.verify_mode = :peer
+          em_http.expects(:get).never
+
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, verification_error)
+        end
+
+        it "sends the request without verification when verify_mode is :none" do
+          request.auth.ssl.verify_mode = :none
+          em_http.expects(:get).returns(http_message)
+
+          expect(adapter.request(:get)).to match_response(body: Fixture.xml)
+        end
+
+        it "tells em-http-request to skip verification when verify_mode is :none" do
+          request.auth.ssl.verify_mode = :none
+          connection_options = {tls: {verify_peer: false}}
+
+          EventMachine::HttpRequest.expects(:new).with("https://example.com:443", connection_options)
+
+          adapter
+        end
+
+        # verify_mode :none alone is accepted, so this pins that other ssl
+        # settings next to it still raise instead of being silently ignored.
+        it "still rejects other ssl settings when verify_mode is :none" do
+          request.auth.ssl.verify_mode = :none
+          request.auth.ssl.ca_cert_file = "spec/fixtures/client_cert.pem"
+
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
+        end
+
+        it "rejects a client certificate it cannot read when verify_mode is :none" do
+          request.auth.ssl.verify_mode = :none
+          request.auth.ssl.cert_file = "spec/fixtures/does_not_exist.pem"
+          request.auth.ssl.cert_key_file = "spec/fixtures/does_not_exist.key"
+          em_http.expects(:get).never
+
+          expect { adapter.request(:get) }
+            .to raise_error(HTTPI::NotSupportedError, "EM-HTTP-Request does not support SSL client auth")
+        end
+      end
+
+      context "(for HTTP requests)" do
+        it "does not pass tls options to em-http-request" do
+          EventMachine::HttpRequest.expects(:new).with("http://example.com:80", {})
+
+          adapter
+        end
+      end
+    end
+
+    describe "deprecation" do
+      before { HTTPI::Adapter::EmHttpRequest.instance_variable_set(:@deprecation_warned, nil) }
+
+      it "warns once per process that the adapter is deprecated" do
+        warning = /The em_http adapter is deprecated\. .*Use another adapter, such as :net_http\./
+
+        expect {
+          HTTPI::Adapter::EmHttpRequest.new(request)
+          HTTPI::Adapter::EmHttpRequest.new(request)
+        }.to output(warning).to_stderr
+
+        expect { HTTPI::Adapter::EmHttpRequest.new(request) }.not_to output.to_stderr
+      end
     end
 
     def http_message(body = Fixture.xml)

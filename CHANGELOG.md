@@ -1,6 +1,12 @@
 ### Unreleased
 
-* Add your changelog entry here
+#### Security
+
+* The `:em_http` adapter no longer sends HTTPS requests without certificate verification ([GHSA-5f96-p49v-qh87](https://github.com/savonrb/httpi/security/advisories/GHSA-5f96-p49v-qh87)). It never applied the default `verify_mode` of `:peer`, so it accepted any server certificate and a network attacker could read and change the traffic, including Basic auth credentials. em-http-request cannot verify certificates reliably, so HTTPS requests through this adapter now raise `HTTPI::NotSupportedError` before anything is sent. **This breaks HTTPS through `:em_http`**, which is why it ships in a minor release. Switch to another adapter, such as `:net_http`, to keep verified HTTPS. Setting `verify_mode` to `:none` sends the request unverified, as an explicit choice. Thanks to @oss-security-shopify for securely disclosing this.
+
+#### Deprecated
+
+* The `:em_http` adapter is deprecated. Use another adapter, such as `:net_http`. em-http-request and eventmachine are no longer maintained, and eventmachine does not build on Ruby 4.1. Using the adapter prints a warning once per process.
 
 ### 4.0.6 (2026-10-29)
 
